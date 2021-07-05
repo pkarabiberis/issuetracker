@@ -1,6 +1,7 @@
 import { User } from '../entities/User';
 import {
   Arg,
+  Ctx,
   Field,
   InputType,
   Mutation,
@@ -9,6 +10,7 @@ import {
   Resolver,
 } from 'type-graphql';
 import argon2 from 'argon2';
+import { Context } from 'src/types';
 
 @InputType()
 class UserRegisterInput {
@@ -53,7 +55,8 @@ class UserResponse {
 export class UserResolver {
   @Mutation(() => UserResponse, { nullable: true })
   async register(
-    @Arg('creds', () => UserRegisterInput) creds: UserRegisterInput
+    @Arg('creds', () => UserRegisterInput) creds: UserRegisterInput,
+    @Ctx() { req }: Context
   ): Promise<UserResponse> {
     if (!creds.email.includes('@')) {
       return {
@@ -106,12 +109,14 @@ export class UserResolver {
       console.log(err.message);
     }
 
+    req.session.userId = user?.id;
     return { user };
   }
 
   @Mutation(() => UserResponse, { nullable: true })
   async login(
-    @Arg('creds', () => UserLoginInput) creds: UserLoginInput
+    @Arg('creds', () => UserLoginInput) creds: UserLoginInput,
+    @Ctx() { req }: Context
   ): Promise<UserResponse> {
     const user = await User.findOne({
       where: {
@@ -141,11 +146,20 @@ export class UserResolver {
       };
     }
 
+    req.session.userId = user?.id;
     return { user };
   }
 
   @Query(() => [User])
   users(): Promise<User[]> {
     return User.find({});
+  }
+
+  @Query(() => User, { nullable: true })
+  me(@Ctx() { req }: Context) {
+    if (!req.session.userId) {
+      return null;
+    }
+    return User.findOne(req.session.userId);
   }
 }
