@@ -1,0 +1,15 @@
+mutation Register($creds: UserRegisterInput!) {
+  register(creds: $creds) {
+    user {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

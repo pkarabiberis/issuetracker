@@ -1,0 +1,15 @@
+mutation Login($creds: UserLoginInput!) {
+  login(creds: $creds) {
+    user {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
