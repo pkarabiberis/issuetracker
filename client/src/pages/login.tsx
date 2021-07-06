@@ -4,14 +4,20 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Layout } from '../components/Layout';
-import { useLoginMutation } from '../generated/graphql';
+import {
+  CurrentUserDocument,
+  CurrentUserQuery,
+  useLoginMutation,
+} from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
+import { withApollo } from '../utils/withApollo';
 
 interface loginProps {}
 
 const Login: React.FC<loginProps> = ({}) => {
   const router = useRouter();
   const [login] = useLoginMutation();
+
   return (
     <Layout>
       <Formik
@@ -21,8 +27,17 @@ const Login: React.FC<loginProps> = ({}) => {
             variables: {
               creds,
             },
+            update: (cache, { data }) => {
+              cache.writeQuery<CurrentUserQuery>({
+                query: CurrentUserDocument,
+                data: {
+                  __typename: 'Query',
+                  currentUser: data?.login?.user,
+                },
+              });
+            },
           });
-          if (response.data?.login.errors) {
+          if (response.data?.login?.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else {
             router.push('/');
@@ -34,27 +49,27 @@ const Login: React.FC<loginProps> = ({}) => {
             <Box w={'400px'}>
               <Form>
                 <InputField
-                  name="username"
-                  placeholder="username"
-                  label="Username"
+                  name='username'
+                  placeholder='username'
+                  label='Username'
                 />
 
                 <Box mt={4}>
                   <InputField
-                    name="password"
-                    label="Password"
-                    placeholder="********"
-                    type="password"
+                    name='password'
+                    label='Password'
+                    placeholder='********'
+                    type='password'
                   />
                 </Box>
                 <Flex>
                   <Button
                     mt={4}
                     ml={'auto'}
-                    type="submit"
+                    type='submit'
                     textColor={'white'}
                     isLoading={isSubmitting}
-                    bgColor="blue.500"
+                    bgColor='blue.500'
                     _hover={{ bgColor: 'blue.400' }}
                   >
                     Login
@@ -69,4 +84,4 @@ const Login: React.FC<loginProps> = ({}) => {
   );
 };
 
-export default Login;
+export default withApollo({ ssr: false })(Login);

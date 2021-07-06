@@ -11,6 +11,8 @@ import connectRedis from 'connect-redis';
 import cors from 'cors';
 import { COOKIE_NAME, __prod__ } from './constants';
 import { Context } from './types';
+import { Project } from './entities/Project';
+import { ProjectResolver } from './resolvers/project';
 
 const main = async () => {
   const conn = await createConnection({
@@ -20,7 +22,7 @@ const main = async () => {
     password: 'postgres',
     logging: true,
     synchronize: true,
-    entities: [User],
+    entities: [User, Project],
   });
   const app = express();
 
@@ -54,7 +56,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, ProjectResolver],
       validate: false,
     }),
     context: ({ req, res }): Context => ({

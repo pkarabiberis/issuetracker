@@ -1,4 +1,6 @@
+import { Request, Response } from 'express';
+
 export type Context = {
-  req: Express.Request & { session: { userId?: number } };
-  res: Express.Response;
+  req: Request & { session: { userId?: number } };
+  res: Response;
 };

@@ -1,0 +1,7 @@
+query UserProjects {
+  userProjects {
+    id
+    name
+    creatorId
+  }
+}

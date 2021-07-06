@@ -10,7 +10,10 @@ import {
   Resolver,
 } from 'type-graphql';
 import argon2 from 'argon2';
-import { Context } from 'src/types';
+import { Context } from '../types';
+import { COOKIE_NAME } from '../constants';
+import { Project } from '../entities/Project';
+import { createQueryBuilder, getConnection } from 'typeorm';
 
 @InputType()
 class UserRegisterInput {
@@ -156,10 +159,45 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  me(@Ctx() { req }: Context) {
+  currentUser(@Ctx() { req }: Context) {
     if (!req.session.userId) {
       return null;
     }
     return User.findOne(req.session.userId);
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: Context) {
+    return new Promise((resolve) => {
+      req.session.destroy((err) => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          resolve(false);
+          return;
+        }
+        resolve(true);
+      });
+    });
+  }
+
+  @Query(() => [Project], { nullable: true })
+  async userProjects(@Ctx() { req }: Context): Promise<Project[] | null> {
+    const userId = [req.session.userId];
+    const projects = await getConnection().query(
+      `
+      SELECT r.*, p.*
+      FROM project_users_user r
+      INNER JOIN project p on p.id = r."projectId" 
+      WHERE r."userId" = $1            
+      ORDER by p."createdAt" DESC
+      `,
+      userId
+    );
+
+    if (!projects) {
+      return null;
+    }
+
+    return projects;
   }
 }

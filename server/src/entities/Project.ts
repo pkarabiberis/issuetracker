@@ -7,29 +7,28 @@ import {
   UpdateDateColumn,
   BaseEntity,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
-import { Project } from './Project';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
+export class Project extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
   @Field(() => String)
   @Column({ unique: true })
-  username!: string;
+  name!: string;
 
-  @Field(() => String)
-  @Column({ unique: true })
-  email!: string;
-
+  @Field(() => Int)
   @Column()
-  password!: string;
+  creatorId: number;
 
-  @ManyToMany(() => Project, (project) => project.users)
-  projects: Project[];
+  @ManyToMany(() => User, (user) => user.projects)
+  @JoinTable()
+  users: User[];
 
   @Field(() => String)
   @CreateDateColumn()
