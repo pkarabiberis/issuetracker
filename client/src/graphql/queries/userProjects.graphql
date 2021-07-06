@@ -5,5 +5,12 @@ query UserProjects {
     creatorId
     createdAt
     updatedAt
+    users {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
   }
 }

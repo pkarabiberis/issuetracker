@@ -17,6 +17,7 @@ export class ProjectResolver {
     if (!user) {
       return null;
     }
+
     userArr.push(user);
     return Project.create({
       creatorId: req.session.userId,

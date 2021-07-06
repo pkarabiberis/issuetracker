@@ -185,22 +185,24 @@ export class UserResolver {
   @Query(() => [Project], { nullable: true })
   async userProjects(@Ctx() { req }: Context): Promise<Project[] | null> {
     const userId = [req.session.userId];
-    const projectUsers = await getConnection().query(
-      `
-      SELECT r.*, u.username, u.email
-      FROM project_users_user r 
-      INNER JOIN public.user u on u.id = r."userId"
-      WHERE r."userId" = $1
-      ORDER by u."createdAt" DESC
-      `,
-      userId
-    );
-    //reurn
+
+    //rerun
     const projects = await getConnection().query(
       `
-      SELECT r.*, p.name, p."createdAt", p."updatedAt", p."creatorId", p.id
+
+      SELECT r.*, p.*,
+      json_build_array(
+        json_build_object(
+          'id', u.id,
+          'username', u.username,
+          'email', u.email,
+          'createdAt', u."createdAt",
+          'updatedAt', u."updatedAt"
+        )
+      ) users
       FROM project_users_user r
-      INNER JOIN project p on p.id = r."projectId"  
+      INNER JOIN project p on p.id = r."projectId"
+      INNER JOIN public.user u on u.id = r."userId"
       WHERE r."userId" = $1
       ORDER by p."createdAt" DESC
       `,
@@ -210,9 +212,8 @@ export class UserResolver {
     if (!projects) {
       return null;
     }
-
+    //rerun
     console.log('PROJECTS: ', projects);
-    console.log('USERS: ', projectUsers);
 
     return projects;
   }

@@ -48,6 +48,7 @@ export type Project = {
   id: Scalars['Int'];
   name: Scalars['String'];
   creatorId: Scalars['Int'];
+  users?: Maybe<Array<User>>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -150,6 +151,10 @@ export type UserProjectsQuery = (
   & { userProjects?: Maybe<Array<(
     { __typename?: 'Project' }
     & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
+    & { users?: Maybe<Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+    )>> }
   )>> }
 );
 
@@ -327,6 +332,13 @@ export const UserProjectsDocument = gql`
     creatorId
     createdAt
     updatedAt
+    users {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
   }
 }
     `;
