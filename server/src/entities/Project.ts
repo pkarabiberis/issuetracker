@@ -26,6 +26,7 @@ export class Project extends BaseEntity {
   @Column()
   creatorId: number;
 
+  @Field(() => [User], { nullable: true })
   @ManyToMany(() => User, (user) => user.projects)
   @JoinTable()
   users: User[];

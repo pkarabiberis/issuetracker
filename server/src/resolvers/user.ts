@@ -3,11 +3,13 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Mutation,
   ObjectType,
   Query,
   Resolver,
+  Root,
 } from 'type-graphql';
 import argon2 from 'argon2';
 import { Context } from '../types';
@@ -183,12 +185,23 @@ export class UserResolver {
   @Query(() => [Project], { nullable: true })
   async userProjects(@Ctx() { req }: Context): Promise<Project[] | null> {
     const userId = [req.session.userId];
+    const projectUsers = await getConnection().query(
+      `
+      SELECT r.*, u.username, u.email
+      FROM project_users_user r 
+      INNER JOIN public.user u on u.id = r."userId"
+      WHERE r."userId" = $1
+      ORDER by u."createdAt" DESC
+      `,
+      userId
+    );
+    //reurn
     const projects = await getConnection().query(
       `
-      SELECT r.*, p.*
+      SELECT r.*, p.name, p."createdAt", p."updatedAt", p."creatorId", p.id
       FROM project_users_user r
-      INNER JOIN project p on p.id = r."projectId" 
-      WHERE r."userId" = $1            
+      INNER JOIN project p on p.id = r."projectId"  
+      WHERE r."userId" = $1
       ORDER by p."createdAt" DESC
       `,
       userId
@@ -197,6 +210,9 @@ export class UserResolver {
     if (!projects) {
       return null;
     }
+
+    console.log('PROJECTS: ', projects);
+    console.log('USERS: ', projectUsers);
 
     return projects;
   }

@@ -39,21 +39,31 @@ const Index = () => {
           </Button>
         </Flex>
         <Divider mt={4} orientation='horizontal' />
-        <Flex
-          p={2}
-          mt={4}
-          bgColor={'gray.50'}
-          alignItems={'center'}
-          justifyContent={'space-between'}
-          w={'100%'}
-        >
-          <Text textColor={'gray.500'} fontWeight={'bold'}>
+        <Flex p={2} mt={4} bgColor={'gray.50'} alignItems={'center'} w={'100%'}>
+          <Text
+            flexGrow={1}
+            flexBasis={0}
+            textColor={'gray.500'}
+            fontWeight={'bold'}
+          >
             Project
           </Text>
-          <Text textColor={'gray.500'} fontWeight={'bold'}>
+          <Text
+            flexGrow={1}
+            flexBasis={0}
+            textColor={'gray.500'}
+            fontWeight={'bold'}
+            textAlign={'center'}
+          >
             Members
           </Text>
-          <Text textColor={'gray.500'} fontWeight={'bold'}>
+          <Text
+            flexGrow={1}
+            flexBasis={0}
+            textColor={'gray.500'}
+            fontWeight={'bold'}
+            textAlign={'end'}
+          >
             Last updated
           </Text>
         </Flex>
@@ -61,24 +71,19 @@ const Index = () => {
         {data?.userProjects &&
           data.userProjects.map((pr) => {
             return (
-              <Flex
-                p={2}
-                mt={4}
-                alignItems={'center'}
-                justifyContent={'space-between'}
-                w={'100%'}
-              >
-                <Text>{pr.name}</Text>
-                <Text>{pr.creatorId}</Text>
-                <Text>{pr.id}</Text>
+              <Flex p={2} mt={4} alignItems={'center'} w={'100%'}>
+                <Text flexGrow={1} flexBasis={0}>
+                  {pr.name}
+                </Text>
+                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+                  {pr.creatorId}
+                </Text>
+                <Text textAlign={'end'} flexGrow={1} flexBasis={0}>
+                  {pr.updatedAt}
+                </Text>
               </Flex>
             );
           })}
-
-        {/* <Box mr={'auto'}>
-          {data?.userProjects &&
-            data.userProjects.map((pr) => <Box key={pr.id}>{pr.name}</Box>)}
-        </Box> */}
       </Flex>
     </>
   );

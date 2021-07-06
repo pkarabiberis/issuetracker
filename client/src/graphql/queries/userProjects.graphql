@@ -3,5 +3,7 @@ query UserProjects {
     id
     name
     creatorId
+    createdAt
+    updatedAt
   }
 }

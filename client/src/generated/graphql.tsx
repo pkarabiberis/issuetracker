@@ -149,7 +149,7 @@ export type UserProjectsQuery = (
   { __typename?: 'Query' }
   & { userProjects?: Maybe<Array<(
     { __typename?: 'Project' }
-    & Pick<Project, 'id' | 'name' | 'creatorId'>
+    & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
   )>> }
 );
 
@@ -325,6 +325,8 @@ export const UserProjectsDocument = gql`
     id
     name
     creatorId
+    createdAt
+    updatedAt
   }
 }
     `;
