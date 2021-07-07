@@ -7,6 +7,7 @@ import {
   Icon,
   Spacer,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import React from 'react';
 import { useEffect } from 'react';
@@ -15,15 +16,19 @@ import { useUserProjectsQuery } from '../generated/graphql';
 import { withApollo } from '../utils/withApollo';
 import { GoPrimitiveDot } from 'react-icons/go';
 import NextLink from 'next/link';
+import { CreateProjectDialog } from '../components/CreateProjectDialog';
+import { toDate } from '../utils/toDate';
 
 const Index = () => {
   const { data, refetch } = useUserProjectsQuery();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   useEffect(() => {
     refetch();
   }, []);
   return (
     <>
       <NavBar />
+      {isOpen && <CreateProjectDialog isOpen={isOpen} onClose={onClose} />}
       <Flex
         mt={10}
         maxW={'1200px'}
@@ -37,6 +42,7 @@ const Index = () => {
             textColor={'white'}
             bgColor='blue.500'
             _hover={{ bgColor: 'blue.400' }}
+            onClick={onOpen}
           >
             Create project
           </Button>
@@ -106,15 +112,7 @@ const Index = () => {
                       : `${pr.users?.[0].username} and ${pr.users?.length} others`}
                   </Text>
                   <Text textAlign={'end'} flexGrow={1} flexBasis={0}>
-                    {new Date(Number(pr.updatedAt)).toLocaleDateString(
-                      'en-GB',
-                      {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      }
-                    )}
+                    {toDate(pr.updatedAt)}
                   </Text>
                 </Flex>
               </NextLink>

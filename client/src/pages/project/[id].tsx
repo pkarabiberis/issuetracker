@@ -4,6 +4,7 @@ import { withApollo } from '../../utils/withApollo';
 import { NavBar } from '../../components/NavBar';
 import { Flex, Heading, Button, Divider, Text } from '@chakra-ui/react';
 import { useProjectQuery } from '../../generated/graphql';
+import { toDate } from '../../utils/toDate';
 
 interface ProjectProps {}
 
@@ -14,6 +15,8 @@ const Project: React.FC<ProjectProps> = ({}) => {
       id: typeof query.id !== 'undefined' ? parseInt(query.id as string) : -1,
     },
   });
+
+  console.log(data?.project);
 
   if (loading) {
     return (
@@ -76,7 +79,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
         direction={'column'}
       >
         <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
-          <Heading>{data.project.name}</Heading>
+          <Heading>{data.project.project.name}</Heading>
           <Button
             textColor={'white'}
             bgColor='blue.500'
@@ -92,6 +95,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
             flexBasis={0}
             textColor={'gray.500'}
             fontWeight={'bold'}
+            textAlign={'center'}
           >
             Issue
           </Text>
@@ -109,7 +113,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
             flexBasis={0}
             textColor={'gray.500'}
             fontWeight={'bold'}
-            textAlign={'end'}
+            textAlign={'center'}
           >
             Created
           </Text>
@@ -118,7 +122,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
             flexBasis={0}
             textColor={'gray.500'}
             fontWeight={'bold'}
-            textAlign={'end'}
+            textAlign={'center'}
           >
             Due
           </Text>
@@ -127,11 +131,47 @@ const Project: React.FC<ProjectProps> = ({}) => {
             flexBasis={0}
             textColor={'gray.500'}
             fontWeight={'bold'}
-            textAlign={'end'}
+            textAlign={'center'}
           >
             Assigned
           </Text>
         </Flex>
+        {data?.project.issues.length &&
+          data.project.issues.map((issue) => {
+            return (
+              <Flex
+                key={issue.id}
+                _hover={{ bgColor: 'gray.50', cursor: 'pointer' }}
+                p={2}
+                mt={4}
+                alignItems={'center'}
+                w={'100%'}
+              >
+                <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
+                  {issue.title}
+                </Text>
+
+                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+                  {issue.status}
+                </Text>
+
+                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+                  {toDate(issue.createdAt)}
+                </Text>
+
+                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+                  {issue.due}
+                </Text>
+
+                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+                  {issue.assignedUsers?.length &&
+                  issue.assignedUsers?.length === 1
+                    ? issue.assignedUsers[0].username
+                    : `${issue?.assignedUsers?.[0].username} and ${issue?.assignedUsers?.length} other`}
+                </Text>
+              </Flex>
+            );
+          })}
       </Flex>
     </>
   );

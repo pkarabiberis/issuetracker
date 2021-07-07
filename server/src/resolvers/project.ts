@@ -50,7 +50,7 @@ class ProjectResponse {
 export class ProjectResolver {
   @Mutation(() => Project)
   @UseMiddleware(isAuthenticated)
-  async create(
+  async createProject(
     @Arg('name') name: string,
     @Ctx() { req }: Context
   ): Promise<Project | null> {

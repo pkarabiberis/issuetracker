@@ -20,12 +20,33 @@ export type InputError = {
   message: Scalars['String'];
 };
 
+export type Issue = {
+  __typename?: 'Issue';
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  creatorId: Scalars['Int'];
+  due: Scalars['String'];
+  projectId?: Maybe<Scalars['Int']>;
+  status: Scalars['String'];
+  assignedUsers?: Maybe<Array<User>>;
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
+export type IssueInput = {
+  title: Scalars['String'];
+  status: Scalars['String'];
+  due: Scalars['String'];
+  projectId: Scalars['Float'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   register?: Maybe<UserResponse>;
   login?: Maybe<UserResponse>;
   logout: Scalars['Boolean'];
-  create: Project;
+  createProject: Project;
+  createIssue: Issue;
 };
 
 
@@ -39,8 +60,14 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationCreateArgs = {
+export type MutationCreateProjectArgs = {
   name: Scalars['String'];
+};
+
+
+export type MutationCreateIssueArgs = {
+  assignedUsers: Array<Scalars['Float']>;
+  input: IssueInput;
 };
 
 export type Project = {
@@ -49,8 +76,15 @@ export type Project = {
   name: Scalars['String'];
   creatorId: Scalars['Int'];
   users?: Maybe<Array<User>>;
+  issues: Array<Issue>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
+};
+
+export type ProjectResponse = {
+  __typename?: 'ProjectResponse';
+  project: Project;
+  issues: Array<Issue>;
 };
 
 export type Query = {
@@ -58,7 +92,7 @@ export type Query = {
   users: Array<User>;
   currentUser?: Maybe<User>;
   userProjects?: Maybe<Array<Project>>;
-  project?: Maybe<Project>;
+  project?: Maybe<ProjectResponse>;
 };
 
 
@@ -71,6 +105,7 @@ export type User = {
   id: Scalars['Int'];
   username: Scalars['String'];
   email: Scalars['String'];
+  issues?: Maybe<Array<Issue>>;
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
 };
@@ -91,6 +126,23 @@ export type UserResponse = {
   user?: Maybe<User>;
   errors?: Maybe<Array<InputError>>;
 };
+
+export type CreateProjectMutationVariables = Exact<{
+  name: Scalars['String'];
+}>;
+
+
+export type CreateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { createProject: (
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
+    & { users?: Maybe<Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+    )>> }
+  ) }
+);
 
 export type LoginMutationVariables = Exact<{
   creds: UserLoginInput;
@@ -157,12 +209,22 @@ export type ProjectQueryVariables = Exact<{
 export type ProjectQuery = (
   { __typename?: 'Query' }
   & { project?: Maybe<(
-    { __typename?: 'Project' }
-    & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
-    & { users?: Maybe<Array<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
-    )>> }
+    { __typename?: 'ProjectResponse' }
+    & { project: (
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
+      & { users?: Maybe<Array<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+      )>> }
+    ), issues: Array<(
+      { __typename?: 'Issue' }
+      & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt'>
+      & { assignedUsers?: Maybe<Array<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username'>
+      )>> }
+    )> }
   )> }
 );
 
@@ -193,6 +255,50 @@ export type UsersQuery = (
 );
 
 
+export const CreateProjectDocument = gql`
+    mutation CreateProject($name: String!) {
+  createProject(name: $name) {
+    id
+    name
+    creatorId
+    createdAt
+    updatedAt
+    users {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type CreateProjectMutationFn = Apollo.MutationFunction<CreateProjectMutation, CreateProjectMutationVariables>;
+
+/**
+ * __useCreateProjectMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOptions<CreateProjectMutation, CreateProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, options);
+      }
+export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
+export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
+export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($creds: UserLoginInput!) {
   login(creds: $creds) {
@@ -350,17 +456,32 @@ export type CurrentUserQueryResult = Apollo.QueryResult<CurrentUserQuery, Curren
 export const ProjectDocument = gql`
     query Project($id: Int!) {
   project(id: $id) {
-    id
-    name
-    creatorId
-    createdAt
-    updatedAt
-    users {
+    project {
       id
-      username
-      email
+      name
+      creatorId
       createdAt
       updatedAt
+      users {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
+    issues {
+      id
+      title
+      creatorId
+      due
+      status
+      createdAt
+      updatedAt
+      assignedUsers {
+        id
+        username
+      }
     }
   }
 }

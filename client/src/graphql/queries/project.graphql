@@ -1,16 +1,32 @@
 query Project($id: Int!) {
   project(id: $id) {
-    id
-    name
-    creatorId
-    createdAt
-    updatedAt
-    users {
+    project {
       id
-      username
-      email
+      name
+      creatorId
       createdAt
       updatedAt
+      users {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
+
+    issues {
+      id
+      title
+      creatorId
+      due
+      status
+      createdAt
+      updatedAt
+      assignedUsers {
+        id
+        username
+      }
     }
   }
 }
