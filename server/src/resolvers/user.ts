@@ -15,7 +15,7 @@ import argon2 from 'argon2';
 import { Context } from '../types';
 import { COOKIE_NAME } from '../constants';
 import { Project } from '../entities/Project';
-import { createQueryBuilder, getConnection } from 'typeorm';
+import { createConnection, createQueryBuilder, getConnection } from 'typeorm';
 
 @InputType()
 class UserRegisterInput {
@@ -156,8 +156,8 @@ export class UserResolver {
   }
 
   @Query(() => [User])
-  users(): Promise<User[]> {
-    return User.find({});
+  async users() {
+    return User.find({ relations: ['issues'] });
   }
 
   @Query(() => User, { nullable: true })

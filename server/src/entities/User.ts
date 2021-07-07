@@ -7,7 +7,9 @@ import {
   UpdateDateColumn,
   BaseEntity,
   ManyToMany,
+  ManyToOne,
 } from 'typeorm';
+import { Issue } from './Issue';
 import { Project } from './Project';
 
 @ObjectType()
@@ -30,6 +32,10 @@ export class User extends BaseEntity {
 
   @ManyToMany(() => Project, (project) => project.users)
   projects: Project[];
+
+  @Field(() => [Issue], { nullable: true })
+  @ManyToMany(() => Issue, (issue) => issue.assignedUsers)
+  issues: Issue[];
 
   @Field(() => String)
   @CreateDateColumn()

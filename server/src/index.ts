@@ -13,6 +13,7 @@ import { COOKIE_NAME, __prod__ } from './constants';
 import { Context } from './types';
 import { Project } from './entities/Project';
 import { ProjectResolver } from './resolvers/project';
+import { Issue } from './entities/Issue';
 
 const main = async () => {
   const conn = await createConnection({
@@ -22,7 +23,7 @@ const main = async () => {
     password: 'postgres',
     logging: true,
     synchronize: true,
-    entities: [User, Project],
+    entities: [User, Project, Issue],
   });
   const app = express();
 
