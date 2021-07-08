@@ -47,6 +47,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   createProject: Project;
   createIssue: Issue;
+  updateissue: Issue;
 };
 
 
@@ -68,6 +69,14 @@ export type MutationCreateProjectArgs = {
 export type MutationCreateIssueArgs = {
   assignedUsers: Array<Scalars['Float']>;
   input: IssueInput;
+};
+
+
+export type MutationUpdateissueArgs = {
+  assignedUsers: Array<Scalars['Int']>;
+  status: Scalars['String'];
+  title: Scalars['String'];
+  id: Scalars['Int'];
 };
 
 export type Project = {
@@ -188,6 +197,26 @@ export type RegisterMutation = (
       & Pick<InputError, 'field' | 'message'>
     )>> }
   )> }
+);
+
+export type UpdateIssueMutationVariables = Exact<{
+  id: Scalars['Int'];
+  title: Scalars['String'];
+  status: Scalars['String'];
+  assignedUsers: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type UpdateIssueMutation = (
+  { __typename?: 'Mutation' }
+  & { updateissue: (
+    { __typename?: 'Issue' }
+    & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt'>
+    & { assignedUsers?: Maybe<Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+    )>> }
+  ) }
 );
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
@@ -415,6 +444,60 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UpdateIssueDocument = gql`
+    mutation UpdateIssue($id: Int!, $title: String!, $status: String!, $assignedUsers: [Int!]!) {
+  updateissue(
+    id: $id
+    title: $title
+    status: $status
+    assignedUsers: $assignedUsers
+  ) {
+    id
+    title
+    creatorId
+    due
+    status
+    createdAt
+    updatedAt
+    assignedUsers {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type UpdateIssueMutationFn = Apollo.MutationFunction<UpdateIssueMutation, UpdateIssueMutationVariables>;
+
+/**
+ * __useUpdateIssueMutation__
+ *
+ * To run a mutation, you first call `useUpdateIssueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateIssueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateIssueMutation, { data, loading, error }] = useUpdateIssueMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      title: // value for 'title'
+ *      status: // value for 'status'
+ *      assignedUsers: // value for 'assignedUsers'
+ *   },
+ * });
+ */
+export function useUpdateIssueMutation(baseOptions?: Apollo.MutationHookOptions<UpdateIssueMutation, UpdateIssueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateIssueMutation, UpdateIssueMutationVariables>(UpdateIssueDocument, options);
+      }
+export type UpdateIssueMutationHookResult = ReturnType<typeof useUpdateIssueMutation>;
+export type UpdateIssueMutationResult = Apollo.MutationResult<UpdateIssueMutation>;
+export type UpdateIssueMutationOptions = Apollo.BaseMutationOptions<UpdateIssueMutation, UpdateIssueMutationVariables>;
 export const CurrentUserDocument = gql`
     query CurrentUser {
   currentUser {

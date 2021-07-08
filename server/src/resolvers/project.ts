@@ -15,12 +15,7 @@ import {
 } from 'type-graphql';
 import { User } from '../entities/User';
 import { Issue } from '../entities/Issue';
-
-@InputType()
-class UserInput {
-  @Field()
-  userId: number;
-}
+import { getConnection, getRepository } from 'typeorm';
 
 @InputType()
 class IssueInput {
@@ -103,5 +98,23 @@ export class ProjectResolver {
       assignedUsers: usersToAssign,
       creatorId: req.session.userId,
     }).save();
+  }
+
+  @Mutation(() => Issue)
+  @UseMiddleware(isAuthenticated)
+  async updateissue(
+    @Arg('id', () => Int) id: number,
+    @Arg('title', () => String) title: string,
+    @Arg('status', () => String) status: string,
+    @Arg('assignedUsers', () => [Int]) assignedUsers: number[]
+  ): Promise<Issue> {
+    const usersToAssign = await User.findByIds(assignedUsers);
+    const issue = await Issue.findOne(id);
+    return getRepository(Issue).save({
+      ...issue,
+      title,
+      status,
+      assignedUsers: usersToAssign,
+    });
   }
 }

@@ -2,9 +2,21 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import { withApollo } from '../../utils/withApollo';
 import { NavBar } from '../../components/NavBar';
-import { Flex, Heading, Button, Divider, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  Heading,
+  Button,
+  Divider,
+  Text,
+  Badge,
+  Icon,
+  Box,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { useProjectQuery } from '../../generated/graphql';
 import { toDate } from '../../utils/toDate';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { EditIssueDialog } from '../../components/EditIssueDialog';
 
 interface ProjectProps {}
 
@@ -16,7 +28,9 @@ const Project: React.FC<ProjectProps> = ({}) => {
     },
   });
 
-  console.log(data?.project);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  console.log(data?.project?.issues);
 
   if (loading) {
     return (
@@ -71,6 +85,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
   return (
     <>
       <NavBar />
+
       <Flex
         mt={10}
         maxW={'1200px'}
@@ -135,6 +150,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
           >
             Assigned
           </Text>
+          <Box flexGrow={0.1} flexBasis={0}></Box>
         </Flex>
         {data?.project.issues.length &&
           data.project.issues.map((issue) => {
@@ -152,7 +168,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
                 </Text>
 
                 <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                  {issue.status}
+                  <Badge colorScheme='purple'>{issue.status}</Badge>
                 </Text>
 
                 <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
@@ -160,15 +176,34 @@ const Project: React.FC<ProjectProps> = ({}) => {
                 </Text>
 
                 <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                  {issue.due}
+                  {toDate(issue.due)}
                 </Text>
 
-                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+                <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
                   {issue.assignedUsers?.length &&
                   issue.assignedUsers?.length === 1
                     ? issue.assignedUsers[0].username
-                    : `${issue?.assignedUsers?.[0].username} and ${issue?.assignedUsers?.length} other`}
+                    : `${issue?.assignedUsers?.[0].username} and ${
+                        issue?.assignedUsers!.length - 1
+                      } other`}
                 </Text>
+
+                <Icon
+                  as={BsThreeDotsVertical}
+                  w={5}
+                  h={5}
+                  flexGrow={0.1}
+                  flexBasis={0}
+                  onClick={onOpen}
+                />
+
+                {isOpen && (
+                  <EditIssueDialog
+                    issue={issue}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                  />
+                )}
               </Flex>
             );
           })}

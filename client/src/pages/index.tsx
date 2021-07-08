@@ -109,7 +109,9 @@ const Index = () => {
                   <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
                     {pr.users?.length && pr.users.length === 1
                       ? pr.users[0].username
-                      : `${pr.users?.[0].username} and ${pr.users?.length} others`}
+                      : `${pr.users?.[0].username} and ${
+                          pr.users!.length - 1
+                        } others`}
                   </Text>
                   <Text textAlign={'end'} flexGrow={1} flexBasis={0}>
                     {toDate(pr.updatedAt)}

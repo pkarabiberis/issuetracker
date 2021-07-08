@@ -1,0 +1,28 @@
+mutation UpdateIssue(
+  $id: Int!
+  $title: String!
+  $status: String!
+  $assignedUsers: [Int!]!
+) {
+  updateissue(
+    id: $id
+    title: $title
+    status: $status
+    assignedUsers: $assignedUsers
+  ) {
+    id
+    title
+    creatorId
+    due
+    status
+    createdAt
+    updatedAt
+    assignedUsers {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+  }
+}
