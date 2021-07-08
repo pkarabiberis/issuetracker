@@ -17,6 +17,7 @@ import { useProjectQuery } from '../../generated/graphql';
 import { toDate } from '../../utils/toDate';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { EditIssueDialog } from '../../components/EditIssueDialog';
+import { getBadgeColor } from '../../utils/getBadgeColor';
 
 interface ProjectProps {}
 
@@ -29,8 +30,6 @@ const Project: React.FC<ProjectProps> = ({}) => {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  console.log(data?.project?.issues);
 
   if (loading) {
     return (
@@ -168,7 +167,9 @@ const Project: React.FC<ProjectProps> = ({}) => {
                 </Text>
 
                 <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                  <Badge colorScheme='purple'>{issue.status}</Badge>
+                  <Badge colorScheme={getBadgeColor(issue.status)}>
+                    {issue.status}
+                  </Badge>
                 </Text>
 
                 <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
