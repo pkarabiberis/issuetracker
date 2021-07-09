@@ -22,10 +22,7 @@ class IssueInput {
   @Field()
   title!: string;
 
-  @Field()
-  status?: string;
-
-  @Field()
+  @Field(() => String, { nullable: true })
   due?: string;
 
   @Field()
@@ -73,6 +70,9 @@ export class ProjectResolver {
         projectId: id,
       },
       relations: ['assignedUsers'],
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     const project = await Project.findOne(id, { relations: ['users'] });
@@ -89,12 +89,13 @@ export class ProjectResolver {
   @UseMiddleware(isAuthenticated)
   async createIssue(
     @Arg('input', () => IssueInput) input: IssueInput,
-    @Arg('assignedUsers', () => [Number]) assignedUsers: number[],
+    @Arg('assignedUsers', () => [Int]) assignedUsers: number[],
     @Ctx() { req }: Context
   ): Promise<Issue> {
     const usersToAssign = await User.findByIds(assignedUsers);
     return Issue.create({
       ...input,
+      status: 'Ongoing',
       assignedUsers: usersToAssign,
       creatorId: req.session.userId,
     }).save();

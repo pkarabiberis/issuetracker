@@ -18,6 +18,7 @@ import { GoPrimitiveDot } from 'react-icons/go';
 import NextLink from 'next/link';
 import { CreateProjectDialog } from '../components/CreateProjectDialog';
 import { toDate } from '../utils/toDate';
+import { TitleSection } from '../components/TitleSection';
 
 const Index = () => {
   const { data, refetch } = useUserProjectsQuery();
@@ -36,17 +37,11 @@ const Index = () => {
         mx={'auto'}
         direction={'column'}
       >
-        <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
-          <Heading>Home</Heading>
-          <Button
-            textColor={'white'}
-            bgColor='blue.500'
-            _hover={{ bgColor: 'blue.400' }}
-            onClick={onOpen}
-          >
-            Create project
-          </Button>
-        </Flex>
+        <TitleSection
+          title={'Home'}
+          buttonText={'Create project'}
+          onOpen={onOpen}
+        />
         <Divider mt={4} orientation='horizontal' />
         {data?.userProjects?.length ? (
           <Flex

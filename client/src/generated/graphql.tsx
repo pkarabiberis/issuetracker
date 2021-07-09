@@ -35,7 +35,6 @@ export type Issue = {
 
 export type IssueInput = {
   title: Scalars['String'];
-  status: Scalars['String'];
   due: Scalars['String'];
   projectId: Scalars['Float'];
 };
@@ -67,7 +66,7 @@ export type MutationCreateProjectArgs = {
 
 
 export type MutationCreateIssueArgs = {
-  assignedUsers: Array<Scalars['Float']>;
+  assignedUsers: Array<Scalars['Int']>;
   input: IssueInput;
 };
 
@@ -135,6 +134,24 @@ export type UserResponse = {
   user?: Maybe<User>;
   errors?: Maybe<Array<InputError>>;
 };
+
+export type CreateIssueMutationVariables = Exact<{
+  input: IssueInput;
+  assignedUsers: Array<Scalars['Int']> | Scalars['Int'];
+}>;
+
+
+export type CreateIssueMutation = (
+  { __typename?: 'Mutation' }
+  & { createIssue: (
+    { __typename?: 'Issue' }
+    & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt'>
+    & { assignedUsers?: Maybe<Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+    )>> }
+  ) }
+);
 
 export type CreateProjectMutationVariables = Exact<{
   name: Scalars['String'];
@@ -284,6 +301,53 @@ export type UsersQuery = (
 );
 
 
+export const CreateIssueDocument = gql`
+    mutation CreateIssue($input: IssueInput!, $assignedUsers: [Int!]!) {
+  createIssue(input: $input, assignedUsers: $assignedUsers) {
+    id
+    title
+    creatorId
+    due
+    status
+    createdAt
+    updatedAt
+    assignedUsers {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type CreateIssueMutationFn = Apollo.MutationFunction<CreateIssueMutation, CreateIssueMutationVariables>;
+
+/**
+ * __useCreateIssueMutation__
+ *
+ * To run a mutation, you first call `useCreateIssueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateIssueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createIssueMutation, { data, loading, error }] = useCreateIssueMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      assignedUsers: // value for 'assignedUsers'
+ *   },
+ * });
+ */
+export function useCreateIssueMutation(baseOptions?: Apollo.MutationHookOptions<CreateIssueMutation, CreateIssueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateIssueMutation, CreateIssueMutationVariables>(CreateIssueDocument, options);
+      }
+export type CreateIssueMutationHookResult = ReturnType<typeof useCreateIssueMutation>;
+export type CreateIssueMutationResult = Apollo.MutationResult<CreateIssueMutation>;
+export type CreateIssueMutationOptions = Apollo.BaseMutationOptions<CreateIssueMutation, CreateIssueMutationVariables>;
 export const CreateProjectDocument = gql`
     mutation CreateProject($name: String!) {
   createProject(name: $name) {

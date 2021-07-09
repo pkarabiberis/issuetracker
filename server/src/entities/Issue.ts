@@ -29,9 +29,9 @@ export class Issue extends BaseEntity {
   @Column()
   creatorId: number;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   @Column({ nullable: true })
-  due: Date;
+  due: string;
 
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })

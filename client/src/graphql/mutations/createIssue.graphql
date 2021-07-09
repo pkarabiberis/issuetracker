@@ -1,0 +1,18 @@
+mutation CreateIssue($input: IssueInput!, $assignedUsers: [Int!]!) {
+  createIssue(input: $input, assignedUsers: $assignedUsers) {
+    id
+    title
+    creatorId
+    due
+    status
+    createdAt
+    updatedAt
+    assignedUsers {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+  }
+}

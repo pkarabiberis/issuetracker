@@ -1,23 +1,14 @@
+import { Divider, Flex, Icon, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import { withApollo } from '../../utils/withApollo';
-import { NavBar } from '../../components/NavBar';
-import {
-  Flex,
-  Heading,
-  Button,
-  Divider,
-  Text,
-  Badge,
-  Icon,
-  Box,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { useProjectQuery } from '../../generated/graphql';
-import { toDate } from '../../utils/toDate';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { EditIssueDialog } from '../../components/EditIssueDialog';
-import { getBadgeColor } from '../../utils/getBadgeColor';
+import { NavBar } from '../../components/NavBar';
+import { ProjectIssues } from '../../components/ProjectIssues';
+import { ProjectIssueTitles } from '../../components/ProjectIssueTitles';
+import { TitleSection } from '../../components/TitleSection';
+import { useProjectQuery } from '../../generated/graphql';
+import { withApollo } from '../../utils/withApollo';
 
 interface ProjectProps {}
 
@@ -84,7 +75,6 @@ const Project: React.FC<ProjectProps> = ({}) => {
   return (
     <>
       <NavBar />
-
       <Flex
         mt={10}
         maxW={'1200px'}
@@ -92,65 +82,16 @@ const Project: React.FC<ProjectProps> = ({}) => {
         mx={'auto'}
         direction={'column'}
       >
-        <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
-          <Heading>{data.project.project.name}</Heading>
-          <Button
-            textColor={'white'}
-            bgColor='blue.500'
-            _hover={{ bgColor: 'blue.400' }}
-          >
-            Create issue
-          </Button>
-        </Flex>
+        <TitleSection
+          title={data.project.project.name}
+          buttonText={'Create issue'}
+          onOpen={onOpen}
+          isOpen={isOpen}
+          onClose={onClose}
+          projectId={data.project.project.id}
+        />
         <Divider mt={4} orientation='horizontal' />
-        <Flex p={2} mt={4} bgColor={'gray.50'} alignItems={'center'} w={'100%'}>
-          <Text
-            flexGrow={1}
-            flexBasis={0}
-            textColor={'gray.500'}
-            fontWeight={'bold'}
-            textAlign={'center'}
-          >
-            Issue
-          </Text>
-          <Text
-            flexGrow={1}
-            flexBasis={0}
-            textColor={'gray.500'}
-            fontWeight={'bold'}
-            textAlign={'center'}
-          >
-            Status
-          </Text>
-          <Text
-            flexGrow={1}
-            flexBasis={0}
-            textColor={'gray.500'}
-            fontWeight={'bold'}
-            textAlign={'center'}
-          >
-            Created
-          </Text>
-          <Text
-            flexGrow={1}
-            flexBasis={0}
-            textColor={'gray.500'}
-            fontWeight={'bold'}
-            textAlign={'center'}
-          >
-            Due
-          </Text>
-          <Text
-            flexGrow={1}
-            flexBasis={0}
-            textColor={'gray.500'}
-            fontWeight={'bold'}
-            textAlign={'center'}
-          >
-            Assigned
-          </Text>
-          <Box flexGrow={0.1} flexBasis={0}></Box>
-        </Flex>
+        <ProjectIssueTitles />
         {data?.project.issues.length &&
           data.project.issues.map((issue) => {
             return (
@@ -162,49 +103,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
                 alignItems={'center'}
                 w={'100%'}
               >
-                <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-                  {issue.title}
-                </Text>
-
-                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                  <Badge colorScheme={getBadgeColor(issue.status)}>
-                    {issue.status}
-                  </Badge>
-                </Text>
-
-                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                  {toDate(issue.createdAt)}
-                </Text>
-
-                <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                  {toDate(issue.due)}
-                </Text>
-
-                <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-                  {issue.assignedUsers?.length &&
-                  issue.assignedUsers?.length === 1
-                    ? issue.assignedUsers[0].username
-                    : `${issue?.assignedUsers?.[0].username} and ${
-                        issue?.assignedUsers!.length - 1
-                      } other`}
-                </Text>
-
-                <Icon
-                  as={BsThreeDotsVertical}
-                  w={5}
-                  h={5}
-                  flexGrow={0.1}
-                  flexBasis={0}
-                  onClick={onOpen}
-                />
-
-                {isOpen && (
-                  <EditIssueDialog
-                    issue={issue}
-                    isOpen={isOpen}
-                    onClose={onClose}
-                  />
-                )}
+                <ProjectIssues issue={issue} />
               </Flex>
             );
           })}

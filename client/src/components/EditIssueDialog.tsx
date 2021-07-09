@@ -14,18 +14,13 @@ import {
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
-import {
-  Issue,
-  ProjectDocument,
-  ProjectQuery,
-  useUpdateIssueMutation,
-} from '../generated/graphql';
+import { Issue, useUpdateIssueMutation } from '../generated/graphql';
 import { InputField } from './InputField';
 
 interface EditIssueDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  issue: any;
+  issue: Issue;
 }
 
 export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
@@ -33,11 +28,11 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   onClose,
   issue,
 }) => {
-  const realIssue = issue as Issue;
-  const [status, setStatus] = useState(realIssue.status);
+  const [status, setStatus] = useState(issue.status);
   const [updateIssue, { loading, error }] = useUpdateIssueMutation();
   const assignedUsers: number[] = [];
-  realIssue?.assignedUsers?.forEach((u) => assignedUsers.push(u.id));
+  issue?.assignedUsers?.forEach((u) => assignedUsers.push(u.id));
+  console.log('editissueDialog call');
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -48,13 +43,13 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
           <ModalBody>
             <Formik
               initialValues={{
-                title: realIssue.title,
+                title: issue.title,
               }}
               onSubmit={async (title, { setErrors }) => {
                 const res = await updateIssue({
                   variables: {
-                    id: realIssue.id,
-                    title: title.title,
+                    id: issue.id,
+                    title: issue.title,
                     status,
                     assignedUsers,
                   },
@@ -116,7 +111,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                           Assigned to
                         </Text>
                         <Flex mt={2}>
-                          {realIssue.assignedUsers?.map((u, i) => (
+                          {issue.assignedUsers?.map((u, i) => (
                             <Badge p={2} mx={i !== 0 ? '4' : '0'} key={u.id}>
                               {u.username}
                             </Badge>
