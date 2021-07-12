@@ -1,0 +1,21 @@
+query Issue($id: Int!) {
+  issue(id: $id) {
+    issue {
+      id
+      title
+      creatorId
+      due
+      projectId
+      status
+      createdAt
+      updatedAt
+      assignedUsers {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

@@ -25,7 +25,7 @@ export type Issue = {
   id: Scalars['Int'];
   title: Scalars['String'];
   creatorId: Scalars['Int'];
-  due: Scalars['String'];
+  due?: Maybe<Scalars['String']>;
   projectId?: Maybe<Scalars['Int']>;
   status: Scalars['String'];
   assignedUsers?: Maybe<Array<User>>;
@@ -35,8 +35,13 @@ export type Issue = {
 
 export type IssueInput = {
   title: Scalars['String'];
-  due: Scalars['String'];
+  due?: Maybe<Scalars['String']>;
   projectId: Scalars['Float'];
+};
+
+export type IssueResponse = {
+  __typename?: 'IssueResponse';
+  issue?: Maybe<Issue>;
 };
 
 export type Mutation = {
@@ -73,6 +78,7 @@ export type MutationCreateIssueArgs = {
 
 export type MutationUpdateissueArgs = {
   assignedUsers: Array<Scalars['Int']>;
+  due?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   title: Scalars['String'];
   id: Scalars['Int'];
@@ -101,10 +107,16 @@ export type Query = {
   currentUser?: Maybe<User>;
   userProjects?: Maybe<Array<Project>>;
   project?: Maybe<ProjectResponse>;
+  issue: IssueResponse;
 };
 
 
 export type QueryProjectArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryIssueArgs = {
   id: Scalars['Int'];
 };
 
@@ -220,6 +232,7 @@ export type UpdateIssueMutationVariables = Exact<{
   id: Scalars['Int'];
   title: Scalars['String'];
   status: Scalars['String'];
+  due?: Maybe<Scalars['String']>;
   assignedUsers: Array<Scalars['Int']> | Scalars['Int'];
 }>;
 
@@ -228,7 +241,7 @@ export type UpdateIssueMutation = (
   { __typename?: 'Mutation' }
   & { updateissue: (
     { __typename?: 'Issue' }
-    & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt'>
+    & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt' | 'projectId'>
     & { assignedUsers?: Maybe<Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
@@ -245,6 +258,26 @@ export type CurrentUserQuery = (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
   )> }
+);
+
+export type IssueQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type IssueQuery = (
+  { __typename?: 'Query' }
+  & { issue: (
+    { __typename?: 'IssueResponse' }
+    & { issue?: Maybe<(
+      { __typename?: 'Issue' }
+      & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'projectId' | 'status' | 'createdAt' | 'updatedAt'>
+      & { assignedUsers?: Maybe<Array<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+      )>> }
+    )> }
+  ) }
 );
 
 export type ProjectQueryVariables = Exact<{
@@ -265,10 +298,10 @@ export type ProjectQuery = (
       )>> }
     ), issues: Array<(
       { __typename?: 'Issue' }
-      & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt'>
+      & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt' | 'projectId'>
       & { assignedUsers?: Maybe<Array<(
         { __typename?: 'User' }
-        & Pick<User, 'id' | 'username'>
+        & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
       )>> }
     )> }
   )> }
@@ -509,11 +542,12 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateIssueDocument = gql`
-    mutation UpdateIssue($id: Int!, $title: String!, $status: String!, $assignedUsers: [Int!]!) {
+    mutation UpdateIssue($id: Int!, $title: String!, $status: String!, $due: String, $assignedUsers: [Int!]!) {
   updateissue(
     id: $id
     title: $title
     status: $status
+    due: $due
     assignedUsers: $assignedUsers
   ) {
     id
@@ -523,6 +557,7 @@ export const UpdateIssueDocument = gql`
     status
     createdAt
     updatedAt
+    projectId
     assignedUsers {
       id
       username
@@ -551,6 +586,7 @@ export type UpdateIssueMutationFn = Apollo.MutationFunction<UpdateIssueMutation,
  *      id: // value for 'id'
  *      title: // value for 'title'
  *      status: // value for 'status'
+ *      due: // value for 'due'
  *      assignedUsers: // value for 'assignedUsers'
  *   },
  * });
@@ -600,6 +636,57 @@ export function useCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type CurrentUserQueryHookResult = ReturnType<typeof useCurrentUserQuery>;
 export type CurrentUserLazyQueryHookResult = ReturnType<typeof useCurrentUserLazyQuery>;
 export type CurrentUserQueryResult = Apollo.QueryResult<CurrentUserQuery, CurrentUserQueryVariables>;
+export const IssueDocument = gql`
+    query Issue($id: Int!) {
+  issue(id: $id) {
+    issue {
+      id
+      title
+      creatorId
+      due
+      projectId
+      status
+      createdAt
+      updatedAt
+      assignedUsers {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useIssueQuery__
+ *
+ * To run a query within a React component, call `useIssueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIssueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIssueQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useIssueQuery(baseOptions: Apollo.QueryHookOptions<IssueQuery, IssueQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IssueQuery, IssueQueryVariables>(IssueDocument, options);
+      }
+export function useIssueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IssueQuery, IssueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IssueQuery, IssueQueryVariables>(IssueDocument, options);
+        }
+export type IssueQueryHookResult = ReturnType<typeof useIssueQuery>;
+export type IssueLazyQueryHookResult = ReturnType<typeof useIssueLazyQuery>;
+export type IssueQueryResult = Apollo.QueryResult<IssueQuery, IssueQueryVariables>;
 export const ProjectDocument = gql`
     query Project($id: Int!) {
   project(id: $id) {
@@ -625,9 +712,13 @@ export const ProjectDocument = gql`
       status
       createdAt
       updatedAt
+      projectId
       assignedUsers {
         id
         username
+        email
+        createdAt
+        updatedAt
       }
     }
   }

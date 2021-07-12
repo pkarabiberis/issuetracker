@@ -22,7 +22,7 @@ export class Issue extends BaseEntity {
   id: number;
 
   @Field(() => String)
-  @Column({ unique: true })
+  @Column()
   title!: string;
 
   @Field(() => Int)
@@ -46,7 +46,9 @@ export class Issue extends BaseEntity {
   @JoinTable()
   assignedUsers: User[];
 
-  @ManyToOne(() => Project, (project) => project.issues)
+  @ManyToOne(() => Project, (project) => project.issues, {
+    onDelete: 'CASCADE',
+  })
   project: Project;
 
   @Field(() => String)

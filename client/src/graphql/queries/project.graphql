@@ -23,9 +23,13 @@ query Project($id: Int!) {
       status
       createdAt
       updatedAt
+      projectId
       assignedUsers {
         id
         username
+        email
+        createdAt
+        updatedAt
       }
     }
   }

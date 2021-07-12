@@ -1,8 +1,13 @@
+import { CloseIcon } from '@chakra-ui/icons';
 import {
   Badge,
   Box,
   Button,
   Flex,
+  Icon,
+  IconButton,
+  List,
+  ListItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,8 +18,19 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
-import React, { useState } from 'react';
-import { Issue, useUpdateIssueMutation } from '../generated/graphql';
+import React, { useEffect, useState } from 'react';
+import { AiOutlineUserAdd } from 'react-icons/ai';
+import {
+  Issue,
+  IssueDocument,
+  IssueQuery,
+  ProjectDocument,
+  ProjectQuery,
+  User,
+  useUpdateIssueMutation,
+  useUsersQuery,
+} from '../generated/graphql';
+import { toDate } from '../utils/toDate';
 import { InputField } from './InputField';
 
 interface EditIssueDialogProps {
@@ -29,10 +45,31 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   issue,
 }) => {
   const [status, setStatus] = useState(issue.status);
+  const [showUserList, setShowUserList] = useState(false);
   const [updateIssue, { loading, error }] = useUpdateIssueMutation();
-  const assignedUsers: number[] = [];
+  const { data } = useUsersQuery();
+  let assignedUsers: number[] = [];
+  const usersToShow: number[] = [];
   issue?.assignedUsers?.forEach((u) => assignedUsers.push(u.id));
-  console.log('editissueDialog call');
+  data?.users?.forEach((user) => {
+    if (!assignedUsers.includes(user.id)) {
+      usersToShow.push(user.id);
+    }
+  });
+
+  const open = () => {
+    if (usersToShow.length) {
+      setShowUserList(!showUserList);
+    }
+  };
+  const close = () => setShowUserList(false);
+
+  useEffect(() => {
+    if (!usersToShow.length) {
+      setShowUserList(false);
+    }
+  }, [usersToShow]);
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -44,18 +81,21 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
             <Formik
               initialValues={{
                 title: issue.title,
+                due: '',
               }}
-              onSubmit={async (title, { setErrors }) => {
-                const res = await updateIssue({
+              onSubmit={async (values, { setErrors }) => {
+                await updateIssue({
                   variables: {
                     id: issue.id,
-                    title: issue.title,
+                    title: values.title,
+                    due: values.due
+                      ? new Date(values.due).getTime().toString()
+                      : null,
                     status,
                     assignedUsers,
                   },
                 });
 
-                console.log(res);
                 onClose();
               }}
             >
@@ -72,6 +112,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                           <Badge
                             onClick={() => setStatus('Ongoing')}
                             p={2}
+                            ml={2}
                             colorScheme='purple'
                             _hover={{ cursor: 'pointer' }}
                             variant={
@@ -107,16 +148,101 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                         </Flex>
                       </Box>
                       <Box mt={4}>
-                        <Text fontSize={'md'} fontWeight={'medium'}>
-                          Assigned to
-                        </Text>
-                        <Flex mt={2}>
-                          {issue.assignedUsers?.map((u, i) => (
-                            <Badge p={2} mx={i !== 0 ? '4' : '0'} key={u.id}>
-                              {u.username}
+                        <InputField name='due' type='date' label='Due' />
+                      </Box>
+                      <Box mt={4}>
+                        <Flex justifyContent={'space-between'}>
+                          <Text fontSize={'md'} fontWeight={'medium'}>
+                            Assigned to
+                          </Text>
+                          <Icon
+                            _hover={{ color: 'gray.500', cursor: 'pointer' }}
+                            w={6}
+                            h={6}
+                            as={AiOutlineUserAdd}
+                            onClick={open}
+                          />
+                        </Flex>
+                        <Flex mt={2} align={'center'} wrap={'wrap'}>
+                          {issue.assignedUsers?.map((u) => (
+                            <Badge
+                              colorScheme={'pink'}
+                              variant={'solid'}
+                              color={'white'}
+                              px={2}
+                              py={1}
+                              ml={2}
+                              mb={2}
+                              key={u.id}
+                            >
+                              <Flex align={'center'}>
+                                <Text>{u.username}</Text>
+                                <IconButton
+                                  aria-label='Delete assigned user'
+                                  colorScheme={'pink'}
+                                  icon={<CloseIcon />}
+                                  size={'xs'}
+                                  ml={2}
+                                  onClick={() => {
+                                    const usersAfterDeletion =
+                                      assignedUsers.filter((au) => au !== u.id);
+
+                                    updateIssue({
+                                      variables: {
+                                        id: issue.id,
+                                        title: issue.title,
+                                        status,
+                                        assignedUsers: usersAfterDeletion,
+                                      },
+                                      update: (cache, { data }) => {
+                                        console.log(cache);
+                                      },
+                                    });
+                                  }}
+                                />
+                              </Flex>
                             </Badge>
                           ))}
                         </Flex>
+                        {showUserList && data?.users.length ? (
+                          <Box maxH={'200px'} overflowY={'auto'} mt={4}>
+                            <List spacing={3}>
+                              {data.users.map((u) => {
+                                if (usersToShow.includes(u.id)) {
+                                  return (
+                                    <ListItem key={u.id}>
+                                      <Badge
+                                        _hover={{
+                                          color: 'gray.500',
+                                          cursor: 'pointer',
+                                        }}
+                                        colorScheme={'whiteAlpha'}
+                                        variant={'solid'}
+                                        color={'black'}
+                                        p={1}
+                                        onClick={() => {
+                                          assignedUsers.push(u.id);
+                                          updateIssue({
+                                            variables: {
+                                              id: issue.id,
+                                              title: issue.title,
+                                              status,
+                                              assignedUsers,
+                                            },
+                                          });
+                                        }}
+                                      >
+                                        {u.username}
+                                      </Badge>
+                                    </ListItem>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              })}
+                            </List>
+                          </Box>
+                        ) : null}
                       </Box>
                       <ModalFooter>
                         <Button

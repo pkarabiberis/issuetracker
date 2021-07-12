@@ -12,7 +12,17 @@ const createClient = (ctx: NextPageContext) =>
           ? ctx?.req?.headers.cookie
           : undefined) || '',
     },
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Issue: {
+          fields: {
+            assignedUsers: {
+              merge: false,
+            },
+          },
+        },
+      },
+    }),
   });
 
 export const withApollo = createWithApollo(createClient);

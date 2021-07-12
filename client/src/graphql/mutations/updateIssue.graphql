@@ -2,12 +2,14 @@ mutation UpdateIssue(
   $id: Int!
   $title: String!
   $status: String!
+  $due: String
   $assignedUsers: [Int!]!
 ) {
   updateissue(
     id: $id
     title: $title
     status: $status
+    due: $due
     assignedUsers: $assignedUsers
   ) {
     id
@@ -17,6 +19,7 @@ mutation UpdateIssue(
     status
     createdAt
     updatedAt
+    projectId
     assignedUsers {
       id
       username

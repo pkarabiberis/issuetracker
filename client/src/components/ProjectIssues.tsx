@@ -30,16 +30,19 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
       </Text>
 
       <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-        {toDate(realIssue.due)}
+        {realIssue.due ? toDate(realIssue.due) : '-'}
       </Text>
 
       <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-        {realIssue.assignedUsers?.length &&
-        realIssue.assignedUsers?.length === 1
-          ? realIssue.assignedUsers[0].username
-          : `${realIssue?.assignedUsers?.[0].username} and ${
-              realIssue?.assignedUsers!.length - 1
-            } other`}
+        {/* clean up later 
+         formats text based on assigned users */}
+        {realIssue?.assignedUsers && realIssue?.assignedUsers?.length >= 1
+          ? realIssue.assignedUsers?.length === 1
+            ? realIssue.assignedUsers[0].username
+            : `${realIssue?.assignedUsers?.[0].username} and ${
+                realIssue?.assignedUsers!.length - 1
+              } other`
+          : '-'}
       </Text>
 
       <Icon

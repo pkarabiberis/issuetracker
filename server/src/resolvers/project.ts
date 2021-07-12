@@ -38,6 +38,12 @@ class ProjectResponse {
   issues?: Issue[];
 }
 
+@ObjectType()
+class IssueResponse {
+  @Field(() => Issue, { nullable: true })
+  issue?: Issue;
+}
+
 @Resolver(Project)
 export class ProjectResolver {
   @Mutation(() => Project)
@@ -107,6 +113,7 @@ export class ProjectResolver {
     @Arg('id', () => Int) id: number,
     @Arg('title', () => String) title: string,
     @Arg('status', () => String) status: string,
+    @Arg('due', () => String, { nullable: true }) due: string,
     @Arg('assignedUsers', () => [Int]) assignedUsers: number[]
   ): Promise<Issue> {
     const usersToAssign = await User.findByIds(assignedUsers);
@@ -115,7 +122,16 @@ export class ProjectResolver {
       ...issue,
       title,
       status,
+      due,
       assignedUsers: usersToAssign,
     });
+  }
+
+  @Query(() => IssueResponse)
+  async issue(@Arg('id', () => Int) id: number): Promise<IssueResponse> {
+    const issue = await Issue.findOne(id, { relations: ['assignedUsers'] });
+    return {
+      issue,
+    };
   }
 }
