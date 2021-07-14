@@ -22,15 +22,9 @@ import React, { useEffect, useState } from 'react';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import {
   Issue,
-  IssueDocument,
-  IssueQuery,
-  ProjectDocument,
-  ProjectQuery,
-  User,
   useUpdateIssueMutation,
   useUsersQuery,
 } from '../generated/graphql';
-import { toDate } from '../utils/toDate';
 import { InputField } from './InputField';
 
 interface EditIssueDialogProps {
@@ -50,6 +44,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   const { data } = useUsersQuery();
   let assignedUsers: number[] = [];
   const usersToShow: number[] = [];
+
   issue?.assignedUsers?.forEach((u) => assignedUsers.push(u.id));
   data?.users?.forEach((user) => {
     if (!assignedUsers.includes(user.id)) {
