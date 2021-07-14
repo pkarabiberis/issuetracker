@@ -57,6 +57,15 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
     }
   });
 
+  const issueDue = new Date(Number(issue.due!));
+
+  //insert zero to initial value if needed
+  //for input type="date"
+  const initialMonth =
+    issueDue.getMonth() + 1 < 10
+      ? `0${(issueDue.getMonth() + 1).toString()}`
+      : `${(issueDue.getMonth() + 1).toString()}`;
+
   const open = () => {
     if (usersToShow.length) {
       setShowUserList(!showUserList);
@@ -81,7 +90,11 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
             <Formik
               initialValues={{
                 title: issue.title,
-                due: '',
+                due: `${issueDue
+                  .getFullYear()
+                  .toString()}-${initialMonth}-${issueDue
+                  .getDate()
+                  .toString()}`,
               }}
               onSubmit={async (values, { setErrors }) => {
                 await updateIssue({

@@ -15,6 +15,7 @@ import { Project } from './entities/Project';
 import { ProjectResolver } from './resolvers/project';
 import { Issue } from './entities/Issue';
 
+//rerun
 const main = async () => {
   const conn = await createConnection({
     type: 'postgres',
@@ -30,6 +31,7 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
   const redis = new Redis();
+
   app.use(
     cors({
       origin: 'http://localhost:3000',

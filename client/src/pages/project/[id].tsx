@@ -1,8 +1,6 @@
-import { Divider, Flex, Icon, useDisclosure } from '@chakra-ui/react';
+import { Divider, Flex, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { EditIssueDialog } from '../../components/EditIssueDialog';
 import { NavBar } from '../../components/NavBar';
 import { ProjectIssues } from '../../components/ProjectIssues';
 import { ProjectIssueTitles } from '../../components/ProjectIssueTitles';
@@ -14,13 +12,20 @@ interface ProjectProps {}
 
 const Project: React.FC<ProjectProps> = ({}) => {
   const { query } = useRouter();
-  const { data, loading, error } = useProjectQuery({
+  const { data, loading, error, refetch } = useProjectQuery({
     variables: {
       id: typeof query.id !== 'undefined' ? parseInt(query.id as string) : -1,
     },
   });
-
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleSort = (sortBy: string, sortDir: string) => {
+    refetch({
+      id: data?.project?.project.id,
+      sortBy,
+      sortDir,
+    });
+  };
 
   if (loading) {
     return (
@@ -91,7 +96,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
           projectId={data.project.project.id}
         />
         <Divider mt={4} orientation='horizontal' />
-        <ProjectIssueTitles />
+        <ProjectIssueTitles handleSort={handleSort} />
         {data?.project.issues.length &&
           data.project.issues.map((issue) => {
             return (

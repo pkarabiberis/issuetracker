@@ -112,6 +112,8 @@ export type Query = {
 
 
 export type QueryProjectArgs = {
+  sortDir?: Maybe<Scalars['String']>;
+  sortBy?: Maybe<Scalars['String']>;
   id: Scalars['Int'];
 };
 
@@ -282,6 +284,8 @@ export type IssueQuery = (
 
 export type ProjectQueryVariables = Exact<{
   id: Scalars['Int'];
+  sortBy?: Maybe<Scalars['String']>;
+  sortDir?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -688,8 +692,8 @@ export type IssueQueryHookResult = ReturnType<typeof useIssueQuery>;
 export type IssueLazyQueryHookResult = ReturnType<typeof useIssueLazyQuery>;
 export type IssueQueryResult = Apollo.QueryResult<IssueQuery, IssueQueryVariables>;
 export const ProjectDocument = gql`
-    query Project($id: Int!) {
-  project(id: $id) {
+    query Project($id: Int!, $sortBy: String, $sortDir: String) {
+  project(id: $id, sortBy: $sortBy, sortDir: $sortDir) {
     project {
       id
       name
@@ -738,6 +742,8 @@ export const ProjectDocument = gql`
  * const { data, loading, error } = useProjectQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      sortBy: // value for 'sortBy'
+ *      sortDir: // value for 'sortDir'
  *   },
  * });
  */

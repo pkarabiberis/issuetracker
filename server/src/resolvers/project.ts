@@ -69,16 +69,28 @@ export class ProjectResolver {
   @Query(() => ProjectResponse, { nullable: true })
   @UseMiddleware(isAuthenticated)
   async project(
-    @Arg('id', () => Int) id: number
+    @Arg('id', () => Int) id: number,
+    @Arg('sortBy', () => String, { nullable: true }) sortBy: string,
+    @Arg('sortDir', () => String, { nullable: true }) sortDir: string
   ): Promise<ProjectResponse | null> {
+    const sortDirection = sortDir === 'ASC' ? 'ASC' : 'DESC';
     const projectIssues = await Issue.find({
       where: {
         projectId: id,
       },
       relations: ['assignedUsers'],
-      order: {
-        createdAt: 'DESC',
-      },
+      order:
+        sortBy === 'status'
+          ? {
+              status: sortDirection,
+            }
+          : sortBy === 'due'
+          ? {
+              due: sortDirection,
+            }
+          : {
+              createdAt: sortDirection,
+            },
     });
 
     const project = await Project.findOne(id, { relations: ['users'] });
