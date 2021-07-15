@@ -28,6 +28,7 @@ import {
   useUpdateIssueMutation,
   useUsersQuery,
 } from '../generated/graphql';
+import { scrollbarStyle } from '../utils/scrollbarStyle';
 import { InputField } from './InputField';
 
 interface EditIssueDialogProps {
@@ -232,7 +233,12 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                         </Flex>
                         <Collapse in={showUserList} animateOpacity>
                           {data?.users && data?.users?.length >= 1 ? (
-                            <Box maxH={'200px'} overflowY={'auto'} mt={4}>
+                            <Box
+                              sx={scrollbarStyle()}
+                              maxH={'200px'}
+                              overflowY={'auto'}
+                              mt={4}
+                            >
                               <List spacing={3}>
                                 {data?.users?.map((u) => {
                                   if (usersToShow.includes(u.id)) {

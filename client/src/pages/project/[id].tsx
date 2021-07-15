@@ -6,6 +6,7 @@ import { ProjectIssues } from '../../components/ProjectIssues';
 import { ProjectIssueTitles } from '../../components/ProjectIssueTitles';
 import { TitleSection } from '../../components/TitleSection';
 import { useProjectQuery } from '../../generated/graphql';
+import { scrollbarStyle } from '../../utils/scrollbarStyle';
 import { withApollo } from '../../utils/withApollo';
 
 interface ProjectProps {}
@@ -18,7 +19,6 @@ const Project: React.FC<ProjectProps> = ({}) => {
     },
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log('VARIABLES: ', variables);
   console.log(data);
   const handleSort = (sortBy: string, sortDir: string) => {
     refetch({
@@ -99,7 +99,8 @@ const Project: React.FC<ProjectProps> = ({}) => {
         />
         <Divider mt={4} orientation='horizontal' />
         <ProjectIssueTitles handleSort={handleSort} />
-        {data?.project.issues.length &&
+        {data?.project &&
+          data.project.issues.length >= 1 &&
           data.project.issues.map((issue) => {
             return (
               <Flex

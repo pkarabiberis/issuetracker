@@ -1,3 +1,4 @@
+import { CloseIcon } from '@chakra-ui/icons';
 import {
   Modal,
   Text,
@@ -10,14 +11,24 @@ import {
   Button,
   Box,
   Flex,
+  Badge,
+  Icon,
+  IconButton,
+  Collapse,
+  List,
+  ListItem,
 } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import React from 'react';
+import { useState } from 'react';
+import { AiOutlineUserDelete, AiOutlineUserAdd } from 'react-icons/ai';
 import {
   useCreateProjectMutation,
   UserProjectsDocument,
   UserProjectsQuery,
+  useUsersQuery,
 } from '../generated/graphql';
+import { scrollbarStyle } from '../utils/scrollbarStyle';
 import { InputField } from './InputField';
 
 interface CreateProjectDialogProps {
@@ -30,6 +41,14 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
   onClose,
 }) => {
   const [createProject, { loading }] = useCreateProjectMutation();
+  const [showUserList, setShowUserList] = useState(false);
+  const { data } = useUsersQuery();
+  const [usersToAssign, setUsersToAssign] = useState<
+    { id: number; username: string }[]
+  >([]);
+  const open = () => {
+    setShowUserList(!showUserList);
+  };
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -69,11 +88,103 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                   <Box w={'400px'}>
                     <Form>
                       <InputField name='projectName' label='Project name' />
-                      <ModalFooter>
+                      <Box mt={4}>
+                        <Flex justifyContent={'space-between'}>
+                          <Text fontSize={'md'} fontWeight={'medium'}>
+                            Users
+                          </Text>
+                          <Icon
+                            _hover={{ color: 'gray.500', cursor: 'pointer' }}
+                            w={6}
+                            h={6}
+                            as={
+                              showUserList
+                                ? AiOutlineUserDelete
+                                : AiOutlineUserAdd
+                            }
+                            onClick={open}
+                          />
+                        </Flex>
+                        <Flex mt={2} align={'center'} wrap={'wrap'}>
+                          {usersToAssign.length >= 1 &&
+                            usersToAssign.map(({ id, username }) => (
+                              <Badge
+                                colorScheme={'pink'}
+                                variant={'solid'}
+                                color={'white'}
+                                px={2}
+                                py={1}
+                                ml={2}
+                                mb={2}
+                                key={id}
+                              >
+                                <Flex align={'center'}>
+                                  <Text>{username}</Text>
+                                  <IconButton
+                                    aria-label='Delete assigned user'
+                                    colorScheme={'pink'}
+                                    icon={<CloseIcon />}
+                                    size={'xs'}
+                                    ml={2}
+                                    onClick={() => {
+                                      const usersAfterDeletion = [
+                                        ...usersToAssign,
+                                      ].filter((u) => u.id !== id);
+                                      setUsersToAssign(usersAfterDeletion);
+                                    }}
+                                  />
+                                </Flex>
+                              </Badge>
+                            ))}
+                        </Flex>
+                      </Box>
+                      <Collapse in={showUserList} animateOpacity>
+                        <Box
+                          sx={scrollbarStyle()}
+                          maxH={'200px'}
+                          overflowY={'auto'}
+                          mt={4}
+                        >
+                          <List spacing={3}>
+                            {data?.users &&
+                              data.users.map((u) => {
+                                const isUserAssigned = usersToAssign.find(
+                                  (e) => e.id === u.id
+                                );
+                                if (!isUserAssigned) {
+                                  return (
+                                    <ListItem key={u.id}>
+                                      <Badge
+                                        _hover={{
+                                          color: 'gray.500',
+                                          cursor: 'pointer',
+                                        }}
+                                        colorScheme={'whiteAlpha'}
+                                        variant={'solid'}
+                                        color={'black'}
+                                        p={1}
+                                        onClick={() => {
+                                          setUsersToAssign([
+                                            { id: u.id, username: u.username },
+                                            ...usersToAssign,
+                                          ]);
+                                        }}
+                                      >
+                                        {u.username}
+                                      </Badge>
+                                    </ListItem>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              })}
+                          </List>
+                        </Box>
+                      </Collapse>
+                      <ModalFooter p={0} mt={5}>
                         <Button
                           isLoading={isSubmitting}
                           colorScheme='blue'
-                          mr={3}
                           type='submit'
                         >
                           Create

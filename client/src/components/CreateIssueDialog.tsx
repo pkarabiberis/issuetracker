@@ -31,6 +31,7 @@ import { InputField } from './InputField';
 import { useState } from 'react';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useEffect } from 'react';
+import { scrollbarStyle } from '../utils/scrollbarStyle';
 
 interface CreateIssueDialogProps {
   projectId: number | undefined;
@@ -161,14 +162,19 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                         </Flex>
                       </Box>
                       <Collapse in={showUserList} animateOpacity>
-                        <Box maxH={'200px'} overflowY={'auto'} mt={4}>
+                        <Box
+                          sx={scrollbarStyle()}
+                          maxH={'200px'}
+                          overflowY={'auto'}
+                          mt={4}
+                        >
                           <List spacing={3}>
                             {userData?.users &&
                               userData.users.map((u) => {
-                                const shouldShowUser = usersToAssign.find(
+                                const isUserAssigned = usersToAssign.find(
                                   (e) => e.id === u.id
                                 );
-                                if (!shouldShowUser) {
+                                if (!isUserAssigned) {
                                   return (
                                     <ListItem key={u.id}>
                                       <Badge
@@ -198,11 +204,10 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                           </List>
                         </Box>
                       </Collapse>
-                      <ModalFooter>
+                      <ModalFooter p={0} mt={5}>
                         <Button
                           isLoading={isSubmitting}
                           colorScheme='blue'
-                          mr={3}
                           type='submit'
                         >
                           Create

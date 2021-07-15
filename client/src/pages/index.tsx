@@ -1,31 +1,17 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Heading,
-  Icon,
-  Spacer,
-  Text,
-  useDisclosure,
-} from '@chakra-ui/react';
-import React from 'react';
-import { useEffect } from 'react';
-import { NavBar } from '../components/NavBar';
-import { useUserProjectsQuery } from '../generated/graphql';
-import { withApollo } from '../utils/withApollo';
-import { GoPrimitiveDot } from 'react-icons/go';
+import { Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import React, { useEffect } from 'react';
+import { GoPrimitiveDot } from 'react-icons/go';
 import { CreateProjectDialog } from '../components/CreateProjectDialog';
-import { toDate } from '../utils/toDate';
+import { NavBar } from '../components/NavBar';
 import { TitleSection } from '../components/TitleSection';
+import { useUserProjectsQuery } from '../generated/graphql';
+import { toDate } from '../utils/toDate';
+import { withApollo } from '../utils/withApollo';
 
 const Index = () => {
-  const { data, refetch } = useUserProjectsQuery();
+  const { data } = useUserProjectsQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  useEffect(() => {
-    refetch();
-  }, []);
   return (
     <>
       <NavBar />
@@ -102,7 +88,7 @@ const Index = () => {
                     <Text ml={2}>{pr.name}</Text>
                   </Flex>
                   <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                    {pr.users?.length && pr.users.length === 1
+                    {pr.users && pr.users?.length >= 1 && pr.users.length === 1
                       ? pr.users[0].username
                       : `${pr.users?.[0].username} and ${
                           pr.users!.length - 1

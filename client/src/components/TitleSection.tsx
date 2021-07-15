@@ -7,10 +7,10 @@ interface TitleSectionProps {
   title: string;
   buttonText: string;
   onOpen: () => void;
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
   projectId?: number;
-  variables: ProjectQueryVariables | undefined;
+  variables?: ProjectQueryVariables | undefined;
 }
 
 export const TitleSection: React.FC<TitleSectionProps> = ({
@@ -36,7 +36,7 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
       {isOpen && (
         <CreateIssueDialog
           isOpen={isOpen}
-          onClose={onClose}
+          onClose={onClose!}
           projectId={projectId || undefined}
           variables={variables}
         />
