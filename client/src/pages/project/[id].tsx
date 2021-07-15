@@ -12,13 +12,14 @@ interface ProjectProps {}
 
 const Project: React.FC<ProjectProps> = ({}) => {
   const { query } = useRouter();
-  const { data, loading, error, refetch } = useProjectQuery({
+  const { data, loading, error, refetch, variables } = useProjectQuery({
     variables: {
       id: typeof query.id !== 'undefined' ? parseInt(query.id as string) : -1,
     },
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  console.log('VARIABLES: ', variables);
+  console.log(data);
   const handleSort = (sortBy: string, sortDir: string) => {
     refetch({
       id: data?.project?.project.id,
@@ -94,6 +95,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
           isOpen={isOpen}
           onClose={onClose}
           projectId={data.project.project.id}
+          variables={typeof variables !== 'undefined' ? variables : undefined}
         />
         <Divider mt={4} orientation='horizontal' />
         <ProjectIssueTitles handleSort={handleSort} />

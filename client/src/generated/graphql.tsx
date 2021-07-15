@@ -52,6 +52,7 @@ export type Mutation = {
   createProject: Project;
   createIssue: Issue;
   updateissue: Issue;
+  deleteIssue: Scalars['Boolean'];
 };
 
 
@@ -81,6 +82,11 @@ export type MutationUpdateissueArgs = {
   due?: Maybe<Scalars['String']>;
   status: Scalars['String'];
   title: Scalars['String'];
+  id: Scalars['Int'];
+};
+
+
+export type MutationDeleteIssueArgs = {
   id: Scalars['Int'];
 };
 
@@ -182,6 +188,16 @@ export type CreateProjectMutation = (
       & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
     )>> }
   ) }
+);
+
+export type DeleteIssueMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type DeleteIssueMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteIssue'>
 );
 
 export type LoginMutationVariables = Exact<{
@@ -429,6 +445,37 @@ export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
 export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
 export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
+export const DeleteIssueDocument = gql`
+    mutation DeleteIssue($id: Int!) {
+  deleteIssue(id: $id)
+}
+    `;
+export type DeleteIssueMutationFn = Apollo.MutationFunction<DeleteIssueMutation, DeleteIssueMutationVariables>;
+
+/**
+ * __useDeleteIssueMutation__
+ *
+ * To run a mutation, you first call `useDeleteIssueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteIssueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteIssueMutation, { data, loading, error }] = useDeleteIssueMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteIssueMutation(baseOptions?: Apollo.MutationHookOptions<DeleteIssueMutation, DeleteIssueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteIssueMutation, DeleteIssueMutationVariables>(DeleteIssueDocument, options);
+      }
+export type DeleteIssueMutationHookResult = ReturnType<typeof useDeleteIssueMutation>;
+export type DeleteIssueMutationResult = Apollo.MutationResult<DeleteIssueMutation>;
+export type DeleteIssueMutationOptions = Apollo.BaseMutationOptions<DeleteIssueMutation, DeleteIssueMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($creds: UserLoginInput!) {
   login(creds: $creds) {

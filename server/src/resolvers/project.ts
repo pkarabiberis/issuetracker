@@ -146,4 +146,11 @@ export class ProjectResolver {
       issue,
     };
   }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async deleteIssue(@Arg('id', () => Int) id: number) {
+    await Issue.delete(id);
+    return true;
+  }
 }

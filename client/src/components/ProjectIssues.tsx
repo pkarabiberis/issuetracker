@@ -15,47 +15,55 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
   const realIssue = issue as Issue;
   return (
     <>
-      <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-        {realIssue.title}
-      </Text>
+      {realIssue !== undefined && (
+        <>
+          <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
+            {realIssue.title}
+          </Text>
 
-      <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-        <Badge colorScheme={getBadgeColor(realIssue.status)}>
-          {realIssue.status}
-        </Badge>
-      </Text>
+          <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+            <Badge colorScheme={getBadgeColor(realIssue.status)}>
+              {realIssue.status}
+            </Badge>
+          </Text>
 
-      <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-        {toDate(realIssue.createdAt)}
-      </Text>
+          <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+            {toDate(realIssue.createdAt)}
+          </Text>
 
-      <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-        {realIssue.due ? toDate(realIssue.due) : '-'}
-      </Text>
+          <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+            {realIssue.due ? toDate(realIssue.due) : '-'}
+          </Text>
 
-      <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-        {/* clean up later 
-         formats text based on assigned users */}
-        {realIssue?.assignedUsers && realIssue?.assignedUsers?.length >= 1
-          ? realIssue.assignedUsers?.length === 1
-            ? realIssue.assignedUsers[0].username
-            : `${realIssue?.assignedUsers?.[0].username} and ${
-                realIssue?.assignedUsers!.length - 1
-              } other`
-          : '-'}
-      </Text>
+          <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
+            {/* clean up later 
+           formats text based on assigned users */}
+            {realIssue?.assignedUsers && realIssue?.assignedUsers?.length >= 1
+              ? realIssue.assignedUsers?.length === 1
+                ? realIssue.assignedUsers[0].username
+                : `${realIssue?.assignedUsers?.[0].username} and ${
+                    realIssue?.assignedUsers!.length - 1
+                  } other`
+              : '-'}
+          </Text>
 
-      <Icon
-        as={BsThreeDotsVertical}
-        w={5}
-        h={5}
-        flexGrow={0.1}
-        flexBasis={0}
-        onClick={onOpen}
-      />
+          <Icon
+            as={BsThreeDotsVertical}
+            w={5}
+            h={5}
+            flexGrow={0.1}
+            flexBasis={0}
+            onClick={onOpen}
+          />
 
-      {isOpen && (
-        <EditIssueDialog issue={realIssue} isOpen={isOpen} onClose={onClose} />
+          {isOpen && (
+            <EditIssueDialog
+              issue={realIssue}
+              isOpen={isOpen}
+              onClose={onClose}
+            />
+          )}
+        </>
       )}
     </>
   );

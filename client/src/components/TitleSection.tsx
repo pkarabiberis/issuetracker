@@ -1,5 +1,6 @@
 import { Flex, Heading, Button } from '@chakra-ui/react';
 import React from 'react';
+import { ProjectQueryVariables } from '../generated/graphql';
 import { CreateIssueDialog } from './CreateIssueDialog';
 
 interface TitleSectionProps {
@@ -9,6 +10,7 @@ interface TitleSectionProps {
   isOpen: boolean;
   onClose: () => void;
   projectId?: number;
+  variables: ProjectQueryVariables | undefined;
 }
 
 export const TitleSection: React.FC<TitleSectionProps> = ({
@@ -18,6 +20,7 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
   isOpen,
   onClose,
   projectId,
+  variables,
 }) => {
   return (
     <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
@@ -35,6 +38,7 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
           isOpen={isOpen}
           onClose={onClose}
           projectId={projectId || undefined}
+          variables={variables}
         />
       )}
     </Flex>

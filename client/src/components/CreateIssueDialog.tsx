@@ -2,6 +2,7 @@ import {
   Badge,
   Box,
   Button,
+  Collapse,
   Flex,
   Icon,
   IconButton,
@@ -17,11 +18,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
-import { AiOutlineUserAdd } from 'react-icons/ai';
+import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import React from 'react';
 import {
   ProjectDocument,
   ProjectQuery,
+  ProjectQueryVariables,
   useCreateIssueMutation,
   useUsersQuery,
 } from '../generated/graphql';
@@ -34,12 +36,14 @@ interface CreateIssueDialogProps {
   projectId: number | undefined;
   isOpen: boolean;
   onClose: () => void;
+  variables: ProjectQueryVariables | undefined;
 }
 
 export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
   projectId,
   isOpen,
   onClose,
+  variables,
 }) => {
   const [createIssue, { data, loading }] = useCreateIssueMutation();
   const [usersToAssign, setUsersToAssign] = useState<
@@ -50,10 +54,6 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
   const open = () => {
     setShowUserList(!showUserList);
   };
-
-  useEffect(() => {
-    console.log('useEffect: ', usersToAssign);
-  }, [usersToAssign]);
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -79,9 +79,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                     const existingProject: ProjectQuery | null =
                       cache.readQuery({
                         query: ProjectDocument,
-                        variables: {
-                          id: projectId,
-                        },
+                        variables: { ...variables },
                       });
                     cache.writeQuery<ProjectQuery>({
                       query: ProjectDocument,
@@ -96,7 +94,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                         },
                       },
                       variables: {
-                        id: projectId!,
+                        ...variables,
                       },
                     });
                   },
@@ -121,7 +119,11 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                             _hover={{ color: 'gray.500', cursor: 'pointer' }}
                             w={6}
                             h={6}
-                            as={AiOutlineUserAdd}
+                            as={
+                              showUserList
+                                ? AiOutlineUserDelete
+                                : AiOutlineUserAdd
+                            }
                             onClick={open}
                           />
                         </Flex>
@@ -158,43 +160,44 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                             ))}
                         </Flex>
                       </Box>
-                      <Box maxH={'200px'} overflowY={'auto'} mt={4}>
-                        <List spacing={3}>
-                          {showUserList &&
-                            userData?.users &&
-                            userData.users.map((u) => {
-                              const shouldShowUser = usersToAssign.find(
-                                (e) => e.id === u.id
-                              );
-                              if (!shouldShowUser) {
-                                return (
-                                  <ListItem key={u.id}>
-                                    <Badge
-                                      _hover={{
-                                        color: 'gray.500',
-                                        cursor: 'pointer',
-                                      }}
-                                      colorScheme={'whiteAlpha'}
-                                      variant={'solid'}
-                                      color={'black'}
-                                      p={1}
-                                      onClick={() => {
-                                        setUsersToAssign([
-                                          { id: u.id, username: u.username },
-                                          ...usersToAssign,
-                                        ]);
-                                      }}
-                                    >
-                                      {u.username}
-                                    </Badge>
-                                  </ListItem>
+                      <Collapse in={showUserList} animateOpacity>
+                        <Box maxH={'200px'} overflowY={'auto'} mt={4}>
+                          <List spacing={3}>
+                            {userData?.users &&
+                              userData.users.map((u) => {
+                                const shouldShowUser = usersToAssign.find(
+                                  (e) => e.id === u.id
                                 );
-                              } else {
-                                return null;
-                              }
-                            })}
-                        </List>
-                      </Box>
+                                if (!shouldShowUser) {
+                                  return (
+                                    <ListItem key={u.id}>
+                                      <Badge
+                                        _hover={{
+                                          color: 'gray.500',
+                                          cursor: 'pointer',
+                                        }}
+                                        colorScheme={'whiteAlpha'}
+                                        variant={'solid'}
+                                        color={'black'}
+                                        p={1}
+                                        onClick={() => {
+                                          setUsersToAssign([
+                                            { id: u.id, username: u.username },
+                                            ...usersToAssign,
+                                          ]);
+                                        }}
+                                      >
+                                        {u.username}
+                                      </Badge>
+                                    </ListItem>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              })}
+                          </List>
+                        </Box>
+                      </Collapse>
                       <ModalFooter>
                         <Button
                           isLoading={isSubmitting}

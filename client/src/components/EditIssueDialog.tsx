@@ -1,8 +1,9 @@
-import { CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Badge,
   Box,
   Button,
+  Collapse,
   Flex,
   Icon,
   IconButton,
@@ -15,13 +16,15 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Slide,
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
-import { AiOutlineUserAdd } from 'react-icons/ai';
+import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import {
   Issue,
+  useDeleteIssueMutation,
   useUpdateIssueMutation,
   useUsersQuery,
 } from '../generated/graphql';
@@ -38,12 +41,20 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   onClose,
   issue,
 }) => {
-  const [status, setStatus] = useState(issue.status);
+  const [status, setStatus] = useState<string>(issue.status);
   const [showUserList, setShowUserList] = useState(false);
   const [updateIssue, { loading, error }] = useUpdateIssueMutation();
   const { data } = useUsersQuery();
+  const [deleteIssue, { loading: deleteLoading }] = useDeleteIssueMutation({
+    onCompleted: () => {
+      isSubscribed = false;
+    },
+  });
+
   let assignedUsers: number[] = [];
   const usersToShow: number[] = [];
+  let isSubscribed = false;
+  let disableUserClick = false;
 
   issue?.assignedUsers?.forEach((u) => assignedUsers.push(u.id));
   data?.users?.forEach((user) => {
@@ -66,13 +77,19 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
       setShowUserList(!showUserList);
     }
   };
-  const close = () => setShowUserList(false);
 
   useEffect(() => {
-    if (!usersToShow.length) {
+    if (!isSubscribed) {
+      return;
+    }
+    if (!usersToShow.length && isSubscribed) {
       setShowUserList(false);
     }
-  }, [usersToShow]);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [usersToShow, isSubscribed]);
 
   return (
     <>
@@ -167,7 +184,11 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                             _hover={{ color: 'gray.500', cursor: 'pointer' }}
                             w={6}
                             h={6}
-                            as={AiOutlineUserAdd}
+                            as={
+                              showUserList
+                                ? AiOutlineUserDelete
+                                : AiOutlineUserAdd
+                            }
                             onClick={open}
                           />
                         </Flex>
@@ -202,9 +223,6 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                                         status,
                                         assignedUsers: usersAfterDeletion,
                                       },
-                                      update: (cache, { data }) => {
-                                        console.log(cache);
-                                      },
                                     });
                                   }}
                                 />
@@ -212,47 +230,82 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                             </Badge>
                           ))}
                         </Flex>
-                        {showUserList && data?.users.length ? (
-                          <Box maxH={'200px'} overflowY={'auto'} mt={4}>
-                            <List spacing={3}>
-                              {data.users.map((u) => {
-                                if (usersToShow.includes(u.id)) {
-                                  return (
-                                    <ListItem key={u.id}>
-                                      <Badge
-                                        _hover={{
-                                          color: 'gray.500',
-                                          cursor: 'pointer',
-                                        }}
-                                        colorScheme={'whiteAlpha'}
-                                        variant={'solid'}
-                                        color={'black'}
-                                        p={1}
-                                        onClick={() => {
-                                          assignedUsers.push(u.id);
-                                          updateIssue({
-                                            variables: {
-                                              id: issue.id,
-                                              title: issue.title,
-                                              status,
-                                              assignedUsers,
-                                            },
-                                          });
-                                        }}
-                                      >
-                                        {u.username}
-                                      </Badge>
-                                    </ListItem>
-                                  );
-                                } else {
-                                  return null;
-                                }
-                              })}
-                            </List>
-                          </Box>
-                        ) : null}
+                        <Collapse in={showUserList} animateOpacity>
+                          {data?.users && data?.users?.length >= 1 ? (
+                            <Box maxH={'200px'} overflowY={'auto'} mt={4}>
+                              <List spacing={3}>
+                                {data?.users?.map((u) => {
+                                  if (usersToShow.includes(u.id)) {
+                                    isSubscribed = true;
+                                    return (
+                                      <ListItem key={u.id}>
+                                        <Badge
+                                          colorScheme={'whiteAlpha'}
+                                          variant={'solid'}
+                                          color={'black'}
+                                          p={1}
+                                        >
+                                          <Flex alignItems={'center'}>
+                                            <Text>{u.username}</Text>
+                                            <IconButton
+                                              ml={2}
+                                              aria-label='Add user'
+                                              size={'xs'}
+                                              disabled={disableUserClick}
+                                              bgColor={'white'}
+                                              icon={<AddIcon />}
+                                              onClick={async () => {
+                                                disableUserClick = true;
+                                                assignedUsers.push(u.id);
+                                                const res = await updateIssue({
+                                                  variables: {
+                                                    id: issue.id,
+                                                    title: issue.title,
+                                                    status,
+                                                    assignedUsers,
+                                                  },
+                                                });
+
+                                                disableUserClick = false;
+                                              }}
+                                            />
+                                          </Flex>
+                                        </Badge>
+                                      </ListItem>
+                                    );
+                                  } else {
+                                    return null;
+                                  }
+                                })}
+                              </List>
+                            </Box>
+                          ) : null}
+                        </Collapse>
                       </Box>
-                      <ModalFooter>
+                      <ModalFooter
+                        justifyContent={'space-between'}
+                        p={0}
+                        mt={5}
+                      >
+                        <Button
+                          isLoading={deleteLoading}
+                          colorScheme='red'
+                          onClick={async () => {
+                            const res = await deleteIssue({
+                              variables: {
+                                id: issue.id,
+                              },
+                              update: (cache) => {
+                                cache.evict({ id: 'Issue:' + issue.id });
+                              },
+                            });
+                            if (!res.errors) {
+                              isSubscribed = false;
+                            }
+                          }}
+                        >
+                          Delete
+                        </Button>
                         <Button
                           isLoading={isSubmitting}
                           colorScheme='blue'
