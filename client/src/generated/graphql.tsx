@@ -67,6 +67,7 @@ export type MutationLoginArgs = {
 
 
 export type MutationCreateProjectArgs = {
+  users?: Maybe<Array<Scalars['Int']>>;
   name: Scalars['String'];
 };
 
@@ -175,6 +176,7 @@ export type CreateIssueMutation = (
 
 export type CreateProjectMutationVariables = Exact<{
   name: Scalars['String'];
+  users?: Maybe<Array<Scalars['Int']> | Scalars['Int']>;
 }>;
 
 
@@ -402,8 +404,8 @@ export type CreateIssueMutationHookResult = ReturnType<typeof useCreateIssueMuta
 export type CreateIssueMutationResult = Apollo.MutationResult<CreateIssueMutation>;
 export type CreateIssueMutationOptions = Apollo.BaseMutationOptions<CreateIssueMutation, CreateIssueMutationVariables>;
 export const CreateProjectDocument = gql`
-    mutation CreateProject($name: String!) {
-  createProject(name: $name) {
+    mutation CreateProject($name: String!, $users: [Int!]) {
+  createProject(name: $name, users: $users) {
     id
     name
     creatorId
@@ -435,6 +437,7 @@ export type CreateProjectMutationFn = Apollo.MutationFunction<CreateProjectMutat
  * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
  *   variables: {
  *      name: // value for 'name'
+ *      users: // value for 'users'
  *   },
  * });
  */

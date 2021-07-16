@@ -12,6 +12,7 @@ import { withApollo } from '../utils/withApollo';
 const Index = () => {
   const { data } = useUserProjectsQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log('PROJECTDATA: ', data);
   return (
     <>
       <NavBar />

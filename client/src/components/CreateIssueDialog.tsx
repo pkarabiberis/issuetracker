@@ -29,7 +29,7 @@ import {
 } from '../generated/graphql';
 import { InputField } from './InputField';
 import { useState } from 'react';
-import { CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { useEffect } from 'react';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
 
@@ -186,14 +186,27 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                                         variant={'solid'}
                                         color={'black'}
                                         p={1}
-                                        onClick={() => {
-                                          setUsersToAssign([
-                                            { id: u.id, username: u.username },
-                                            ...usersToAssign,
-                                          ]);
-                                        }}
+                                        onClick={() => {}}
                                       >
-                                        {u.username}
+                                        <Flex alignItems={'center'}>
+                                          <Text>{u.username}</Text>
+                                          <IconButton
+                                            ml={2}
+                                            aria-label='Add user'
+                                            size={'xs'}
+                                            bgColor={'white'}
+                                            icon={<AddIcon />}
+                                            onClick={() => {
+                                              setUsersToAssign([
+                                                {
+                                                  id: u.id,
+                                                  username: u.username,
+                                                },
+                                                ...usersToAssign,
+                                              ]);
+                                            }}
+                                          />
+                                        </Flex>
                                       </Badge>
                                     </ListItem>
                                   );

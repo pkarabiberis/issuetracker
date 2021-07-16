@@ -60,9 +60,11 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
             <Formik
               initialValues={{ projectName: '' }}
               onSubmit={async (name, { setErrors }) => {
+                const idsToAssign = usersToAssign.map(({ id }) => id);
                 await createProject({
                   variables: {
                     name: name.projectName,
+                    users: idsToAssign,
                   },
                   update: (cache, { data: newProjectData }) => {
                     const existingProjects: UserProjectsQuery | null =

@@ -50,19 +50,15 @@ export class ProjectResolver {
   @UseMiddleware(isAuthenticated)
   async createProject(
     @Arg('name') name: string,
+    @Arg('users', () => [Int], { nullable: true }) users: number[],
     @Ctx() { req }: Context
   ): Promise<Project | null> {
-    const user = await User.findOne(req.session.userId);
-    const userArr: Array<User> = [];
-    if (!user) {
-      return null;
-    }
+    const usersToAdd = await User.findByIds(users);
 
-    userArr.push(user);
     return Project.create({
       creatorId: req.session.userId,
       name,
-      users: userArr,
+      users: usersToAdd.length > 0 ? usersToAdd : undefined,
     }).save();
   }
 

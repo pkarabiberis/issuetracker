@@ -46,15 +46,10 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   const [showUserList, setShowUserList] = useState(false);
   const [updateIssue, { loading, error }] = useUpdateIssueMutation();
   const { data } = useUsersQuery();
-  const [deleteIssue, { loading: deleteLoading }] = useDeleteIssueMutation({
-    onCompleted: () => {
-      isSubscribed = false;
-    },
-  });
+  const [deleteIssue, { loading: deleteLoading }] = useDeleteIssueMutation();
 
   let assignedUsers: number[] = [];
   const usersToShow: number[] = [];
-  let isSubscribed = false;
   let disableUserClick = false;
 
   issue?.assignedUsers?.forEach((u) => assignedUsers.push(u.id));
@@ -80,17 +75,10 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   };
 
   useEffect(() => {
-    if (!isSubscribed) {
-      return;
-    }
-    if (!usersToShow.length && isSubscribed) {
+    if (!usersToShow.length) {
       setShowUserList(false);
     }
-
-    return () => {
-      isSubscribed = false;
-    };
-  }, [usersToShow, isSubscribed]);
+  }, [usersToShow]);
 
   return (
     <>
@@ -242,7 +230,6 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                               <List spacing={3}>
                                 {data?.users?.map((u) => {
                                   if (usersToShow.includes(u.id)) {
-                                    isSubscribed = true;
                                     return (
                                       <ListItem key={u.id}>
                                         <Badge
@@ -305,9 +292,6 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                                 cache.evict({ id: 'Issue:' + issue.id });
                               },
                             });
-                            if (!res.errors) {
-                              isSubscribed = false;
-                            }
                           }}
                         >
                           Delete

@@ -185,35 +185,48 @@ export class UserResolver {
   @Query(() => [Project], { nullable: true })
   async userProjects(@Ctx() { req }: Context): Promise<Project[] | null> {
     const userId = [req.session.userId];
-
-    //rerun
-    const projects = await getConnection().query(
+    const pIdArr: number[] = [];
+    const projectIds: Record<string, number>[] = await getConnection().query(
       `
-
-      SELECT r.*, p.*,
-      json_build_array(
-        json_build_object(
-          'id', u.id,
-          'username', u.username,
-          'email', u.email,
-          'createdAt', u."createdAt",
-          'updatedAt', u."updatedAt"
-        )
-      ) users
+      SELECT r."projectId"
       FROM project_users_user r
-      INNER JOIN project p on p.id = r."projectId"
-      INNER JOIN public.user u on u.id = r."userId"
       WHERE r."userId" = $1
-      ORDER by p."createdAt" DESC
       `,
       userId
     );
 
+    //rerun
+    projectIds.forEach((e) => pIdArr.push(e.projectId));
+    const projects = await Project.findByIds(pIdArr, {
+      relations: ['users'],
+      order: { updatedAt: 'DESC' },
+    });
+
+    // const projects = await getConnection().query(
+    //   `
+    //   SELECT r.*, p.*,
+    //   json_build_array(
+    //     json_build_object(
+    //       'id', u.id,
+    //       'username', u.username,
+    //       'email', u.email,
+    //       'createdAt', u."createdAt",
+    //       'updatedAt', u."updatedAt"
+    //     )
+    //   ) users
+    //   FROM project_users_user r
+    //   INNER JOIN project p on p.id = r."projectId"
+    //   INNER JOIN public.user u on u.id = r."userId"
+    //   WHERE r."projectId" = $1
+    //   ORDER by p."createdAt" DESC
+    //   `
+
+    //   // pIdArr
+    // );
+
     if (!projects) {
       return null;
     }
-    //rerun
-    console.log('PROJECTS: ', projects);
 
     return projects;
   }
