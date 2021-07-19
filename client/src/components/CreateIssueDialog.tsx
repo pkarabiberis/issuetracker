@@ -25,6 +25,7 @@ import {
   ProjectQuery,
   ProjectQueryVariables,
   useCreateIssueMutation,
+  useProjectQuery,
   useUsersQuery,
 } from '../generated/graphql';
 import { InputField } from './InputField';
@@ -46,11 +47,17 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
   onClose,
   variables,
 }) => {
-  const [createIssue, { data, loading }] = useCreateIssueMutation();
+  const [createIssue] = useCreateIssueMutation();
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
   >([]);
-  const { data: userData } = useUsersQuery();
+  const { data: projectUsers } = useProjectQuery({
+    variables: {
+      id: typeof projectId !== 'undefined' ? projectId : -1,
+    },
+    skip: projectId === -1,
+  });
+
   const [showUserList, setShowUserList] = useState(false);
   const open = () => {
     setShowUserList(!showUserList);
@@ -107,9 +114,9 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                 return (
                   <Box w={'400px'}>
                     <Form>
-                      <InputField name='title' label='Issue name' />
+                      <InputField name="title" label="Issue name" />
                       <Box mt={4}>
-                        <InputField name='due' type='date' label='Due' />
+                        <InputField name="due" type="date" label="Due" />
                       </Box>
                       <Box mt={4}>
                         <Flex justifyContent={'space-between'}>
@@ -144,7 +151,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                                 <Flex align={'center'}>
                                   <Text>{username}</Text>
                                   <IconButton
-                                    aria-label='Delete assigned user'
+                                    aria-label="Delete assigned user"
                                     colorScheme={'pink'}
                                     icon={<CloseIcon />}
                                     size={'xs'}
@@ -169,8 +176,8 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                           mt={4}
                         >
                           <List spacing={3}>
-                            {userData?.users &&
-                              userData.users.map((u) => {
+                            {projectUsers?.project?.project.users &&
+                              projectUsers?.project?.project.users.map((u) => {
                                 const isUserAssigned = usersToAssign.find(
                                   (e) => e.id === u.id
                                 );
@@ -178,10 +185,6 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                                   return (
                                     <ListItem key={u.id}>
                                       <Badge
-                                        _hover={{
-                                          color: 'gray.500',
-                                          cursor: 'pointer',
-                                        }}
                                         colorScheme={'whiteAlpha'}
                                         variant={'solid'}
                                         color={'black'}
@@ -192,7 +195,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                                           <Text>{u.username}</Text>
                                           <IconButton
                                             ml={2}
-                                            aria-label='Add user'
+                                            aria-label="Add user"
                                             size={'xs'}
                                             bgColor={'white'}
                                             icon={<AddIcon />}
@@ -220,8 +223,8 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                       <ModalFooter p={0} mt={5}>
                         <Button
                           isLoading={isSubmitting}
-                          colorScheme='blue'
-                          type='submit'
+                          colorScheme="blue"
+                          type="submit"
                         >
                           Create
                         </Button>

@@ -23,7 +23,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   if (!data?.currentUser) {
     navBarButtons = (
       <>
-        <NextLink href='/login'>
+        <NextLink href="/login">
           <Button
             textColor={'white'}
             _hover={{ bgColor: 'blue.300' }}
@@ -33,7 +33,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
             Login
           </Button>
         </NextLink>
-        <NextLink href='/register'>
+        <NextLink href="/register">
           <Button
             textColor={'white'}
             _hover={{ bgColor: 'blue.300' }}
@@ -66,6 +66,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           onClick={async () => {
             await logout();
             await apolloClient.resetStore();
+            router.replace('/login');
           }}
         >
           Logout
@@ -74,7 +75,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     );
   }
   return (
-    <Flex bgColor='white' zIndex={1} shadow={'md'} p={4} alignItems={'center'}>
+    <Flex bgColor="white" zIndex={1} shadow={'md'} p={4} alignItems={'center'}>
       <Flex alignItems={'center'}>
         <Icon
           boxSize={10}

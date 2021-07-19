@@ -11,11 +11,11 @@ interface ProjectIssuesProps {
 }
 
 export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
-  const { onOpen, onClose, isOpen } = useDisclosure();
   const realIssue = issue as Issue;
+  const { onOpen, onClose, isOpen } = useDisclosure();
   return (
     <>
-      {realIssue !== undefined && (
+      {realIssue && (
         <>
           <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
             {realIssue.title}
@@ -36,7 +36,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
           </Text>
 
           <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-            {/* clean up later 
+            {/* clean up later
            formats text based on assigned users */}
             {realIssue?.assignedUsers && realIssue?.assignedUsers?.length >= 1
               ? realIssue.assignedUsers?.length === 1

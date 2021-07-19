@@ -5,6 +5,7 @@ import {
   Field,
   FieldResolver,
   InputType,
+  Int,
   Mutation,
   ObjectType,
   Query,
@@ -111,7 +112,14 @@ export class UserResolver {
         password: hashedPassword,
       }).save();
     } catch (err) {
-      console.log(err.message);
+      return {
+        errors: [
+          {
+            field: 'email',
+            message: 'error occured',
+          },
+        ],
+      };
     }
 
     req.session.userId = user?.id;
@@ -159,6 +167,13 @@ export class UserResolver {
   async users() {
     return User.find({ relations: ['issues'] });
   }
+
+  // @Query(() => [User])
+  // async projectUsers(
+  //   @Arg('projectId', () => Int) projectId: number
+  // ): Promise<User[]> {
+
+  // }
 
   @Query(() => User, { nullable: true })
   currentUser(@Ctx() { req }: Context) {

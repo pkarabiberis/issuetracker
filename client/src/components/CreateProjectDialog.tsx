@@ -1,4 +1,4 @@
-import { CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Modal,
   Text,
@@ -24,6 +24,7 @@ import { useState } from 'react';
 import { AiOutlineUserDelete, AiOutlineUserAdd } from 'react-icons/ai';
 import {
   useCreateProjectMutation,
+  useCurrentUserQuery,
   UserProjectsDocument,
   UserProjectsQuery,
   useUsersQuery,
@@ -40,7 +41,8 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [createProject, { loading }] = useCreateProjectMutation();
+  const [createProject] = useCreateProjectMutation();
+  const { data: meData } = useCurrentUserQuery();
   const [showUserList, setShowUserList] = useState(false);
   const { data } = useUsersQuery();
   const [usersToAssign, setUsersToAssign] = useState<
@@ -64,7 +66,12 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                 await createProject({
                   variables: {
                     name: name.projectName,
-                    users: idsToAssign,
+                    users: [
+                      ...idsToAssign,
+                      typeof meData?.currentUser?.id !== 'undefined'
+                        ? meData.currentUser?.id
+                        : -1,
+                    ],
                   },
                   update: (cache, { data: newProjectData }) => {
                     const existingProjects: UserProjectsQuery | null =
@@ -89,7 +96,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                 return (
                   <Box w={'400px'}>
                     <Form>
-                      <InputField name='projectName' label='Project name' />
+                      <InputField name="projectName" label="Project name" />
                       <Box mt={4}>
                         <Flex justifyContent={'space-between'}>
                           <Text fontSize={'md'} fontWeight={'medium'}>
@@ -123,7 +130,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                                 <Flex align={'center'}>
                                   <Text>{username}</Text>
                                   <IconButton
-                                    aria-label='Delete assigned user'
+                                    aria-label="Delete assigned user"
                                     colorScheme={'pink'}
                                     icon={<CloseIcon />}
                                     size={'xs'}
@@ -153,26 +160,38 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                                 const isUserAssigned = usersToAssign.find(
                                   (e) => e.id === u.id
                                 );
-                                if (!isUserAssigned) {
+                                if (
+                                  !isUserAssigned &&
+                                  u.id !== meData?.currentUser?.id
+                                ) {
                                   return (
                                     <ListItem key={u.id}>
                                       <Badge
-                                        _hover={{
-                                          color: 'gray.500',
-                                          cursor: 'pointer',
-                                        }}
                                         colorScheme={'whiteAlpha'}
                                         variant={'solid'}
                                         color={'black'}
                                         p={1}
-                                        onClick={() => {
-                                          setUsersToAssign([
-                                            { id: u.id, username: u.username },
-                                            ...usersToAssign,
-                                          ]);
-                                        }}
+                                        onClick={() => {}}
                                       >
-                                        {u.username}
+                                        <Flex alignItems={'center'}>
+                                          <Text>{u.username}</Text>
+                                          <IconButton
+                                            ml={2}
+                                            aria-label="Add user"
+                                            size={'xs'}
+                                            bgColor={'white'}
+                                            icon={<AddIcon />}
+                                            onClick={() => {
+                                              setUsersToAssign([
+                                                {
+                                                  id: u.id,
+                                                  username: u.username,
+                                                },
+                                                ...usersToAssign,
+                                              ]);
+                                            }}
+                                          />
+                                        </Flex>
                                       </Badge>
                                     </ListItem>
                                   );
@@ -186,8 +205,8 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                       <ModalFooter p={0} mt={5}>
                         <Button
                           isLoading={isSubmitting}
-                          colorScheme='blue'
-                          type='submit'
+                          colorScheme="blue"
+                          type="submit"
                         >
                           Create
                         </Button>

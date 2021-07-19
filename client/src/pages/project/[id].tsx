@@ -19,7 +19,6 @@ const Project: React.FC<ProjectProps> = ({}) => {
     },
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log(data);
   const handleSort = (sortBy: string, sortDir: string) => {
     refetch({
       id: data?.project?.project.id,
@@ -35,7 +34,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
         <Flex
           mt={10}
           maxW={'1200px'}
-          align='center'
+          align="center"
           mx={'auto'}
           direction={'column'}
         >
@@ -52,7 +51,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
         <Flex
           mt={10}
           maxW={'1200px'}
-          align='center'
+          align="center"
           mx={'auto'}
           direction={'column'}
         >
@@ -69,7 +68,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
         <Flex
           mt={10}
           maxW={'1200px'}
-          align='center'
+          align="center"
           mx={'auto'}
           direction={'column'}
         >
@@ -84,7 +83,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
       <Flex
         mt={10}
         maxW={'1200px'}
-        align='center'
+        align="center"
         mx={'auto'}
         direction={'column'}
       >
@@ -97,7 +96,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
           projectId={data.project.project.id}
           variables={typeof variables !== 'undefined' ? variables : undefined}
         />
-        <Divider mt={4} orientation='horizontal' />
+        <Divider mt={4} orientation="horizontal" />
         <ProjectIssueTitles handleSort={handleSort} />
         {data?.project &&
           data.project.issues.length >= 1 &&

@@ -25,9 +25,11 @@ import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import {
   Issue,
   useDeleteIssueMutation,
+  useProjectQuery,
   useUpdateIssueMutation,
   useUsersQuery,
 } from '../generated/graphql';
+import { getInitialDate } from '../utils/getInitialDate';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
 import { InputField } from './InputField';
 
@@ -44,29 +46,25 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
 }) => {
   const [status, setStatus] = useState<string>(issue.status);
   const [showUserList, setShowUserList] = useState(false);
-  const [updateIssue, { loading, error }] = useUpdateIssueMutation();
-  const { data } = useUsersQuery();
+  const [updateIssue] = useUpdateIssueMutation();
+  const { data } = useProjectQuery({
+    variables: {
+      id: issue.projectId ? issue.projectId : -1,
+    },
+    skip: issue.projectId === -1,
+  });
   const [deleteIssue, { loading: deleteLoading }] = useDeleteIssueMutation();
 
-  let assignedUsers: number[] = [];
+  const assignedUsers: number[] = [];
   const usersToShow: number[] = [];
   let disableUserClick = false;
 
   issue?.assignedUsers?.forEach((u) => assignedUsers.push(u.id));
-  data?.users?.forEach((user) => {
+  data?.project?.project.users?.forEach((user) => {
     if (!assignedUsers.includes(user.id)) {
       usersToShow.push(user.id);
     }
   });
-
-  const issueDue = new Date(Number(issue.due!));
-
-  //insert zero to initial value if needed
-  //for input type="date"
-  const initialMonth =
-    issueDue.getMonth() + 1 < 10
-      ? `0${(issueDue.getMonth() + 1).toString()}`
-      : `${(issueDue.getMonth() + 1).toString()}`;
 
   const open = () => {
     if (usersToShow.length) {
@@ -82,7 +80,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Update issue</ModalHeader>
@@ -91,11 +89,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
             <Formik
               initialValues={{
                 title: issue.title,
-                due: `${issueDue
-                  .getFullYear()
-                  .toString()}-${initialMonth}-${issueDue
-                  .getDate()
-                  .toString()}`,
+                due: issue.due ? getInitialDate(issue.due) : '',
               }}
               onSubmit={async (values, { setErrors }) => {
                 await updateIssue({
@@ -109,15 +103,13 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                     assignedUsers,
                   },
                 });
-
-                onClose();
               }}
             >
               {({ isSubmitting }) => {
                 return (
                   <Box w={'400px'}>
                     <Form>
-                      <InputField name='title' label='Issue' />
+                      <InputField name="title" label="Issue" />
                       <Box mt={4}>
                         <Text fontSize={'md'} fontWeight={'medium'}>
                           Status
@@ -127,7 +119,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                             onClick={() => setStatus('Ongoing')}
                             p={2}
                             ml={2}
-                            colorScheme='purple'
+                            colorScheme="purple"
                             _hover={{ cursor: 'pointer' }}
                             variant={
                               status === 'Ongoing' ? undefined : 'outline'
@@ -138,7 +130,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                           <Badge
                             ml={4}
                             p={2}
-                            colorScheme='green'
+                            colorScheme="green"
                             variant={
                               status === 'Completed' ? undefined : 'outline'
                             }
@@ -150,7 +142,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                           <Badge
                             ml={4}
                             p={2}
-                            colorScheme='red'
+                            colorScheme="red"
                             variant={
                               status === 'Closed' ? undefined : 'outline'
                             }
@@ -162,7 +154,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                         </Flex>
                       </Box>
                       <Box mt={4}>
-                        <InputField name='due' type='date' label='Due' />
+                        <InputField name="due" type="date" label="Due" />
                       </Box>
                       <Box mt={4}>
                         <Flex justifyContent={'space-between'}>
@@ -196,7 +188,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                               <Flex align={'center'}>
                                 <Text>{u.username}</Text>
                                 <IconButton
-                                  aria-label='Delete assigned user'
+                                  aria-label="Delete assigned user"
                                   colorScheme={'pink'}
                                   icon={<CloseIcon />}
                                   size={'xs'}
@@ -220,7 +212,8 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                           ))}
                         </Flex>
                         <Collapse in={showUserList} animateOpacity>
-                          {data?.users && data?.users?.length >= 1 ? (
+                          {data?.project?.project.users &&
+                          data.project.project.users.length >= 1 ? (
                             <Box
                               sx={scrollbarStyle()}
                               maxH={'200px'}
@@ -228,7 +221,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                               mt={4}
                             >
                               <List spacing={3}>
-                                {data?.users?.map((u) => {
+                                {data.project.project.users.map((u) => {
                                   if (usersToShow.includes(u.id)) {
                                     return (
                                       <ListItem key={u.id}>
@@ -242,7 +235,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                                             <Text>{u.username}</Text>
                                             <IconButton
                                               ml={2}
-                                              aria-label='Add user'
+                                              aria-label="Add user"
                                               size={'xs'}
                                               disabled={disableUserClick}
                                               bgColor={'white'}
@@ -250,7 +243,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                                               onClick={async () => {
                                                 disableUserClick = true;
                                                 assignedUsers.push(u.id);
-                                                const res = await updateIssue({
+                                                await updateIssue({
                                                   variables: {
                                                     id: issue.id,
                                                     title: issue.title,
@@ -282,9 +275,10 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                       >
                         <Button
                           isLoading={deleteLoading}
-                          colorScheme='red'
+                          colorScheme="red"
                           onClick={async () => {
-                            const res = await deleteIssue({
+                            onClose();
+                            await deleteIssue({
                               variables: {
                                 id: issue.id,
                               },
@@ -298,8 +292,8 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                         </Button>
                         <Button
                           isLoading={isSubmitting}
-                          colorScheme='blue'
-                          type='submit'
+                          colorScheme="blue"
+                          type="submit"
                         >
                           Update
                         </Button>
