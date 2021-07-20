@@ -63,7 +63,6 @@ export class ProjectResolver {
   }
 
   @Query(() => ProjectResponse, { nullable: true })
-  @UseMiddleware(isAuthenticated)
   async project(
     @Arg('id', () => Int) id: number,
     @Arg('sortBy', () => String, { nullable: true }) sortBy: string,

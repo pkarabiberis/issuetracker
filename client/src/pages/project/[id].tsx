@@ -6,13 +6,14 @@ import { ProjectIssues } from '../../components/ProjectIssues';
 import { ProjectIssueTitles } from '../../components/ProjectIssueTitles';
 import { TitleSection } from '../../components/TitleSection';
 import { useProjectQuery } from '../../generated/graphql';
-import { scrollbarStyle } from '../../utils/scrollbarStyle';
+import { useIsAuth } from '../../utils/useIsAuth';
 import { withApollo } from '../../utils/withApollo';
 
 interface ProjectProps {}
 
 const Project: React.FC<ProjectProps> = ({}) => {
   const { query } = useRouter();
+  useIsAuth();
   const { data, loading, error, refetch, variables } = useProjectQuery({
     variables: {
       id: typeof query.id !== 'undefined' ? parseInt(query.id as string) : -1,

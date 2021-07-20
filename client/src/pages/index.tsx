@@ -5,14 +5,22 @@ import { GoPrimitiveDot } from 'react-icons/go';
 import { CreateProjectDialog } from '../components/CreateProjectDialog';
 import { NavBar } from '../components/NavBar';
 import { TitleSection } from '../components/TitleSection';
-import { useUserProjectsQuery } from '../generated/graphql';
+import {
+  useCurrentUserQuery,
+  useUserProjectsQuery,
+} from '../generated/graphql';
 import { toDate } from '../utils/toDate';
+import { useIsAuth } from '../utils/useIsAuth';
 import { withApollo } from '../utils/withApollo';
 
 const Index = () => {
-  const { data } = useUserProjectsQuery();
+  const { data, refetch } = useUserProjectsQuery();
+  const { data: meData } = useCurrentUserQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log('PROJECTDATA: ', data);
+  useIsAuth();
+  useEffect(() => {
+    refetch();
+  }, [meData?.currentUser?.id]);
   return (
     <>
       <NavBar />
@@ -20,16 +28,16 @@ const Index = () => {
       <Flex
         mt={10}
         maxW={'1200px'}
-        align='center'
+        align="center"
         mx={'auto'}
         direction={'column'}
       >
         <TitleSection
-          title={'Home'}
+          title={'My projects'}
           buttonText={'Create project'}
           onOpen={onOpen}
         />
-        <Divider mt={4} orientation='horizontal' />
+        <Divider mt={4} orientation="horizontal" />
         {data?.userProjects?.length ? (
           <Flex
             p={2}
@@ -44,7 +52,7 @@ const Index = () => {
               textColor={'gray.500'}
               fontWeight={'bold'}
             >
-              Project
+              PROJECT
             </Text>
             <Text
               flexGrow={1}
@@ -53,7 +61,7 @@ const Index = () => {
               fontWeight={'bold'}
               textAlign={'center'}
             >
-              Members
+              MEMBERS
             </Text>
             <Text
               flexGrow={1}
@@ -62,7 +70,7 @@ const Index = () => {
               fontWeight={'bold'}
               textAlign={'end'}
             >
-              Last updated
+              LAST UPDATED
             </Text>
           </Flex>
         ) : (
@@ -74,7 +82,7 @@ const Index = () => {
             return (
               <NextLink
                 key={pr.id}
-                href='/project/[id]'
+                href="/project/[id]"
                 as={`/project/${pr.id}`}
               >
                 <Flex
@@ -84,7 +92,7 @@ const Index = () => {
                   alignItems={'center'}
                   w={'100%'}
                 >
-                  <Flex flexGrow={1} flexBasis={0} alignItems='center'>
+                  <Flex flexGrow={1} flexBasis={0} alignItems="center">
                     <Icon color={'pink.700'} as={GoPrimitiveDot} />
                     <Text ml={2}>{pr.name}</Text>
                   </Flex>

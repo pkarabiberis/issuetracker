@@ -33,14 +33,14 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
           <IconButton
             size={'xs'}
             bgColor={'gray.50'}
-            aria-label='Sort by status'
+            aria-label="Sort by status"
             onClick={() => handleSort('status', 'ASC')}
             icon={<FaSortUp />}
           />
           <IconButton
             size={'xs'}
             bgColor={'gray.50'}
-            aria-label='Sort by status'
+            aria-label="Sort by status"
             onClick={() => handleSort('status', 'DESC')}
             icon={<FaSortDown />}
           />
@@ -59,14 +59,14 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
           <IconButton
             size={'xs'}
             bgColor={'gray.50'}
-            aria-label='Sort by status'
+            aria-label="Sort by status"
             onClick={() => handleSort('createdAt', 'DESC')}
             icon={<FaSortUp />}
           />
           <IconButton
             size={'xs'}
             bgColor={'gray.50'}
-            aria-label='Sort by status'
+            aria-label="Sort by status"
             onClick={() => handleSort('createdAt', 'ASC')}
             icon={<FaSortDown />}
           />
@@ -86,14 +86,14 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
           <IconButton
             size={'xs'}
             bgColor={'gray.50'}
-            aria-label='Sort by status'
+            aria-label="Sort by status"
             onClick={() => handleSort('due', 'DESC')}
             icon={<FaSortUp />}
           />
           <IconButton
             size={'xs'}
             bgColor={'gray.50'}
-            aria-label='Sort by status'
+            aria-label="Sort by status"
             onClick={() => handleSort('due', 'ASC')}
             icon={<FaSortDown />}
           />

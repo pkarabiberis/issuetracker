@@ -1,22 +1,25 @@
-import { Icon, Box, Button, Flex, Heading } from '@chakra-ui/react';
-import React from 'react';
-import NextLink from 'next/link';
-import { AiFillBug } from 'react-icons/ai';
+import { Box, Button, Flex, Heading, Icon } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
-import { useCurrentUserQuery, useLogoutMutation } from '../generated/graphql';
-import { useApolloClient } from '@apollo/client';
+import NextLink from 'next/link';
+import React, { useState } from 'react';
+import { useRef } from 'react';
 
-interface NavBarProps {}
+import { AiFillBug } from 'react-icons/ai';
+import { FaUserCircle } from 'react-icons/fa';
+import { useCurrentUserQuery } from '../generated/graphql';
 
-export const NavBar: React.FC<NavBarProps> = ({}) => {
+import { Dropdown } from './Dropdown';
+
+export const NavBar: React.FC = ({}) => {
   const router = useRouter();
-  const navToHome = () => {
-    router.push('/');
-  };
-  const apolloClient = useApolloClient();
   const { data, loading } = useCurrentUserQuery();
-  const [logout, { loading: logoutLoading }] = useLogoutMutation();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const iconRef = useRef<HTMLDivElement>(null);
   let navBarButtons;
+
+  const testToggle = () => {
+    setShowDropdown(false);
+  };
 
   if (loading) {
   }
@@ -49,45 +52,64 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   if (data?.currentUser) {
     navBarButtons = (
       <>
-        <Button
-          textColor={'white'}
-          _hover={{ bgColor: 'blue.300' }}
-          bgColor={'blue.400'}
-          mr={2}
-        >
-          {data.currentUser.username}
-        </Button>
-
-        <Button
-          textColor={'white'}
-          _hover={{ bgColor: 'blue.300' }}
-          bgColor={'blue.400'}
-          isLoading={logoutLoading}
-          onClick={async () => {
-            await logout();
-            await apolloClient.resetStore();
-            router.replace('/login');
-          }}
-        >
-          Logout
-        </Button>
+        <Box position={'relative'} display={'inline-block'}>
+          <Box ref={iconRef}>
+            <Icon
+              backgroundColor={'white'}
+              boxSize={6}
+              as={FaUserCircle}
+              onClick={() => {
+                setShowDropdown((dropdown) => !dropdown);
+              }}
+            />
+          </Box>
+          <Dropdown
+            username={data.currentUser.username}
+            showDropdown={showDropdown}
+            toggle={testToggle}
+            iconRef={iconRef}
+          />
+        </Box>
       </>
     );
   }
   return (
-    <Flex bgColor="white" zIndex={1} shadow={'md'} p={4} alignItems={'center'}>
-      <Flex alignItems={'center'}>
-        <Icon
-          boxSize={10}
-          color={'black'}
-          _hover={{ color: 'blackAlpha.700' }}
-          cursor={'pointer'}
-          as={AiFillBug}
-          onClick={() => navToHome()}
-        />
+    <Flex
+      bgColor="white"
+      maxW={'1200px'}
+      mx={'auto'}
+      mt={4}
+      alignItems={'center'}
+    >
+      <NextLink href="/">
+        <Flex alignItems={'center'}>
+          <Icon
+            boxSize={10}
+            color={'black'}
+            _hover={{ color: 'blackAlpha.700' }}
+            cursor={'pointer'}
+            as={AiFillBug}
+            onClick={() => {
+              router.push('/');
+            }}
+          />
 
-        <Heading ml={4}>IssueTracker</Heading>
-      </Flex>
+          <Heading
+            visibility={{
+              base: 'hidden',
+              sm: 'hidden',
+              md: 'visible',
+              lg: 'visible',
+              xl: 'visible',
+            }}
+            cursor={'pointer'}
+            ml={4}
+          >
+            Issuetracker
+          </Heading>
+        </Flex>
+      </NextLink>
+
       <Box ml={'auto'}>{navBarButtons}</Box>
     </Flex>
   );

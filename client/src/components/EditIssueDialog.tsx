@@ -16,7 +16,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Slide,
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
@@ -27,7 +26,6 @@ import {
   useDeleteIssueMutation,
   useProjectQuery,
   useUpdateIssueMutation,
-  useUsersQuery,
 } from '../generated/graphql';
 import { getInitialDate } from '../utils/getInitialDate';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
@@ -103,6 +101,8 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                     assignedUsers,
                   },
                 });
+
+                onClose();
               }}
             >
               {({ isSubmitting }) => {

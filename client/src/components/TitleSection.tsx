@@ -27,7 +27,7 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
       <Heading>{title}</Heading>
       <Button
         textColor={'white'}
-        bgColor='blue.500'
+        bgColor="blue.500"
         _hover={{ bgColor: 'blue.400' }}
         onClick={onOpen}
       >
