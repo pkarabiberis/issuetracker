@@ -46,12 +46,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <Divider mt={2} orientation="horizontal" />
       <Flex direction={'column'}>
         <Button
-          textColor={'black'}
+          textColor={'#361d32'}
+          bgColor={'transparent'}
+          fontWeight={'700'}
+          _hover={{ bgColor: '#f1e8e6' }}
           justifyContent={'flex-start'}
-          mx={2}
-          p={0}
+          p={2}
           textAlign={'start'}
-          bgColor={'white'}
           isLoading={logoutLoading}
           onClick={async () => {
             await logout();
@@ -62,12 +63,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
           Logout
         </Button>
         <Button
-          mx={2}
+          p={2}
           justifyContent={'flex-start'}
-          textColor={'black'}
-          p={0}
+          textColor={'#361d32'}
+          bgColor={'transparent'}
+          fontWeight={'700'}
+          _hover={{ bgColor: '#f1e8e6' }}
           textAlign={'start'}
-          bgColor={'white'}
         >
           Delete user
         </Button>

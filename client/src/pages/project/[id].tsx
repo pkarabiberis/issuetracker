@@ -105,7 +105,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
             return (
               <Flex
                 key={issue.id}
-                _hover={{ bgColor: 'gray.50', cursor: 'pointer' }}
+                _hover={{ bgColor: '#fcfafa', cursor: 'pointer' }}
                 p={2}
                 mt={4}
                 alignItems={'center'}

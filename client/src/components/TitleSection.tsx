@@ -24,11 +24,14 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
 }) => {
   return (
     <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
-      <Heading>{title}</Heading>
+      <Heading fontWeight={'300'}>{title}</Heading>
       <Button
-        textColor={'white'}
-        bgColor="blue.500"
-        _hover={{ bgColor: 'blue.400' }}
+        textColor={'#361d32'}
+        bgColor={'transparent'}
+        border={'1px'}
+        fontWeight={'700'}
+        borderColor={'#361d32'}
+        _hover={{ bgColor: '#f1e8e6' }}
         onClick={onOpen}
       >
         {buttonText}

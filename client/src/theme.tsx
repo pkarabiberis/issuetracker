@@ -1,7 +1,7 @@
 import { extendTheme } from '@chakra-ui/react';
 import { createBreakpoints } from '@chakra-ui/theme-tools';
 
-const fonts = { mono: `'Menlo', monospace` };
+const fonts = { body: `Roboto`, heading: 'Roboto' };
 
 const breakpoints = createBreakpoints({
   sm: '320px',

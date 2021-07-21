@@ -42,35 +42,29 @@ const Index = () => {
           <Flex
             p={2}
             mt={4}
-            bgColor={'gray.50'}
+            bgColor={'#f1e8e6'}
+            borderRadius={'lg'}
             alignItems={'center'}
             w={'100%'}
           >
-            <Text
-              flexGrow={1}
-              flexBasis={0}
-              textColor={'gray.500'}
-              fontWeight={'bold'}
-            >
-              PROJECT
+            <Text flexGrow={1} flexBasis={0} fontWeight={'bold'}>
+              Project
             </Text>
             <Text
               flexGrow={1}
               flexBasis={0}
-              textColor={'gray.500'}
               fontWeight={'bold'}
               textAlign={'center'}
             >
-              MEMBERS
+              Members
             </Text>
             <Text
               flexGrow={1}
               flexBasis={0}
-              textColor={'gray.500'}
               fontWeight={'bold'}
               textAlign={'end'}
             >
-              LAST UPDATED
+              Last updated
             </Text>
           </Flex>
         ) : (
@@ -86,7 +80,7 @@ const Index = () => {
                 as={`/project/${pr.id}`}
               >
                 <Flex
-                  _hover={{ bgColor: 'gray.50', cursor: 'pointer' }}
+                  _hover={{ bgColor: '#fcfafa', cursor: 'pointer' }}
                   p={2}
                   mt={4}
                   alignItems={'center'}

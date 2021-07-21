@@ -55,7 +55,8 @@ export const NavBar: React.FC = ({}) => {
         <Box position={'relative'} display={'inline-block'}>
           <Box ref={iconRef}>
             <Icon
-              backgroundColor={'white'}
+              backgroundColor={'#f1e8e6'}
+              color={'#361d32'}
               boxSize={6}
               as={FaUserCircle}
               onClick={() => {
@@ -74,43 +75,23 @@ export const NavBar: React.FC = ({}) => {
     );
   }
   return (
-    <Flex
-      bgColor="white"
-      maxW={'1200px'}
-      mx={'auto'}
-      mt={4}
-      alignItems={'center'}
-    >
-      <NextLink href="/">
-        <Flex alignItems={'center'}>
+    <Box w={'100%'} p={4} bgColor="#f1e8e6" shadow={'md'}>
+      <Flex bgColor="#f1e8e6" maxW={'1200px'} mx={'auto'} alignItems={'center'}>
+        <NextLink href="/">
           <Icon
             boxSize={10}
-            color={'black'}
-            _hover={{ color: 'blackAlpha.700' }}
+            color={'#361d32'}
+            _hover={{ color: '#c7c7b7' }}
             cursor={'pointer'}
             as={AiFillBug}
             onClick={() => {
               router.push('/');
             }}
           />
+        </NextLink>
 
-          <Heading
-            visibility={{
-              base: 'hidden',
-              sm: 'hidden',
-              md: 'visible',
-              lg: 'visible',
-              xl: 'visible',
-            }}
-            cursor={'pointer'}
-            ml={4}
-          >
-            Issuetracker
-          </Heading>
-        </Flex>
-      </NextLink>
-
-      <Box ml={'auto'}>{navBarButtons}</Box>
-    </Flex>
+        <Box ml={'auto'}>{navBarButtons}</Box>
+      </Flex>
+    </Box>
   );
 };
