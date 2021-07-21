@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 
-export const useOnClickOutside = (ref, iconRef, handler) => {
+export const useOnClickOutside = (
+  ref: any,
+  iconRef: any,
+  handler: (e: Event) => void
+) => {
   useEffect(
     () => {
       const listener = (event: Event) => {
@@ -27,6 +31,6 @@ export const useOnClickOutside = (ref, iconRef, handler) => {
     // ... callback/cleanup to run every render. It's not a big deal ...
     // ... but to optimize you can wrap handler in useCallback before ...
     // ... passing it into this hook.
-    [ref, handler]
+    [ref, handler, iconRef]
   );
 };

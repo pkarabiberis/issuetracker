@@ -1,4 +1,11 @@
-import { Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
+import {
+  Divider,
+  Flex,
+  Icon,
+  Text,
+  useBreakpointValue,
+  useDisclosure,
+} from '@chakra-ui/react';
 import NextLink from 'next/link';
 import React, { useEffect } from 'react';
 import { GoPrimitiveDot } from 'react-icons/go';
@@ -17,10 +24,12 @@ const Index = () => {
   const { data, refetch } = useUserProjectsQuery();
   const { data: meData } = useCurrentUserQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   useIsAuth();
   useEffect(() => {
     refetch();
   }, [meData?.currentUser?.id]);
+
   return (
     <>
       <NavBar />

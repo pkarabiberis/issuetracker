@@ -17,6 +17,7 @@ import {
   Collapse,
   List,
   ListItem,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import React from 'react';
@@ -48,12 +49,19 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
   >([]);
+  const modalSize = useBreakpointValue({
+    base: 'sm',
+    sm: 'sm',
+    md: 'md',
+    lg: 'lg',
+    xl: 'xl',
+  });
   const open = () => {
     setShowUserList(!showUserList);
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create project</ModalHeader>

@@ -78,16 +78,18 @@ export const NavBar: React.FC = ({}) => {
     <Box w={'100%'} p={4} bgColor="#f1e8e6" shadow={'md'}>
       <Flex bgColor="#f1e8e6" maxW={'1200px'} mx={'auto'} alignItems={'center'}>
         <NextLink href="/">
-          <Icon
-            boxSize={10}
-            color={'#361d32'}
-            _hover={{ color: '#c7c7b7' }}
-            cursor={'pointer'}
-            as={AiFillBug}
-            onClick={() => {
-              router.push('/');
-            }}
-          />
+          <Box>
+            <Icon
+              boxSize={10}
+              color={'#361d32'}
+              _hover={{ color: '#c7c7b7' }}
+              cursor={'pointer'}
+              as={AiFillBug}
+              onClick={() => {
+                router.push('/');
+              }}
+            />
+          </Box>
         </NextLink>
 
         <Box ml={'auto'}>{navBarButtons}</Box>
