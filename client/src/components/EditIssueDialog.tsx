@@ -29,7 +29,9 @@ import {
 } from '../generated/graphql';
 import { getInitialDate } from '../utils/getInitialDate';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
+import { useModalSize } from '../utils/useModalSize';
 import { InputField } from './InputField';
+import { PrimaryButton } from './PrimaryButton';
 
 interface EditIssueDialogProps {
   isOpen: boolean;
@@ -78,10 +80,15 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} autoFocus={false}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        autoFocus={false}
+        size={useModalSize()}
+      >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Update issue</ModalHeader>
+        <ModalContent mx={[2, 2, 0, 0, 0, 0]}>
+          <ModalHeader textAlign={'center'}>Update issue</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -107,7 +114,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
             >
               {({ isSubmitting }) => {
                 return (
-                  <Box w={'400px'}>
+                  <Box mx={'auto'} maxW={'400px'}>
                     <Form>
                       <InputField name="title" label="Issue" />
                       <Box mt={4}>
@@ -290,13 +297,11 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                         >
                           Delete
                         </Button>
-                        <Button
+                        <PrimaryButton
+                          buttonText={'Update'}
+                          type={'submit'}
                           isLoading={isSubmitting}
-                          colorScheme="blue"
-                          type="submit"
-                        >
-                          Update
-                        </Button>
+                        />
                       </ModalFooter>
                     </Form>
                   </Box>

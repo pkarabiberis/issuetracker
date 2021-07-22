@@ -1,7 +1,7 @@
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Badge,
   Box,
-  Button,
   Collapse,
   Flex,
   Icon,
@@ -18,21 +18,19 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
+import React, { useState } from 'react';
 import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
-import React from 'react';
 import {
   ProjectDocument,
   ProjectQuery,
   ProjectQueryVariables,
   useCreateIssueMutation,
   useProjectQuery,
-  useUsersQuery,
 } from '../generated/graphql';
-import { InputField } from './InputField';
-import { useState } from 'react';
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
-import { useEffect } from 'react';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
+import { useModalSize } from '../utils/useModalSize';
+import { InputField } from './InputField';
+import { PrimaryButton } from './PrimaryButton';
 
 interface CreateIssueDialogProps {
   projectId: number | undefined;
@@ -64,10 +62,10 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size={useModalSize()}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create issue</ModalHeader>
+        <ModalContent mx={[2, 2, 0, 0, 0, 0]}>
+          <ModalHeader textAlign={'center'}>Create issue</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -112,7 +110,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
             >
               {({ isSubmitting }) => {
                 return (
-                  <Box w={'400px'}>
+                  <Box mx={'auto'} maxW={'400px'}>
                     <Form>
                       <InputField name="title" label="Issue name" />
                       <Box mt={4}>
@@ -221,13 +219,11 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                         </Box>
                       </Collapse>
                       <ModalFooter p={0} mt={5}>
-                        <Button
+                        <PrimaryButton
+                          buttonText={'Create'}
+                          type={'submit'}
                           isLoading={isSubmitting}
-                          colorScheme="blue"
-                          type="submit"
-                        >
-                          Create
-                        </Button>
+                        />
                       </ModalFooter>
                     </Form>
                   </Box>

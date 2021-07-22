@@ -1,28 +1,25 @@
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
-  Modal,
-  Text,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Box,
-  Flex,
   Badge,
+  Box,
+  Collapse,
+  Flex,
   Icon,
   IconButton,
-  Collapse,
   List,
   ListItem,
-  useBreakpointValue,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
 } from '@chakra-ui/react';
-import { Formik, Form } from 'formik';
-import React from 'react';
-import { useState } from 'react';
-import { AiOutlineUserDelete, AiOutlineUserAdd } from 'react-icons/ai';
+import { Form, Formik } from 'formik';
+import React, { useState } from 'react';
+import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import {
   useCreateProjectMutation,
   useCurrentUserQuery,
@@ -31,7 +28,9 @@ import {
   useUsersQuery,
 } from '../generated/graphql';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
+import { useModalSize } from '../utils/useModalSize';
 import { InputField } from './InputField';
+import { PrimaryButton } from './PrimaryButton';
 
 interface CreateProjectDialogProps {
   isOpen: boolean;
@@ -49,22 +48,16 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
   >([]);
-  const modalSize = useBreakpointValue({
-    base: 'sm',
-    sm: 'sm',
-    md: 'md',
-    lg: 'lg',
-    xl: 'xl',
-  });
+
   const open = () => {
     setShowUserList(!showUserList);
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size={modalSize}>
+      <Modal isOpen={isOpen} onClose={onClose} size={useModalSize()}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create project</ModalHeader>
+        <ModalContent mx={[2, 2, 0, 0, 0, 0]}>
+          <ModalHeader textAlign={'center'}>Create project</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -102,7 +95,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
             >
               {({ isSubmitting }) => {
                 return (
-                  <Box w={'400px'}>
+                  <Box maxW={'400px'} mx={'auto'}>
                     <Form>
                       <InputField name="projectName" label="Project name" />
                       <Box mt={4}>
@@ -211,13 +204,11 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                         </Box>
                       </Collapse>
                       <ModalFooter p={0} mt={5}>
-                        <Button
+                        <PrimaryButton
+                          buttonText={'Create'}
+                          type={'submit'}
                           isLoading={isSubmitting}
-                          colorScheme="blue"
-                          type="submit"
-                        >
-                          Create
-                        </Button>
+                        />
                       </ModalFooter>
                     </Form>
                   </Box>

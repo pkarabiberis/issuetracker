@@ -100,20 +100,9 @@ const Project: React.FC<ProjectProps> = ({}) => {
         <Divider mt={4} orientation="horizontal" />
         <ProjectIssueTitles handleSort={handleSort} />
         {data?.project &&
-          data.project.issues.length >= 1 &&
+          data.project.issues.length > 0 &&
           data.project.issues.map((issue) => {
-            return (
-              <Flex
-                key={issue.id}
-                _hover={{ bgColor: '#fcfafa', cursor: 'pointer' }}
-                p={2}
-                mt={4}
-                alignItems={'center'}
-                w={'100%'}
-              >
-                <ProjectIssues issue={issue} />
-              </Flex>
-            );
+            return <ProjectIssues key={issue.id} issue={issue} />;
           })}
       </Flex>
     </>

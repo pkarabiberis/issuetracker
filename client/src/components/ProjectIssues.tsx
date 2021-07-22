@@ -1,8 +1,9 @@
-import { Badge, Icon, Text, useDisclosure } from '@chakra-ui/react';
+import { Badge, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import React from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Issue } from '../generated/graphql';
 import { getBadgeColor } from '../utils/getBadgeColor';
+import { getIssueVisibility } from '../utils/getIssueVisibility';
 import { toDate } from '../utils/toDate';
 import { EditIssueDialog } from './EditIssueDialog';
 
@@ -17,52 +18,108 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
     <>
       {realIssue && (
         <>
-          <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-            {realIssue.title}
-          </Text>
+          <Flex
+            alignItems={'center'}
+            p={2}
+            mt={4}
+            display={{
+              base: 'flex',
+              sm: 'flex',
+              md: 'none',
+              lg: 'none',
+              xl: 'none',
+              '2xl': 'none',
+            }}
+            w={'100%'}
+          >
+            <Text flex={1} flexGrow={1} textAlign={'center'}>
+              {realIssue.title ? realIssue.title : '-'}
+            </Text>
 
-          <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-            <Badge colorScheme={getBadgeColor(realIssue.status)}>
-              {realIssue.status}
-            </Badge>
-          </Text>
+            <Text flex={1} flexGrow={1} textAlign={'center'}>
+              <Badge colorScheme={getBadgeColor(realIssue.status)}>
+                {realIssue.status}
+              </Badge>
+            </Text>
+          </Flex>
+          <Flex
+            key={issue.id}
+            _hover={{ bgColor: '#fcfafa', cursor: 'pointer' }}
+            p={2}
+            mt={4}
+            alignItems={'center'}
+            w={'100%'}
+            display={{
+              base: 'none',
+              sm: 'none',
+              md: 'flex',
+              lg: 'flex',
+              xl: 'flex',
+              '2xl': 'flex',
+            }}
+          >
+            <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
+              {realIssue.title}
+            </Text>
 
-          <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-            {toDate(realIssue.createdAt)}
-          </Text>
+            <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+              <Badge colorScheme={getBadgeColor(realIssue.status)}>
+                {realIssue.status}
+              </Badge>
+            </Text>
 
-          <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-            {realIssue.due ? toDate(realIssue.due) : '-'}
-          </Text>
+            <Text
+              visibility={getIssueVisibility()}
+              textAlign={'center'}
+              flexGrow={1}
+              flexBasis={0}
+            >
+              {toDate(realIssue.createdAt)}
+            </Text>
 
-          <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
-            {/* clean up later
+            <Text
+              visibility={getIssueVisibility()}
+              textAlign={'center'}
+              flexGrow={1}
+              flexBasis={0}
+            >
+              {realIssue.due ? toDate(realIssue.due) : '-'}
+            </Text>
+
+            <Text
+              visibility={getIssueVisibility()}
+              flexGrow={1}
+              flexBasis={0}
+              textAlign={'center'}
+            >
+              {/* clean up later
            formats text based on assigned users */}
-            {realIssue?.assignedUsers && realIssue?.assignedUsers?.length >= 1
-              ? realIssue.assignedUsers?.length === 1
-                ? realIssue.assignedUsers[0].username
-                : `${realIssue?.assignedUsers?.[0].username} and ${
-                    realIssue?.assignedUsers!.length - 1
-                  } other`
-              : '-'}
-          </Text>
+              {realIssue?.assignedUsers && realIssue?.assignedUsers?.length > 0
+                ? realIssue.assignedUsers?.length === 1
+                  ? realIssue.assignedUsers[0].username
+                  : `${realIssue?.assignedUsers?.[0].username} and ${
+                      realIssue?.assignedUsers!.length - 1
+                    } other`
+                : '-'}
+            </Text>
 
-          <Icon
-            as={BsThreeDotsVertical}
-            w={5}
-            h={5}
-            flexGrow={0.1}
-            flexBasis={0}
-            onClick={onOpen}
-          />
-
-          {isOpen && (
-            <EditIssueDialog
-              issue={realIssue}
-              isOpen={isOpen}
-              onClose={onClose}
+            <Icon
+              as={BsThreeDotsVertical}
+              w={5}
+              h={5}
+              flexGrow={0.1}
+              flexBasis={0}
+              onClick={onOpen}
             />
-          )}
+
+            {isOpen && (
+              <EditIssueDialog
+                issue={realIssue}
+                isOpen={isOpen}
+                onClose={onClose}
+              />
+            )}
+          </Flex>
         </>
       )}
     </>

@@ -1,6 +1,7 @@
 import { Flex, Heading, Button } from '@chakra-ui/react';
 import React from 'react';
 import { ProjectQueryVariables } from '../generated/graphql';
+import { useModalSize } from '../utils/useModalSize';
 import { CreateIssueDialog } from './CreateIssueDialog';
 
 interface TitleSectionProps {
@@ -24,8 +25,11 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
 }) => {
   return (
     <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
-      <Heading fontWeight={'300'}>{title}</Heading>
+      <Heading ml={[4, 4, 4, 4, 0, 0]} fontWeight={'300'}>
+        {title}
+      </Heading>
       <Button
+        mr={[4, 4, 4, 4, 0, 0]}
         textColor={'#361d32'}
         bgColor={'transparent'}
         border={'1px'}
