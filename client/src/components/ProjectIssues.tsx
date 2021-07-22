@@ -41,6 +41,14 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
                 {realIssue.status}
               </Badge>
             </Text>
+
+            <Icon
+              as={BsThreeDotsVertical}
+              h={5}
+              flexGrow={0.1}
+              flexBasis={0}
+              onClick={onOpen}
+            />
           </Flex>
           <Flex
             key={issue.id}

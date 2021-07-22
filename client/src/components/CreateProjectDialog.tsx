@@ -54,10 +54,15 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size={useModalSize()}>
+      <Modal
+        returnFocusOnClose={false}
+        autoFocus={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        size={useModalSize()}
+      >
         <ModalOverlay />
         <ModalContent mx={[2, 2, 0, 0, 0, 0]}>
-          <ModalHeader textAlign={'center'}>Create project</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -96,7 +101,10 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
               {({ isSubmitting }) => {
                 return (
                   <Box maxW={'400px'} mx={'auto'}>
-                    <Form>
+                    <Text color={'#361d32'} fontSize={20} fontWeight={'bold'}>
+                      Create project
+                    </Text>
+                    <Form style={{ marginTop: '24px' }}>
                       <InputField name="projectName" label="Project name" />
                       <Box mt={4}>
                         <Flex justifyContent={'space-between'}>

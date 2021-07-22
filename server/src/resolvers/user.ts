@@ -168,12 +168,13 @@ export class UserResolver {
     return User.find({ relations: ['issues'] });
   }
 
-  // @Query(() => [User])
-  // async projectUsers(
-  //   @Arg('projectId', () => Int) projectId: number
-  // ): Promise<User[]> {
-
-  // }
+  @Query(() => UserResponse)
+  async user(@Arg('userId', () => Int) userId: number): Promise<UserResponse> {
+    const user = await User.findOne(userId);
+    return {
+      user,
+    };
+  }
 
   @Query(() => User, { nullable: true })
   currentUser(@Ctx() { req }: Context) {

@@ -82,7 +82,6 @@ const initApolloClient = (apolloClient, initialState, ctx) => {
  * @returns {(PageComponent: ReactNode) => ReactNode}
  */
 export const createWithApollo = (ac) => {
-  console.log('AC: ', ac);
   return ({ ssr = false } = {}) =>
     (PageComponent) => {
       const WithApollo = ({ apolloClient, apolloState, ...pageProps }) => {

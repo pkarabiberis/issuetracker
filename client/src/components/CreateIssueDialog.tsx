@@ -62,10 +62,15 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
   };
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size={useModalSize()}>
+      <Modal
+        returnFocusOnClose={false}
+        isOpen={isOpen}
+        autoFocus={false}
+        onClose={onClose}
+        size={useModalSize()}
+      >
         <ModalOverlay />
         <ModalContent mx={[2, 2, 0, 0, 0, 0]}>
-          <ModalHeader textAlign={'center'}>Create issue</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -111,7 +116,10 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
               {({ isSubmitting }) => {
                 return (
                   <Box mx={'auto'} maxW={'400px'}>
-                    <Form>
+                    <Text color={'#361d32'} fontSize={20} fontWeight={'bold'}>
+                      Create issue
+                    </Text>
+                    <Form style={{ marginTop: '24px' }}>
                       <InputField name="title" label="Issue name" />
                       <Box mt={4}>
                         <InputField name="due" type="date" label="Due" />

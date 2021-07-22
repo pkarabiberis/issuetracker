@@ -54,6 +54,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
             />
           </Flex>
         </Flex>
+        <Box flexGrow={0.1} flexBasis={0}></Box>
       </Flex>
       <Flex
         p={2}

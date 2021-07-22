@@ -111,10 +111,16 @@ export type ProjectResponse = {
 export type Query = {
   __typename?: 'Query';
   users: Array<User>;
+  user: UserResponse;
   currentUser?: Maybe<User>;
   userProjects?: Maybe<Array<Project>>;
   project?: Maybe<ProjectResponse>;
   issue: IssueResponse;
+};
+
+
+export type QueryUserArgs = {
+  userId: Scalars['Int'];
 };
 
 
@@ -327,6 +333,25 @@ export type ProjectQuery = (
       )>> }
     )> }
   )> }
+);
+
+export type UserQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type UserQuery = (
+  { __typename?: 'Query' }
+  & { user: (
+    { __typename?: 'UserResponse' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'InputError' }
+      & Pick<InputError, 'field' | 'message'>
+    )>> }
+  ) }
 );
 
 export type UserProjectsQueryVariables = Exact<{ [key: string]: never; }>;
@@ -808,6 +833,51 @@ export function useProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pr
 export type ProjectQueryHookResult = ReturnType<typeof useProjectQuery>;
 export type ProjectLazyQueryHookResult = ReturnType<typeof useProjectLazyQuery>;
 export type ProjectQueryResult = Apollo.QueryResult<ProjectQuery, ProjectQueryVariables>;
+export const UserDocument = gql`
+    query User($userId: Int!) {
+  user(userId: $userId) {
+    user {
+      id
+      username
+      email
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserQuery__
+ *
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+      }
+export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
+        }
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UserProjectsDocument = gql`
     query UserProjects {
   userProjects {

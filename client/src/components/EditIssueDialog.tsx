@@ -26,9 +26,11 @@ import {
   useDeleteIssueMutation,
   useProjectQuery,
   useUpdateIssueMutation,
+  useUserQuery,
 } from '../generated/graphql';
 import { getInitialDate } from '../utils/getInitialDate';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
+import { toDate } from '../utils/toDate';
 import { useModalSize } from '../utils/useModalSize';
 import { InputField } from './InputField';
 import { PrimaryButton } from './PrimaryButton';
@@ -52,6 +54,11 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
       id: issue.projectId ? issue.projectId : -1,
     },
     skip: issue.projectId === -1,
+  });
+  const { data: issueCreator } = useUserQuery({
+    variables: {
+      userId: issue.creatorId,
+    },
   });
   const [deleteIssue, { loading: deleteLoading }] = useDeleteIssueMutation();
 
@@ -81,6 +88,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   return (
     <>
       <Modal
+        returnFocusOnClose={false}
         isOpen={isOpen}
         onClose={onClose}
         autoFocus={false}
@@ -88,7 +96,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
       >
         <ModalOverlay />
         <ModalContent mx={[2, 2, 0, 0, 0, 0]}>
-          <ModalHeader textAlign={'center'}>Update issue</ModalHeader>
+          <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik
@@ -115,7 +123,26 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
               {({ isSubmitting }) => {
                 return (
                   <Box mx={'auto'} maxW={'400px'}>
-                    <Form>
+                    <Text color={'#361d32'} fontSize={20} fontWeight={'bold'}>
+                      Edit issue
+                    </Text>
+                    <Text fontWeight={300} fontSize={14}>
+                      Created at {toDate(issue.createdAt)}
+                    </Text>
+                    <Flex>
+                      <Text fontWeight={300} fontSize={14}>
+                        by
+                      </Text>
+                      <Text
+                        ml={1}
+                        fontWeight={'bold'}
+                        fontSize={14}
+                        color={'#361d32'}
+                      >
+                        {issueCreator?.user.user?.username}
+                      </Text>
+                    </Flex>
+                    <Form style={{ marginTop: '24px' }}>
                       <InputField name="title" label="Issue" />
                       <Box mt={4}>
                         <Text fontSize={'md'} fontWeight={'medium'}>
