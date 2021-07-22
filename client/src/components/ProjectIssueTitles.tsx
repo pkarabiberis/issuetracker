@@ -15,7 +15,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
       <Flex
         p={2}
         mt={4}
-        bgColor={'#f1e8e6'}
+        bgColor={'#fbf9f8'}
         borderRadius={'lg'}
         alignItems={'center'}
         display={{
@@ -57,9 +57,9 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
         <Box flexGrow={0.1} flexBasis={0}></Box>
       </Flex>
       <Flex
-        p={2}
+        p={1}
         mt={4}
-        bgColor={'#f1e8e6'}
+        bgColor={'#fbf9f8'}
         borderRadius={'lg'}
         alignItems={'center'}
         display={{
@@ -87,7 +87,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
           <Flex direction={'column'}>
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by status"
               onClick={() => handleSort('status', 'ASC')}
               _hover={{ bgColor: undefined }}
@@ -95,7 +95,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
             />
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by status"
               _hover={{ bgColor: undefined }}
               onClick={() => handleSort('status', 'DESC')}
@@ -116,7 +116,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
           <Flex direction={'column'}>
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by created date"
               _hover={{ bgColor: undefined }}
               onClick={() => handleSort('createdAt', 'DESC')}
@@ -124,7 +124,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
             />
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by created date"
               _hover={{ bgColor: undefined }}
               onClick={() => handleSort('createdAt', 'ASC')}
@@ -146,7 +146,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
           <Flex direction={'column'}>
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by due date"
               _hover={{ bgColor: undefined }}
               onClick={() => handleSort('due', 'DESC')}
@@ -154,7 +154,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
             />
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by due date"
               _hover={{ bgColor: undefined }}
               onClick={() => handleSort('due', 'ASC')}

@@ -1,13 +1,13 @@
-import { Flex, Heading, Button } from '@chakra-ui/react';
+import { Flex, Heading, Button, Text } from '@chakra-ui/react';
 import React from 'react';
 import { ProjectQueryVariables } from '../generated/graphql';
 import { useModalSize } from '../utils/useModalSize';
 import { CreateIssueDialog } from './CreateIssueDialog';
 
 interface TitleSectionProps {
-  title: string;
+  title?: string;
   buttonText: string;
-  onOpen: () => void;
+  onOpen?: () => void;
   isOpen?: boolean;
   onClose?: () => void;
   projectId?: number;
@@ -25,11 +25,15 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
 }) => {
   return (
     <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
-      <Heading ml={[4, 4, 4, 4, 0, 0]} fontWeight={'300'}>
-        {title}
-      </Heading>
+      {title && (
+        <Text ml={[4, 4, 4, 4, 0, 0]} color={'#361d32'} fontSize={20}>
+          {title}
+        </Text>
+      )}
+
       <Button
         mr={[4, 4, 4, 4, 0, 0]}
+        ml={!title ? 'auto' : undefined}
         textColor={'#361d32'}
         bgColor={'transparent'}
         border={'1px'}

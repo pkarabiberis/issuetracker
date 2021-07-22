@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, Icon } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, Icon } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
 import NextLink from 'next/link';
 import React, { useState } from 'react';
@@ -55,7 +55,7 @@ export const NavBar: React.FC = ({}) => {
         <Box position={'relative'} display={'inline-block'}>
           <Box ref={iconRef}>
             <Icon
-              backgroundColor={'#f1e8e6'}
+              backgroundColor={'white'}
               color={'#361d32'}
               boxSize={6}
               as={FaUserCircle}
@@ -75,8 +75,8 @@ export const NavBar: React.FC = ({}) => {
     );
   }
   return (
-    <Box w={'100%'} p={4} bgColor="#f1e8e6" shadow={'md'}>
-      <Flex bgColor="#f1e8e6" maxW={'1200px'} mx={'auto'} alignItems={'center'}>
+    <Box w={'100%'} p={4} shadow={'sm'}>
+      <Flex maxW={'1200px'} mx={'auto'} alignItems={'center'}>
         <NextLink href="/">
           <Box>
             <Icon
@@ -91,6 +91,12 @@ export const NavBar: React.FC = ({}) => {
             />
           </Box>
         </NextLink>
+        <Text ml={8} color={'#361d32'} fontSize={24}>
+          My projects
+        </Text>
+        <Text ml={4} color={'#361d32'} fontSize={24}>
+          Explore projects
+        </Text>
 
         <Box ml={'auto'}>{navBarButtons}</Box>
       </Flex>

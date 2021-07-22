@@ -1,0 +1,18 @@
+query Projects {
+  projects {
+    projects {
+      id
+      name
+      creatorId
+      createdAt
+      updatedAt
+      users {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

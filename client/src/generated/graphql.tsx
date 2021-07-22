@@ -105,6 +105,7 @@ export type Project = {
 export type ProjectResponse = {
   __typename?: 'ProjectResponse';
   project: Project;
+  projects: Array<Project>;
   issues: Array<Issue>;
 };
 
@@ -114,6 +115,7 @@ export type Query = {
   user: UserResponse;
   currentUser?: Maybe<User>;
   userProjects?: Maybe<Array<Project>>;
+  projects?: Maybe<ProjectResponse>;
   project?: Maybe<ProjectResponse>;
   issue: IssueResponse;
 };
@@ -328,6 +330,24 @@ export type ProjectQuery = (
       { __typename?: 'Issue' }
       & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt' | 'projectId'>
       & { assignedUsers?: Maybe<Array<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+      )>> }
+    )> }
+  )> }
+);
+
+export type ProjectsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ProjectsQuery = (
+  { __typename?: 'Query' }
+  & { projects?: Maybe<(
+    { __typename?: 'ProjectResponse' }
+    & { projects: Array<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
+      & { users?: Maybe<Array<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
       )>> }
@@ -833,6 +853,53 @@ export function useProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Pr
 export type ProjectQueryHookResult = ReturnType<typeof useProjectQuery>;
 export type ProjectLazyQueryHookResult = ReturnType<typeof useProjectLazyQuery>;
 export type ProjectQueryResult = Apollo.QueryResult<ProjectQuery, ProjectQueryVariables>;
+export const ProjectsDocument = gql`
+    query Projects {
+  projects {
+    projects {
+      id
+      name
+      creatorId
+      createdAt
+      updatedAt
+      users {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useProjectsQuery__
+ *
+ * To run a query within a React component, call `useProjectsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useProjectsQuery(baseOptions?: Apollo.QueryHookOptions<ProjectsQuery, ProjectsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProjectsQuery, ProjectsQueryVariables>(ProjectsDocument, options);
+      }
+export function useProjectsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProjectsQuery, ProjectsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProjectsQuery, ProjectsQueryVariables>(ProjectsDocument, options);
+        }
+export type ProjectsQueryHookResult = ReturnType<typeof useProjectsQuery>;
+export type ProjectsLazyQueryHookResult = ReturnType<typeof useProjectsLazyQuery>;
+export type ProjectsQueryResult = Apollo.QueryResult<ProjectsQuery, ProjectsQueryVariables>;
 export const UserDocument = gql`
     query User($userId: Int!) {
   user(userId: $userId) {

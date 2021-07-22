@@ -1,18 +1,32 @@
-import { Divider, Flex, Icon, Text } from '@chakra-ui/react';
+import { Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GoPrimitiveDot } from 'react-icons/go';
+import { CreateProjectDialog } from '../components/CreateProjectDialog';
 import { NavBar } from '../components/NavBar';
 import { TitleSection } from '../components/TitleSection';
-import { useProjectsQuery } from '../generated/graphql';
+import {
+  useCurrentUserQuery,
+  useUserProjectsQuery,
+} from '../generated/graphql';
 import { toDate } from '../utils/toDate';
+import { useIsAuth } from '../utils/useIsAuth';
 import { withApollo } from '../utils/withApollo';
 
-const Index = () => {
-  const { data } = useProjectsQuery();
+const Projects = () => {
+  const { data, refetch } = useUserProjectsQuery();
+  const { data: meData } = useCurrentUserQuery();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useIsAuth();
+  useEffect(() => {
+    refetch();
+  }, [meData?.currentUser?.id]);
+
   return (
     <>
       <NavBar />
+      {isOpen && <CreateProjectDialog isOpen={isOpen} onClose={onClose} />}
       <Flex
         mt={10}
         maxW={'1200px'}
@@ -20,9 +34,9 @@ const Index = () => {
         mx={'auto'}
         direction={'column'}
       >
-        <TitleSection buttonText={'Create project'} />
+        <TitleSection buttonText={'Create project'} onOpen={onOpen} />
         <Divider mt={4} orientation="horizontal" />
-        {data?.projects?.projects?.length ? (
+        {data?.userProjects?.length ? (
           <Flex
             p={2}
             mt={4}
@@ -55,8 +69,8 @@ const Index = () => {
           <Text mt={4}>No projects yet</Text>
         )}
 
-        {data?.projects?.projects &&
-          data.projects.projects.map((pr) => {
+        {data?.userProjects &&
+          data.userProjects.map((pr) => {
             return (
               <NextLink
                 key={pr.id}
@@ -93,4 +107,4 @@ const Index = () => {
   );
 };
 
-export default withApollo({ ssr: true })(Index);
+export default withApollo({ ssr: true })(Projects);

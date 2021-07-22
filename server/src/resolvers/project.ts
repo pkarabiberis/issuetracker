@@ -32,7 +32,10 @@ class IssueInput {
 @ObjectType()
 class ProjectResponse {
   @Field(() => Project)
-  project: Project;
+  project?: Project;
+
+  @Field(() => [Project])
+  projects?: Project[];
 
   @Field(() => [Issue])
   issues?: Issue[];
@@ -60,6 +63,14 @@ export class ProjectResolver {
       name,
       users: usersToAdd.length > 0 ? usersToAdd : undefined,
     }).save();
+  }
+
+  @Query(() => ProjectResponse, { nullable: true })
+  async projects(): Promise<ProjectResponse> {
+    const projects = await Project.find({ relations: ['users'] });
+    return {
+      projects,
+    };
   }
 
   @Query(() => ProjectResponse, { nullable: true })
