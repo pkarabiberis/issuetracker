@@ -21,6 +21,8 @@ import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import {
+  ProjectsDocument,
+  ProjectsQuery,
   useCreateProjectMutation,
   useCurrentUserQuery,
   UserProjectsDocument,
@@ -35,11 +37,13 @@ import { PrimaryButton } from './PrimaryButton';
 interface CreateProjectDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  fromIndexPage: boolean;
 }
 
 export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
   isOpen,
   onClose,
+  fromIndexPage,
 }) => {
   const [createProject] = useCreateProjectMutation();
   const { data: meData } = useCurrentUserQuery();
@@ -80,19 +84,40 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                     ],
                   },
                   update: (cache, { data: newProjectData }) => {
-                    const existingProjects: UserProjectsQuery | null =
-                      cache.readQuery({
+                    if (!fromIndexPage) {
+                      const existingProjects: UserProjectsQuery | null =
+                        cache.readQuery({
+                          query: UserProjectsDocument,
+                        });
+                      cache.writeQuery({
                         query: UserProjectsDocument,
+                        data: {
+                          userProjects: [
+                            newProjectData!.createProject,
+                            ...(existingProjects?.userProjects || []),
+                          ],
+                        },
                       });
-                    cache.writeQuery({
-                      query: UserProjectsDocument,
-                      data: {
-                        userProjects: [
-                          newProjectData!.createProject,
-                          ...(existingProjects?.userProjects || []),
-                        ],
-                      },
-                    });
+                    } else {
+                      const existingProjects: ProjectsQuery | null =
+                        cache.readQuery({
+                          query: ProjectsDocument,
+                        });
+                      console.log('EXISTING: ', existingProjects);
+                      cache.writeQuery<ProjectsQuery>({
+                        query: ProjectsDocument,
+
+                        data: {
+                          projects: {
+                            __typename: 'ProjectResponse',
+                            projects: [
+                              newProjectData!.createProject,
+                              ...(existingProjects?.projects?.projects || []),
+                            ],
+                          },
+                        },
+                      });
+                    }
                   },
                 });
                 onClose();

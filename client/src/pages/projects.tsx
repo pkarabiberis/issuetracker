@@ -9,6 +9,7 @@ import {
   useCurrentUserQuery,
   useUserProjectsQuery,
 } from '../generated/graphql';
+import { membersAmount } from '../utils/membersAmount';
 import { toDate } from '../utils/toDate';
 import { useIsAuth } from '../utils/useIsAuth';
 import { withApollo } from '../utils/withApollo';
@@ -26,7 +27,13 @@ const Projects = () => {
   return (
     <>
       <NavBar />
-      {isOpen && <CreateProjectDialog isOpen={isOpen} onClose={onClose} />}
+      {isOpen && (
+        <CreateProjectDialog
+          isOpen={isOpen}
+          onClose={onClose}
+          fromIndexPage={false}
+        />
+      )}
       <Flex
         mt={10}
         maxW={'1200px'}
@@ -89,11 +96,7 @@ const Projects = () => {
                     <Text ml={2}>{pr.name}</Text>
                   </Flex>
                   <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-                    {pr.users && pr.users?.length >= 1 && pr.users.length === 1
-                      ? pr.users[0].username
-                      : `${pr.users?.[0].username} and ${
-                          pr.users!.length - 1
-                        } others`}
+                    {membersAmount(pr.users)}
                   </Text>
                   <Text textAlign={'end'} flexGrow={1} flexBasis={0}>
                     {toDate(pr.updatedAt)}
@@ -107,4 +110,4 @@ const Projects = () => {
   );
 };
 
-export default withApollo({ ssr: true })(Projects);
+export default withApollo({ ssr: false })(Projects);

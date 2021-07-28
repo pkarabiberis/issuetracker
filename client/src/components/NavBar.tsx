@@ -91,13 +91,28 @@ export const NavBar: React.FC = ({}) => {
             />
           </Box>
         </NextLink>
-        <Text ml={8} color={'#361d32'} fontSize={24}>
-          My projects
-        </Text>
-        <Text ml={4} color={'#361d32'} fontSize={24}>
-          Explore projects
-        </Text>
-
+        <NextLink href="/projects">
+          <Text
+            cursor={'pointer'}
+            _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
+            ml={8}
+            color={'#361d32'}
+            fontSize={24}
+          >
+            My projects
+          </Text>
+        </NextLink>
+        <NextLink href="/">
+          <Text
+            cursor={'pointer'}
+            _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
+            ml={4}
+            color={'#361d32'}
+            fontSize={24}
+          >
+            Explore projects
+          </Text>
+        </NextLink>
         <Box ml={'auto'}>{navBarButtons}</Box>
       </Flex>
     </Box>
