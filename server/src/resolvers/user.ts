@@ -1,22 +1,20 @@
-import { User } from '../entities/User';
+import argon2 from 'argon2';
 import {
   Arg,
   Ctx,
   Field,
-  FieldResolver,
   InputType,
   Int,
   Mutation,
   ObjectType,
   Query,
   Resolver,
-  Root,
 } from 'type-graphql';
-import argon2 from 'argon2';
-import { Context } from '../types';
+import { getConnection } from 'typeorm';
 import { COOKIE_NAME } from '../constants';
 import { Project } from '../entities/Project';
-import { createConnection, createQueryBuilder, getConnection } from 'typeorm';
+import { User } from '../entities/User';
+import { Context } from '../types';
 
 @InputType()
 class UserRegisterInput {

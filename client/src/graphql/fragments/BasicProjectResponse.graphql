@@ -1,0 +1,14 @@
+fragment BasicProjectResponse on Project {
+  id
+  name
+  creatorId
+  createdAt
+  updatedAt
+  users {
+    id
+    username
+    email
+    createdAt
+    updatedAt
+  }
+}

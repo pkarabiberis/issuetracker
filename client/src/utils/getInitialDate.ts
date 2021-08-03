@@ -8,7 +8,10 @@ export const getInitialDate = (due?: string) => {
       ? `0${(issueDue.getMonth() + 1).toString()}`
       : `${(issueDue.getMonth() + 1).toString()}`;
 
-  return `${issueDue.getFullYear().toString()}-${initialMonth}-${issueDue
-    .getDate()
-    .toString()}`;
+  const initialDay =
+    issueDue.getDate() < 10
+      ? `0${issueDue.getDate().toString()}`
+      : `${issueDue.getDate().toString()}`;
+
+  return `${issueDue.getFullYear().toString()}-${initialMonth}-${initialDay}`;
 };

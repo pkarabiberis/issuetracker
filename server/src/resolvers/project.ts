@@ -67,7 +67,10 @@ export class ProjectResolver {
 
   @Query(() => ProjectResponse, { nullable: true })
   async projects(): Promise<ProjectResponse> {
-    const projects = await Project.find({ relations: ['users'] });
+    const projects = await Project.find({
+      relations: ['users'],
+      order: { updatedAt: 'DESC' },
+    });
     return {
       projects,
     };

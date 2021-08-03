@@ -1,16 +1,5 @@
 query UserProjects {
   userProjects {
-    id
-    name
-    creatorId
-    createdAt
-    updatedAt
-    users {
-      id
-      username
-      email
-      createdAt
-      updatedAt
-    }
+    ...BasicProjectResponse
   }
 }

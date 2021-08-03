@@ -164,6 +164,15 @@ export type UserResponse = {
   errors?: Maybe<Array<InputError>>;
 };
 
+export type BasicProjectResponseFragment = (
+  { __typename?: 'Project' }
+  & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
+  & { users?: Maybe<Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+  )>> }
+);
+
 export type CreateIssueMutationVariables = Exact<{
   input: IssueInput;
   assignedUsers: Array<Scalars['Int']> | Scalars['Int'];
@@ -346,11 +355,7 @@ export type ProjectsQuery = (
     { __typename?: 'ProjectResponse' }
     & { projects: Array<(
       { __typename?: 'Project' }
-      & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
-      & { users?: Maybe<Array<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
-      )>> }
+      & BasicProjectResponseFragment
     )> }
   )> }
 );
@@ -381,11 +386,7 @@ export type UserProjectsQuery = (
   { __typename?: 'Query' }
   & { userProjects?: Maybe<Array<(
     { __typename?: 'Project' }
-    & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
-    & { users?: Maybe<Array<(
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
-    )>> }
+    & BasicProjectResponseFragment
   )>> }
 );
 
@@ -400,7 +401,22 @@ export type UsersQuery = (
   )> }
 );
 
-
+export const BasicProjectResponseFragmentDoc = gql`
+    fragment BasicProjectResponse on Project {
+  id
+  name
+  creatorId
+  createdAt
+  updatedAt
+  users {
+    id
+    username
+    email
+    createdAt
+    updatedAt
+  }
+}
+    `;
 export const CreateIssueDocument = gql`
     mutation CreateIssue($input: IssueInput!, $assignedUsers: [Int!]!) {
   createIssue(input: $input, assignedUsers: $assignedUsers) {
@@ -857,22 +873,11 @@ export const ProjectsDocument = gql`
     query Projects {
   projects {
     projects {
-      id
-      name
-      creatorId
-      createdAt
-      updatedAt
-      users {
-        id
-        username
-        email
-        createdAt
-        updatedAt
-      }
+      ...BasicProjectResponse
     }
   }
 }
-    `;
+    ${BasicProjectResponseFragmentDoc}`;
 
 /**
  * __useProjectsQuery__
@@ -948,21 +953,10 @@ export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;
 export const UserProjectsDocument = gql`
     query UserProjects {
   userProjects {
-    id
-    name
-    creatorId
-    createdAt
-    updatedAt
-    users {
-      id
-      username
-      email
-      createdAt
-      updatedAt
-    }
+    ...BasicProjectResponse
   }
 }
-    `;
+    ${BasicProjectResponseFragmentDoc}`;
 
 /**
  * __useUserProjectsQuery__

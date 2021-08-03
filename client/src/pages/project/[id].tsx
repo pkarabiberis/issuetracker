@@ -1,6 +1,8 @@
 import { Divider, Flex, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
+import { GeneralError } from '../../components/GeneralError';
+import { Loading } from '../../components/Loading';
 import { NavBar } from '../../components/NavBar';
 import { ProjectIssues } from '../../components/ProjectIssues';
 import { ProjectIssueTitles } from '../../components/ProjectIssueTitles';
@@ -29,37 +31,11 @@ const Project: React.FC<ProjectProps> = ({}) => {
   };
 
   if (loading) {
-    return (
-      <>
-        <NavBar />
-        <Flex
-          mt={10}
-          maxW={'1200px'}
-          align="center"
-          mx={'auto'}
-          direction={'column'}
-        >
-          Loading...
-        </Flex>
-      </>
-    );
+    return <Loading />;
   }
 
   if (error) {
-    return (
-      <>
-        <NavBar />
-        <Flex
-          mt={10}
-          maxW={'1200px'}
-          align="center"
-          mx={'auto'}
-          direction={'column'}
-        >
-          {error.message}
-        </Flex>
-      </>
-    );
+    return <GeneralError />;
   }
 
   if (!data?.project) {
