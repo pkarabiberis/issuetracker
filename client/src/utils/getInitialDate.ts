@@ -1,4 +1,7 @@
 export const getInitialDate = (due?: string) => {
+  if (due?.includes('NaN')) {
+    return '';
+  }
   const issueDue = new Date(Number(due));
 
   //insert zero to initial value if needed

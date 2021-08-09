@@ -103,10 +103,8 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                         cache.readQuery({
                           query: ProjectsDocument,
                         });
-                      console.log('EXISTING: ', existingProjects);
                       cache.writeQuery<ProjectsQuery>({
                         query: ProjectsDocument,
-
                         data: {
                           projects: {
                             __typename: 'ProjectResponse',

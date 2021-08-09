@@ -38,7 +38,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
           <Flex direction={'column'}>
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by status"
               onClick={() => handleSort('status', 'ASC')}
               _hover={{ bgColor: undefined }}
@@ -46,7 +46,7 @@ export const ProjectIssueTitles: React.FC<ProjectIssueTitlesProps> = ({
             />
             <IconButton
               size={'xs'}
-              bgColor={'#f1e8e6'}
+              bgColor={'#fbf9f8'}
               aria-label="Sort by status"
               _hover={{ bgColor: undefined }}
               onClick={() => handleSort('status', 'DESC')}

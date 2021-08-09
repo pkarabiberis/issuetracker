@@ -1,8 +1,7 @@
-import { Button } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 import React, { ButtonHTMLAttributes } from 'react';
-import { InputHTMLAttributes } from 'react';
 
-type PrimaryButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type PrimaryButtonProps = ButtonProps & {
   buttonText?: string;
   isLoading?: boolean;
 };
@@ -13,12 +12,12 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   ...props
 }) => (
   <Button
+    {...props}
     textColor={'#361d32'}
     bgColor={'transparent'}
     border={'1px'}
     fontWeight={'700'}
     isLoading={isLoading}
-    {...props}
     borderColor={'#361d32'}
     _hover={{ bgColor: '#f1e8e6' }}
   >

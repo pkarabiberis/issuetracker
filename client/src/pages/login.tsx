@@ -4,6 +4,7 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Layout } from '../components/Layout';
+import { PrimaryButton } from '../components/PrimaryButton';
 import {
   CurrentUserDocument,
   CurrentUserQuery,
@@ -49,31 +50,27 @@ const Login: React.FC<loginProps> = ({}) => {
             <Box w={'400px'}>
               <Form>
                 <InputField
-                  name='username'
-                  placeholder='username'
-                  label='Username'
+                  name="username"
+                  placeholder="username"
+                  label="Username"
                 />
 
                 <Box mt={4}>
                   <InputField
-                    name='password'
-                    label='Password'
-                    placeholder='********'
-                    type='password'
+                    name="password"
+                    label="Password"
+                    placeholder="********"
+                    type="password"
                   />
                 </Box>
                 <Flex>
-                  <Button
+                  <PrimaryButton
                     mt={4}
                     ml={'auto'}
-                    type='submit'
-                    textColor={'white'}
+                    type="submit"
                     isLoading={isSubmitting}
-                    bgColor='blue.500'
-                    _hover={{ bgColor: 'blue.400' }}
-                  >
-                    Login
-                  </Button>
+                    buttonText={'Login'}
+                  />
                 </Flex>
               </Form>
             </Box>

@@ -1,5 +1,4 @@
 import { Divider, Flex, useDisclosure } from '@chakra-ui/react';
-import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import { GeneralError } from '../../components/GeneralError';
 import { Loading } from '../../components/Loading';
@@ -7,20 +6,15 @@ import { NavBar } from '../../components/NavBar';
 import { ProjectIssues } from '../../components/ProjectIssues';
 import { ProjectIssueTitles } from '../../components/ProjectIssueTitles';
 import { TitleSection } from '../../components/TitleSection';
-import { useProjectQuery } from '../../generated/graphql';
+import { useGetProjectFromUrl } from '../../utils/useGetProjectFromUrl';
 import { useIsAuth } from '../../utils/useIsAuth';
 import { withApollo } from '../../utils/withApollo';
 
 interface ProjectProps {}
 
 const Project: React.FC<ProjectProps> = ({}) => {
-  const { query } = useRouter();
   useIsAuth();
-  const { data, loading, error, refetch, variables } = useProjectQuery({
-    variables: {
-      id: typeof query.id !== 'undefined' ? parseInt(query.id as string) : -1,
-    },
-  });
+  const { data, loading, error, refetch, variables } = useGetProjectFromUrl();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const handleSort = (sortBy: string, sortDir: string) => {
     refetch({

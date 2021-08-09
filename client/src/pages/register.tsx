@@ -4,6 +4,7 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Layout } from '../components/Layout';
+import { PrimaryButton } from '../components/PrimaryButton';
 import {
   CurrentUserDocument,
   CurrentUserQuery,
@@ -48,37 +49,33 @@ const Register: React.FC<registerProps> = ({}) => {
             <Box w={'400px'}>
               <Form>
                 <InputField
-                  name='email'
-                  placeholder='your@email.com'
-                  label='Email'
+                  name="email"
+                  placeholder="your@email.com"
+                  label="Email"
                 />
                 <Box mt={4}>
                   <InputField
-                    name='username'
-                    placeholder='username'
-                    label='Username'
+                    name="username"
+                    placeholder="username"
+                    label="Username"
                   />
                 </Box>
                 <Box mt={4}>
                   <InputField
-                    name='password'
-                    label='Password'
-                    placeholder='********'
-                    type='password'
+                    name="password"
+                    label="Password"
+                    placeholder="********"
+                    type="password"
                   />
                 </Box>
                 <Flex>
-                  <Button
+                  <PrimaryButton
                     mt={4}
                     ml={'auto'}
-                    type='submit'
-                    textColor={'white'}
+                    type="submit"
+                    buttonText={'Register'}
                     isLoading={isSubmitting}
-                    bgColor='blue.500'
-                    _hover={{ bgColor: 'blue.400' }}
-                  >
-                    Register
-                  </Button>
+                  />
                 </Flex>
               </Form>
             </Box>

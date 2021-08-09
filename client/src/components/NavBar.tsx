@@ -3,12 +3,11 @@ import { useRouter } from 'next/dist/client/router';
 import NextLink from 'next/link';
 import React, { useState } from 'react';
 import { useRef } from 'react';
-
 import { AiFillBug } from 'react-icons/ai';
 import { FaUserCircle } from 'react-icons/fa';
 import { useCurrentUserQuery } from '../generated/graphql';
-
 import { Dropdown } from './Dropdown';
+import { PrimaryButton } from './PrimaryButton';
 
 export const NavBar: React.FC = ({}) => {
   const router = useRouter();
@@ -27,23 +26,14 @@ export const NavBar: React.FC = ({}) => {
     navBarButtons = (
       <>
         <NextLink href="/login">
-          <Button
-            textColor={'white'}
-            _hover={{ bgColor: 'blue.300' }}
-            bgColor={'blue.400'}
-            mr={2}
-          >
-            Login
-          </Button>
+          <a>
+            <PrimaryButton mr={2} buttonText={'Login'} />
+          </a>
         </NextLink>
         <NextLink href="/register">
-          <Button
-            textColor={'white'}
-            _hover={{ bgColor: 'blue.300' }}
-            bgColor={'blue.400'}
-          >
-            Register
-          </Button>
+          <a>
+            <PrimaryButton buttonText={'Register'} />
+          </a>
         </NextLink>
       </>
     );

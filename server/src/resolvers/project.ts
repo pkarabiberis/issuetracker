@@ -1,6 +1,4 @@
-import { Project } from '../entities/Project';
-import { isAuthenticated } from '../middleware/isAuthenticated';
-import { Context } from '../types';
+import { toISO } from '../utils/toISO';
 import {
   Arg,
   Ctx,
@@ -13,9 +11,12 @@ import {
   Resolver,
   UseMiddleware,
 } from 'type-graphql';
-import { User } from '../entities/User';
+import { getRepository } from 'typeorm';
 import { Issue } from '../entities/Issue';
-import { getConnection, getRepository } from 'typeorm';
+import { Project } from '../entities/Project';
+import { User } from '../entities/User';
+import { isAuthenticated } from '../middleware/isAuthenticated';
+import { Context } from '../types';
 
 @InputType()
 class IssueInput {
@@ -120,6 +121,9 @@ export class ProjectResolver {
     @Ctx() { req }: Context
   ): Promise<Issue> {
     const usersToAssign = await User.findByIds(assignedUsers);
+    await Project.update(input.projectId, {
+      updatedAt: toISO(new Date()),
+    });
     return Issue.create({
       ...input,
       status: 'Ongoing',
@@ -128,7 +132,7 @@ export class ProjectResolver {
     }).save();
   }
 
-  @Mutation(() => Issue)
+  @Mutation(() => Issue, { nullable: true })
   @UseMiddleware(isAuthenticated)
   async updateissue(
     @Arg('id', () => Int) id: number,
@@ -136,9 +140,15 @@ export class ProjectResolver {
     @Arg('status', () => String) status: string,
     @Arg('due', () => String, { nullable: true }) due: string,
     @Arg('assignedUsers', () => [Int]) assignedUsers: number[]
-  ): Promise<Issue> {
+  ): Promise<Issue | null> {
     const usersToAssign = await User.findByIds(assignedUsers);
     const issue = await Issue.findOne(id);
+    if (!issue) {
+      return null;
+    }
+    await Project.update(issue?.projectId, {
+      updatedAt: toISO(new Date()),
+    });
     return getRepository(Issue).save({
       ...issue,
       title,
@@ -151,9 +161,7 @@ export class ProjectResolver {
   @Query(() => IssueResponse)
   async issue(@Arg('id', () => Int) id: number): Promise<IssueResponse> {
     const issue = await Issue.findOne(id, { relations: ['assignedUsers'] });
-    return {
-      issue,
-    };
+    return { issue };
   }
 
   @Mutation(() => Boolean)

@@ -1,9 +1,5 @@
-import { Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
-import NextLink from 'next/link';
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { GoPrimitiveDot } from 'react-icons/go';
+import { Divider, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
 import { CreateProjectDialog } from '../components/CreateProjectDialog';
 import { GeneralError } from '../components/GeneralError';
 import { Loading } from '../components/Loading';
@@ -12,8 +8,6 @@ import { Project } from '../components/Project';
 import { ProjectTitles } from '../components/ProjectTitles';
 import { TitleSection } from '../components/TitleSection';
 import { useCurrentUserQuery, useProjectsQuery } from '../generated/graphql';
-import { membersAmount } from '../utils/membersAmount';
-import { toDate } from '../utils/toDate';
 import { withApollo } from '../utils/withApollo';
 
 const Index = () => {
@@ -23,14 +17,16 @@ const Index = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    data?.projects?.projects.forEach((p) => {
-      const isMyProject = p.users?.find(
-        (u) => u.id === meData?.currentUser!.id
-      );
-      if (isMyProject && !myProjects?.includes(p.id)) {
-        setMyProjects((projects) => [...(projects || []), p.id]);
-      }
-    });
+    if (meData?.currentUser) {
+      data?.projects?.projects.forEach((p) => {
+        const isMyProject = p.users?.find(
+          (u) => u.id === meData?.currentUser!.id
+        );
+        if (isMyProject && !myProjects?.includes(p.id)) {
+          setMyProjects((projects) => [...(projects || []), p.id]);
+        }
+      });
+    }
   }, [meData?.currentUser, data?.projects?.projects]);
 
   if (loading) {

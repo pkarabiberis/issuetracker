@@ -14,7 +14,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
@@ -24,13 +23,13 @@ import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import {
   Issue,
   useDeleteIssueMutation,
-  useProjectQuery,
   useUpdateIssueMutation,
   useUserQuery,
 } from '../generated/graphql';
 import { getInitialDate } from '../utils/getInitialDate';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
 import { toDate } from '../utils/toDate';
+import { useGetProjectFromUrl } from '../utils/useGetProjectFromUrl';
 import { useModalSize } from '../utils/useModalSize';
 import { InputField } from './InputField';
 import { PrimaryButton } from './PrimaryButton';
@@ -49,12 +48,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
   const [status, setStatus] = useState<string>(issue.status);
   const [showUserList, setShowUserList] = useState(false);
   const [updateIssue] = useUpdateIssueMutation();
-  const { data } = useProjectQuery({
-    variables: {
-      id: issue.projectId ? issue.projectId : -1,
-    },
-    skip: issue.projectId === -1,
-  });
+  const { data } = useGetProjectFromUrl();
   const { data: issueCreator } = useUserQuery({
     variables: {
       userId: issue.creatorId,
@@ -96,7 +90,6 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
       >
         <ModalOverlay />
         <ModalContent mx={[2, 2, 0, 0, 0, 0]}>
-          <ModalHeader></ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Formik

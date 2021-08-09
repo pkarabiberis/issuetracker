@@ -13,21 +13,21 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import {
   ProjectDocument,
   ProjectQuery,
   ProjectQueryVariables,
   useCreateIssueMutation,
-  useProjectQuery,
 } from '../generated/graphql';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
+import { useGetProjectFromUrl } from '../utils/useGetProjectFromUrl';
 import { useModalSize } from '../utils/useModalSize';
 import { InputField } from './InputField';
 import { PrimaryButton } from './PrimaryButton';
@@ -49,17 +49,22 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
   >([]);
-  const { data: projectUsers } = useProjectQuery({
-    variables: {
-      id: typeof projectId !== 'undefined' ? projectId : -1,
-    },
-    skip: projectId === -1,
-  });
-
+  const { data: projectUsers } = useGetProjectFromUrl();
   const [showUserList, setShowUserList] = useState(false);
+  const canToggle =
+    usersToAssign.length !== projectUsers?.project?.project.users?.length;
   const open = () => {
-    setShowUserList(!showUserList);
+    if (canToggle) {
+      setShowUserList(!showUserList);
+    }
   };
+
+  useEffect(() => {
+    if (!canToggle) {
+      setShowUserList(false);
+    }
+  }, [usersToAssign]);
+
   return (
     <>
       <Modal
@@ -195,7 +200,6 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                                         variant={'solid'}
                                         color={'black'}
                                         p={1}
-                                        onClick={() => {}}
                                       >
                                         <Flex alignItems={'center'}>
                                           <Text>{u.username}</Text>
