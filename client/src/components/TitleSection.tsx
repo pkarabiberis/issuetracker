@@ -1,4 +1,4 @@
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Icon, IconButton, Text, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import {
@@ -7,6 +7,9 @@ import {
 } from '../generated/graphql';
 import { CreateIssueDialog } from './CreateIssueDialog';
 import { PrimaryButton } from './PrimaryButton';
+import { MdEdit } from 'react-icons/md';
+import { BaseModal } from './BaseModal';
+import { EditProjectModal } from './EditProjectModal';
 
 interface TitleSectionProps {
   title?: string;
@@ -29,12 +32,27 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
 }) => {
   const { data } = useCurrentUserQuery();
   const router = useRouter();
+  const {
+    isOpen: isOpenEditProject,
+    onOpen: onOpenEditProject,
+    onClose: onCloseEditProject,
+  } = useDisclosure();
   return (
     <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
       {title && (
-        <Text ml={[4, 4, 4, 4, 0, 0]} color={'#361d32'} fontSize={20}>
-          {title}
-        </Text>
+        <Flex ml={[4, 4, 4, 4, 0, 0]} alignItems={'center'}>
+          <Text color={'#361d32'} fontSize={20}>
+            {title}
+          </Text>
+          <Icon
+            ml={2}
+            aria-label='Edit project'
+            boxSize={7}
+            bgColor='white'
+            as={MdEdit}
+            onClick={onOpenEditProject}
+          />
+        </Flex>
       )}
 
       <PrimaryButton
@@ -50,6 +68,12 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
           onClose={onClose!}
           projectId={projectId || undefined}
           variables={variables}
+        />
+      )}
+      {isOpenEditProject && (
+        <EditProjectModal
+          isOpen={isOpenEditProject}
+          onClose={onCloseEditProject}
         />
       )}
     </Flex>

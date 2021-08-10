@@ -4,6 +4,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Issue } from '../generated/graphql';
 import { getBadgeColor } from '../utils/getBadgeColor';
 import { getIssueVisibility } from '../utils/getIssueVisibility';
+import { membersAmount } from '../utils/membersAmount';
 import { toDate } from '../utils/toDate';
 import { EditIssueDialog } from './EditIssueDialog';
 
@@ -100,15 +101,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
               flexBasis={0}
               textAlign={'center'}
             >
-              {/* clean up later
-           formats text based on assigned users */}
-              {realIssue?.assignedUsers && realIssue?.assignedUsers?.length > 0
-                ? realIssue.assignedUsers?.length === 1
-                  ? realIssue.assignedUsers[0].username
-                  : `${realIssue?.assignedUsers?.[0].username} and ${
-                      realIssue?.assignedUsers!.length - 1
-                    } other`
-                : '-'}
+              {membersAmount(realIssue.assignedUsers)}
             </Text>
 
             <Icon

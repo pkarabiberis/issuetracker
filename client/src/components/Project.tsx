@@ -1,15 +1,10 @@
 import { Flex, Icon, Text } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import React from 'react';
 import { GoPrimitiveDot } from 'react-icons/go';
-import {
-  BasicProjectResponseFragment,
-  Project as ProjectType,
-  ProjectsQuery,
-} from '../generated/graphql';
+import { BasicProjectResponseFragment } from '../generated/graphql';
 import { membersAmount } from '../utils/membersAmount';
 import { toDate } from '../utils/toDate';
-
-import NextLink from 'next/link';
 
 interface ProjectProps {
   pr: BasicProjectResponseFragment;
@@ -18,7 +13,7 @@ interface ProjectProps {
 
 export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
   return userProject ? (
-    <NextLink href="/project/[id]" as={`/project/${pr.id}`}>
+    <NextLink href='/project/[id]' as={`/project/${pr.id}`}>
       <Flex
         _hover={{ bgColor: '#fcfafa', cursor: 'pointer' }}
         p={2}
@@ -27,7 +22,7 @@ export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
         alignItems={'center'}
         w={'100%'}
       >
-        <Flex flexGrow={1} flexBasis={0} alignItems="center">
+        <Flex flexGrow={1} flexBasis={0} alignItems='center'>
           <Icon color={'green.500'} as={GoPrimitiveDot} />
           <Text ml={2}>{pr.name}</Text>
         </Flex>
@@ -48,7 +43,7 @@ export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
       alignItems={'center'}
       w={'100%'}
     >
-      <Flex flexGrow={1} flexBasis={0} alignItems="center">
+      <Flex flexGrow={1} flexBasis={0} alignItems='center'>
         <Icon color={'red.500'} as={GoPrimitiveDot} />
         <Text ml={2}>{pr.name}</Text>
       </Flex>

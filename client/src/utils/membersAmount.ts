@@ -1,7 +1,7 @@
 import { Project } from '../generated/graphql';
 
 export const membersAmount = (users?: Project['users']) => {
-  if (!users) {
+  if (!users || !users.length) {
     return '-';
   }
 
