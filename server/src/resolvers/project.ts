@@ -99,7 +99,7 @@ export class ProjectResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuthenticated)
-  async deleteProject(@Arg('id') id: number) {
+  async deleteProject(@Arg('id', () => Int) id: number) {
     await Project.delete(id);
     return true;
   }

@@ -2,6 +2,7 @@ import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Badge,
   Box,
+  Button,
   Collapse,
   Flex,
   Icon,
@@ -12,11 +13,16 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
+import { Router, useRouter } from 'next/dist/client/router';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { AiOutlineUserDelete, AiOutlineUserAdd } from 'react-icons/ai';
-import { useEditProjectMutation, useUsersQuery } from '../generated/graphql';
+import {
+  useDeleteProjectMutation,
+  useEditProjectMutation,
+  useUsersQuery,
+} from '../generated/graphql';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
 import { useGetProjectFromUrl } from '../utils/useGetProjectFromUrl';
 import { BaseModal } from './BaseModal';
@@ -35,7 +41,9 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
   const { data, loading } = useGetProjectFromUrl();
   const { data: userData } = useUsersQuery();
   const [editProject] = useEditProjectMutation();
+  const [deleteProject] = useDeleteProjectMutation();
   const [showUserList, setShowUserList] = useState(false);
+  const router = useRouter();
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
   >([]);
@@ -189,7 +197,27 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                     </List>
                   </Box>
                 </Collapse>
-                <ModalFooter p={0} mt={5}>
+                <ModalFooter justifyContent={'space-between'} p={0} mt={5}>
+                  <Button
+                    colorScheme='red'
+                    onClick={async () => {
+                      onClose();
+                      await deleteProject({
+                        variables: {
+                          id: data?.project?.project.id!,
+                        },
+                        update: (cache) => {
+                          cache.evict({
+                            id: 'Project:' + data?.project?.project.id!,
+                          });
+                        },
+                      });
+
+                      router.replace('/');
+                    }}
+                  >
+                    Delete
+                  </Button>
                   <PrimaryButton
                     buttonText={'Update'}
                     type={'submit'}
