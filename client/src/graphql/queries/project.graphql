@@ -1,18 +1,7 @@
 query Project($id: Int!, $sortBy: String, $sortDir: String) {
   project(id: $id, sortBy: $sortBy, sortDir: $sortDir) {
     project {
-      id
-      name
-      creatorId
-      createdAt
-      updatedAt
-      users {
-        id
-        username
-        email
-        createdAt
-        updatedAt
-      }
+      ...BasicProjectResponse
     }
 
     issues {

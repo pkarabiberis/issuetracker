@@ -1,7 +1,23 @@
 mutation EditProject($id: Int!, $name: String!, $users: [Int!]) {
   editProject(id: $id, name: $name, users: $users) {
-    id
-    name
-    creatorId
+    project {
+      ...BasicProjectResponse
+    }
+    issues {
+      id
+      title
+      creatorId
+      due
+      status
+      createdAt
+      updatedAt
+      assignedUsers {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
   }
 }

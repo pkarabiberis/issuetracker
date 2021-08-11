@@ -66,24 +66,60 @@ export class ProjectResolver {
     }).save();
   }
 
-  @Mutation(() => Project, { nullable: true })
+  @Mutation(() => ProjectResponse, { nullable: true })
   @UseMiddleware(isAuthenticated)
   async editProject(
     @Arg('id', () => Int) id: number,
     @Arg('name') name: string,
     @Arg('users', () => [Int], { nullable: true }) users: number[]
-  ): Promise<Project | null> {
-    const usersToAdd = await User.findByIds(users);
-    const project = await Project.findOne(id);
+  ): Promise<ProjectResponse | null> {
+    const updatedUsers = await User.findByIds(users);
+    const project = await Project.findOne(id, { relations: ['users'] });
     if (!project) {
       return null;
     }
 
-    return getRepository(Project).save({
+    const projectIssues = await Issue.find({
+      where: {
+        projectId: id,
+      },
+      relations: ['assignedUsers'],
+    });
+
+    console.log('ogIssues: ', projectIssues);
+    const newIssueUsers: Record<number, User[]> = {};
+    projectIssues.forEach((issue) => {
+      newIssueUsers[issue.id] = issue.assignedUsers.filter(({ id }) =>
+        users.includes(id)
+      );
+    });
+
+    console.log(newIssueUsers);
+
+    const updatedIssues: Issue[] = [];
+    Object.keys(newIssueUsers).forEach(async (iu) => {
+      const id = parseInt(iu);
+      const issue = await Issue.findOne(id);
+      const updatedIssue = await getRepository(Issue).save({
+        ...issue,
+        assignedUsers: newIssueUsers[id],
+      });
+
+      updatedIssues.push(updatedIssue);
+    });
+
+    const updatedProject = await getRepository(Project).save({
       ...project,
       name,
-      users: usersToAdd,
+      users: updatedUsers,
     });
+
+    console.log('updtIssues: ', updatedIssues);
+
+    return {
+      project: updatedProject,
+      issues: updatedIssues,
+    };
   }
 
   @Query(() => ProjectResponse, { nullable: true })

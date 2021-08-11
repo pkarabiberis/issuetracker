@@ -50,7 +50,7 @@ export type Mutation = {
   login?: Maybe<UserResponse>;
   logout: Scalars['Boolean'];
   createProject: Project;
-  editProject?: Maybe<Project>;
+  editProject?: Maybe<ProjectResponse>;
   deleteProject: Scalars['Boolean'];
   createIssue: Issue;
   updateissue?: Maybe<Issue>;
@@ -253,8 +253,18 @@ export type EditProjectMutationVariables = Exact<{
 export type EditProjectMutation = (
   { __typename?: 'Mutation' }
   & { editProject?: Maybe<(
-    { __typename?: 'Project' }
-    & Pick<Project, 'id' | 'name' | 'creatorId'>
+    { __typename?: 'ProjectResponse' }
+    & { project: (
+      { __typename?: 'Project' }
+      & BasicProjectResponseFragment
+    ), issues: Array<(
+      { __typename?: 'Issue' }
+      & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt'>
+      & { assignedUsers?: Maybe<Array<(
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
+      )>> }
+    )> }
   )> }
 );
 
@@ -369,11 +379,7 @@ export type ProjectQuery = (
     { __typename?: 'ProjectResponse' }
     & { project: (
       { __typename?: 'Project' }
-      & Pick<Project, 'id' | 'name' | 'creatorId' | 'createdAt' | 'updatedAt'>
-      & { users?: Maybe<Array<(
-        { __typename?: 'User' }
-        & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
-      )>> }
+      & BasicProjectResponseFragment
     ), issues: Array<(
       { __typename?: 'Issue' }
       & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt' | 'projectId'>
@@ -613,12 +619,28 @@ export type DeleteProjectMutationOptions = Apollo.BaseMutationOptions<DeleteProj
 export const EditProjectDocument = gql`
     mutation EditProject($id: Int!, $name: String!, $users: [Int!]) {
   editProject(id: $id, name: $name, users: $users) {
-    id
-    name
-    creatorId
+    project {
+      ...BasicProjectResponse
+    }
+    issues {
+      id
+      title
+      creatorId
+      due
+      status
+      createdAt
+      updatedAt
+      assignedUsers {
+        id
+        username
+        email
+        createdAt
+        updatedAt
+      }
+    }
   }
 }
-    `;
+    ${BasicProjectResponseFragmentDoc}`;
 export type EditProjectMutationFn = Apollo.MutationFunction<EditProjectMutation, EditProjectMutationVariables>;
 
 /**
@@ -913,18 +935,7 @@ export const ProjectDocument = gql`
     query Project($id: Int!, $sortBy: String, $sortDir: String) {
   project(id: $id, sortBy: $sortBy, sortDir: $sortDir) {
     project {
-      id
-      name
-      creatorId
-      createdAt
-      updatedAt
-      users {
-        id
-        username
-        email
-        createdAt
-        updatedAt
-      }
+      ...BasicProjectResponse
     }
     issues {
       id
@@ -945,7 +956,7 @@ export const ProjectDocument = gql`
     }
   }
 }
-    `;
+    ${BasicProjectResponseFragmentDoc}`;
 
 /**
  * __useProjectQuery__
