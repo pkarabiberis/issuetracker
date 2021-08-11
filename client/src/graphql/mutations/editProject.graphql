@@ -1,0 +1,7 @@
+mutation EditProject($id: Int!, $name: String!, $users: [Int!]) {
+  editProject(id: $id, name: $name, users: $users) {
+    id
+    name
+    creatorId
+  }
+}

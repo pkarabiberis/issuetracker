@@ -50,8 +50,9 @@ export type Mutation = {
   login?: Maybe<UserResponse>;
   logout: Scalars['Boolean'];
   createProject: Project;
+  editProject?: Maybe<Project>;
   createIssue: Issue;
-  updateissue: Issue;
+  updateissue?: Maybe<Issue>;
   deleteIssue: Scalars['Boolean'];
 };
 
@@ -69,6 +70,13 @@ export type MutationLoginArgs = {
 export type MutationCreateProjectArgs = {
   users?: Maybe<Array<Scalars['Int']>>;
   name: Scalars['String'];
+};
+
+
+export type MutationEditProjectArgs = {
+  users?: Maybe<Array<Scalars['Int']>>;
+  name: Scalars['String'];
+  id: Scalars['Int'];
 };
 
 
@@ -219,6 +227,21 @@ export type DeleteIssueMutation = (
   & Pick<Mutation, 'deleteIssue'>
 );
 
+export type EditProjectMutationVariables = Exact<{
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  users?: Maybe<Array<Scalars['Int']> | Scalars['Int']>;
+}>;
+
+
+export type EditProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { editProject?: Maybe<(
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name' | 'creatorId'>
+  )> }
+);
+
 export type LoginMutationVariables = Exact<{
   creds: UserLoginInput;
 }>;
@@ -276,14 +299,14 @@ export type UpdateIssueMutationVariables = Exact<{
 
 export type UpdateIssueMutation = (
   { __typename?: 'Mutation' }
-  & { updateissue: (
+  & { updateissue?: Maybe<(
     { __typename?: 'Issue' }
     & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt' | 'projectId'>
     & { assignedUsers?: Maybe<Array<(
       { __typename?: 'User' }
       & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
     )>> }
-  ) }
+  )> }
 );
 
 export type CurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
@@ -540,6 +563,43 @@ export function useDeleteIssueMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteIssueMutationHookResult = ReturnType<typeof useDeleteIssueMutation>;
 export type DeleteIssueMutationResult = Apollo.MutationResult<DeleteIssueMutation>;
 export type DeleteIssueMutationOptions = Apollo.BaseMutationOptions<DeleteIssueMutation, DeleteIssueMutationVariables>;
+export const EditProjectDocument = gql`
+    mutation EditProject($id: Int!, $name: String!, $users: [Int!]) {
+  editProject(id: $id, name: $name, users: $users) {
+    id
+    name
+    creatorId
+  }
+}
+    `;
+export type EditProjectMutationFn = Apollo.MutationFunction<EditProjectMutation, EditProjectMutationVariables>;
+
+/**
+ * __useEditProjectMutation__
+ *
+ * To run a mutation, you first call `useEditProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editProjectMutation, { data, loading, error }] = useEditProjectMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      users: // value for 'users'
+ *   },
+ * });
+ */
+export function useEditProjectMutation(baseOptions?: Apollo.MutationHookOptions<EditProjectMutation, EditProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditProjectMutation, EditProjectMutationVariables>(EditProjectDocument, options);
+      }
+export type EditProjectMutationHookResult = ReturnType<typeof useEditProjectMutation>;
+export type EditProjectMutationResult = Apollo.MutationResult<EditProjectMutation>;
+export type EditProjectMutationOptions = Apollo.BaseMutationOptions<EditProjectMutation, EditProjectMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($creds: UserLoginInput!) {
   login(creds: $creds) {

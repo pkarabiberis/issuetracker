@@ -34,7 +34,9 @@ export class Project extends BaseEntity {
   users: User[];
 
   @Field(() => [Issue])
-  @OneToMany(() => Issue, (issue) => issue.project)
+  @OneToMany(() => Issue, (issue) => issue.project, {
+    onDelete: 'CASCADE',
+  })
   issues: Issue[];
 
   @Field(() => String)

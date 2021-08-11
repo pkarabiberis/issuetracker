@@ -8,6 +8,7 @@ import {
   IconButton,
   List,
   ListItem,
+  ModalFooter,
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
@@ -15,11 +16,12 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { AiOutlineUserDelete, AiOutlineUserAdd } from 'react-icons/ai';
-import { useUsersQuery } from '../generated/graphql';
+import { useEditProjectMutation, useUsersQuery } from '../generated/graphql';
 import { scrollbarStyle } from '../utils/scrollbarStyle';
 import { useGetProjectFromUrl } from '../utils/useGetProjectFromUrl';
 import { BaseModal } from './BaseModal';
 import { InputField } from './InputField';
+import { PrimaryButton } from './PrimaryButton';
 
 interface EditProjectModalProps {
   isOpen: boolean;
@@ -32,6 +34,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
 }) => {
   const { data, loading } = useGetProjectFromUrl();
   const { data: userData } = useUsersQuery();
+  const [editProject] = useEditProjectMutation();
   const [showUserList, setShowUserList] = useState(false);
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
@@ -67,7 +70,18 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
     <BaseModal isOpen={isOpen} onClose={onClose}>
       <Formik
         initialValues={{ projectName: data?.project?.project.name }}
-        onSubmit={() => console.log('ye')}
+        onSubmit={async (values) => {
+          const userIds = usersToAssign.map((user) => user.id);
+          await editProject({
+            variables: {
+              name: values.projectName ? values.projectName : '',
+              id: data?.project?.project.id!,
+              users: userIds,
+            },
+          });
+
+          onClose();
+        }}
       >
         {({ isSubmitting }) => {
           return (
@@ -175,6 +189,13 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                     </List>
                   </Box>
                 </Collapse>
+                <ModalFooter p={0} mt={5}>
+                  <PrimaryButton
+                    buttonText={'Update'}
+                    type={'submit'}
+                    isLoading={isSubmitting}
+                  />
+                </ModalFooter>
               </Form>
             </Box>
           );

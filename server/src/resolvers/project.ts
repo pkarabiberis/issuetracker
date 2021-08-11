@@ -66,6 +66,26 @@ export class ProjectResolver {
     }).save();
   }
 
+  @Mutation(() => Project, { nullable: true })
+  @UseMiddleware(isAuthenticated)
+  async editProject(
+    @Arg('id', () => Int) id: number,
+    @Arg('name') name: string,
+    @Arg('users', () => [Int], { nullable: true }) users: number[]
+  ): Promise<Project | null> {
+    const usersToAdd = await User.findByIds(users);
+    const project = await Project.findOne(id);
+    if (!project) {
+      return null;
+    }
+
+    return getRepository(Project).save({
+      ...project,
+      name,
+      users: usersToAdd,
+    });
+  }
+
   @Query(() => ProjectResponse, { nullable: true })
   async projects(): Promise<ProjectResponse> {
     const projects = await Project.find({
@@ -75,6 +95,13 @@ export class ProjectResolver {
     return {
       projects,
     };
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuthenticated)
+  async deleteProject(@Arg('id') id: number) {
+    await Project.delete(id);
+    return true;
   }
 
   @Query(() => ProjectResponse, { nullable: true })
