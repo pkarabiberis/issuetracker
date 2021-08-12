@@ -102,7 +102,10 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                       Users
                     </Text>
                     <Icon
-                      _hover={{ color: 'gray.500', cursor: 'pointer' }}
+                      _hover={{
+                        color: 'gray.500',
+                        cursor: canToggle ? 'pointer' : 'not-allowed',
+                      }}
                       w={6}
                       h={6}
                       as={showUserList ? AiOutlineUserDelete : AiOutlineUserAdd}
@@ -195,8 +198,8 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                   </Box>
                 </Collapse>
                 <ModalFooter justifyContent={'space-between'} p={0} mt={5}>
-                  <Button
-                    colorScheme='red'
+                  <PrimaryButton
+                    buttonText={'Delete project'}
                     onClick={async () => {
                       await deleteProject({
                         variables: {
@@ -211,9 +214,8 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                       onClose();
                       router.replace('/');
                     }}
-                  >
-                    Delete
-                  </Button>
+                  />
+
                   <PrimaryButton
                     buttonText={'Update'}
                     type={'submit'}

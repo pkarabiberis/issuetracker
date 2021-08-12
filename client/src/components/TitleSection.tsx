@@ -38,10 +38,19 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
     onClose: onCloseEditProject,
   } = useDisclosure();
   return (
-    <Flex alignItems={'center'} justifyContent={'space-between'} w={'100%'}>
+    <Flex
+      alignItems={'center'}
+      flexDir={['column', 'column', 'row', 'row', 'row', 'row']}
+      justifyContent={'space-between'}
+      w={'100%'}
+    >
       {title && (
-        <Flex ml={[4, 4, 4, 4, 0, 0]} alignItems={'center'}>
-          <Text color={'#361d32'} fontSize={20}>
+        <Flex
+          mx={[4, 4, 4, 4, 0, 0]}
+          alignItems={'center'}
+          flexDir={['column', 'column', 'row', 'row', 'row', 'row']}
+        >
+          <Text color={'#361d32'} overflowWrap={'anywhere'} fontSize={20}>
             {title}
           </Text>
           <Icon
@@ -54,14 +63,15 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
           />
         </Flex>
       )}
-
       <PrimaryButton
-        mr={[4, 4, 4, 4, 0, 0]}
+        mt={[8, 8, 0, 0, 0, 0]}
+        mr={title ? [0, 0, 4, 4, 4, 4] : 4}
         ml={!title ? 'auto' : undefined}
         buttonText={buttonText}
         cursor={!data?.currentUser ? 'not-allowed' : 'pointer'}
         onClick={data?.currentUser ? onOpen : () => router.replace('/login')}
       />
+
       {isOpen && (
         <CreateIssueDialog
           isOpen={isOpen}

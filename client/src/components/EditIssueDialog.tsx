@@ -121,7 +121,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                   </Text>
                 </Flex>
                 <Form style={{ marginTop: '24px' }}>
-                  <InputField name="title" label="Issue" />
+                  <InputField name='title' label='Issue' />
                   <Box mt={4}>
                     <Text fontSize={'md'} fontWeight={'medium'}>
                       Status
@@ -131,7 +131,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                         onClick={() => setStatus('Ongoing')}
                         p={2}
                         ml={2}
-                        colorScheme="purple"
+                        colorScheme='purple'
                         _hover={{ cursor: 'pointer' }}
                         variant={status === 'Ongoing' ? undefined : 'outline'}
                       >
@@ -140,7 +140,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                       <Badge
                         ml={4}
                         p={2}
-                        colorScheme="green"
+                        colorScheme='green'
                         variant={status === 'Completed' ? undefined : 'outline'}
                         onClick={() => setStatus('Completed')}
                         _hover={{ cursor: 'pointer' }}
@@ -150,7 +150,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                       <Badge
                         ml={4}
                         p={2}
-                        colorScheme="red"
+                        colorScheme='red'
                         variant={status === 'Closed' ? undefined : 'outline'}
                         onClick={() => setStatus('Closed')}
                         _hover={{ cursor: 'pointer' }}
@@ -160,7 +160,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                     </Flex>
                   </Box>
                   <Box mt={4}>
-                    <InputField name="due" type="date" label="Due" />
+                    <InputField name='due' type='date' label='Due' />
                   </Box>
                   <Box mt={4}>
                     <Flex justifyContent={'space-between'}>
@@ -168,7 +168,12 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                         Assigned to
                       </Text>
                       <Icon
-                        _hover={{ color: 'gray.500', cursor: 'pointer' }}
+                        _hover={{
+                          color: 'gray.500',
+                          cursor: usersToShow.length
+                            ? 'pointer'
+                            : 'not-allowed',
+                        }}
                         w={6}
                         h={6}
                         as={
@@ -192,7 +197,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                           <Flex align={'center'}>
                             <Text>{u.username}</Text>
                             <IconButton
-                              aria-label="Delete assigned user"
+                              aria-label='Delete assigned user'
                               colorScheme={'pink'}
                               icon={<CloseIcon />}
                               size={'xs'}
@@ -240,7 +245,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                                         <Text>{u.username}</Text>
                                         <IconButton
                                           ml={2}
-                                          aria-label="Add user"
+                                          aria-label='Add user'
                                           size={'xs'}
                                           disabled={disableUserClick}
                                           bgColor={'white'}
@@ -274,9 +279,9 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                     </Collapse>
                   </Box>
                   <ModalFooter justifyContent={'space-between'} p={0} mt={5}>
-                    <Button
+                    <PrimaryButton
+                      buttonText={'Delete issue'}
                       isLoading={deleteLoading}
-                      colorScheme="red"
                       onClick={async () => {
                         onClose();
                         await deleteIssue({
@@ -288,9 +293,8 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                           },
                         });
                       }}
-                    >
-                      Delete
-                    </Button>
+                    />
+
                     <PrimaryButton
                       buttonText={'Update'}
                       type={'submit'}

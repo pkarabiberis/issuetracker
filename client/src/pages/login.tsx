@@ -47,27 +47,30 @@ const Login: React.FC<loginProps> = ({}) => {
       >
         {({ isSubmitting }) => {
           return (
-            <Box w={'400px'}>
+            <Box
+              px={2}
+              w={['320px', '320px', '400px', '400px', '400px', '400px']}
+            >
               <Form>
                 <InputField
-                  name="username"
-                  placeholder="username"
-                  label="Username"
+                  name='username'
+                  placeholder='username'
+                  label='Username'
                 />
 
                 <Box mt={4}>
                   <InputField
-                    name="password"
-                    label="Password"
-                    placeholder="********"
-                    type="password"
+                    name='password'
+                    label='Password'
+                    placeholder='********'
+                    type='password'
                   />
                 </Box>
                 <Flex>
                   <PrimaryButton
                     mt={4}
                     ml={'auto'}
-                    type="submit"
+                    type='submit'
                     isLoading={isSubmitting}
                     buttonText={'Login'}
                   />

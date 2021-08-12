@@ -46,33 +46,36 @@ const Register: React.FC<registerProps> = ({}) => {
       >
         {({ isSubmitting }) => {
           return (
-            <Box w={'400px'}>
+            <Box
+              px={2}
+              w={['320px', '320px', '400px', '400px', '400px', '400px']}
+            >
               <Form>
                 <InputField
-                  name="email"
-                  placeholder="your@email.com"
-                  label="Email"
+                  name='email'
+                  placeholder='your@email.com'
+                  label='Email'
                 />
                 <Box mt={4}>
                   <InputField
-                    name="username"
-                    placeholder="username"
-                    label="Username"
+                    name='username'
+                    placeholder='username'
+                    label='Username'
                   />
                 </Box>
                 <Box mt={4}>
                   <InputField
-                    name="password"
-                    label="Password"
-                    placeholder="********"
-                    type="password"
+                    name='password'
+                    label='Password'
+                    placeholder='********'
+                    type='password'
                   />
                 </Box>
                 <Flex>
                   <PrimaryButton
                     mt={4}
                     ml={'auto'}
-                    type="submit"
+                    type='submit'
                     buttonText={'Register'}
                     isLoading={isSubmitting}
                   />

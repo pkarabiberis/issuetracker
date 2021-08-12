@@ -50,12 +50,12 @@ const Index = () => {
       <Flex
         mt={10}
         maxW={'1200px'}
-        align="center"
+        align='center'
         mx={'auto'}
         direction={'column'}
       >
         <TitleSection buttonText={'Create project'} onOpen={onOpen} />
-        <Divider mt={4} orientation="horizontal" />
+        <Divider mt={4} orientation='horizontal' />
 
         {data?.projects?.projects && data.projects.projects.length > 0 ? (
           <ProjectTitles />
