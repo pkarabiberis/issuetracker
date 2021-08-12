@@ -1,4 +1,3 @@
-import { toISO } from '../utils/toISO';
 import {
   Arg,
   Ctx,
@@ -17,6 +16,23 @@ import { Project } from '../entities/Project';
 import { User } from '../entities/User';
 import { isAuthenticated } from '../middleware/isAuthenticated';
 import { Context } from '../types';
+import { toISO } from '../utils/toISO';
+
+const updateIssueUsers = async (newIssueUsers: Record<number, User[]>) => {
+  const updatedIssues: Issue[] = [];
+  for (const val in newIssueUsers) {
+    const id = parseInt(val);
+    const issue = await Issue.findOne(id);
+    if (!issue) {
+      return;
+    }
+
+    issue.assignedUsers = newIssueUsers[id];
+    updatedIssues.push(issue);
+  }
+
+  return updatedIssues;
+};
 
 @InputType()
 class IssueInput {
@@ -74,7 +90,10 @@ export class ProjectResolver {
     @Arg('users', () => [Int], { nullable: true }) users: number[]
   ): Promise<ProjectResponse | null> {
     const updatedUsers = await User.findByIds(users);
-    const project = await Project.findOne(id, { relations: ['users'] });
+    const project = await Project.findOne(id, {
+      relations: ['users'],
+    });
+
     if (!project) {
       return null;
     }
@@ -86,7 +105,6 @@ export class ProjectResolver {
       relations: ['assignedUsers'],
     });
 
-    console.log('ogIssues: ', projectIssues);
     const newIssueUsers: Record<number, User[]> = {};
     projectIssues.forEach((issue) => {
       newIssueUsers[issue.id] = issue.assignedUsers.filter(({ id }) =>
@@ -94,27 +112,16 @@ export class ProjectResolver {
       );
     });
 
-    console.log(newIssueUsers);
+    const updatedIssues = await updateIssueUsers(newIssueUsers);
 
-    const updatedIssues: Issue[] = [];
-    Object.keys(newIssueUsers).forEach(async (iu) => {
-      const id = parseInt(iu);
-      const issue = await Issue.findOne(id);
-      const updatedIssue = await getRepository(Issue).save({
-        ...issue,
-        assignedUsers: newIssueUsers[id],
-      });
-
-      updatedIssues.push(updatedIssue);
-    });
+    await getRepository(Issue).save(updatedIssues || []);
 
     const updatedProject = await getRepository(Project).save({
       ...project,
       name,
       users: updatedUsers,
+      issues: updatedIssues,
     });
-
-    console.log('updtIssues: ', updatedIssues);
 
     return {
       project: updatedProject,

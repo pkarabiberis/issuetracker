@@ -21,6 +21,13 @@ const createClient = (ctx: NextPageContext) =>
             },
           },
         },
+        Project: {
+          fields: {
+            users: {
+              merge: false,
+            },
+          },
+        },
       },
     }),
   });

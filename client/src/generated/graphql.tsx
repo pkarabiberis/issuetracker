@@ -259,7 +259,7 @@ export type EditProjectMutation = (
       & BasicProjectResponseFragment
     ), issues: Array<(
       { __typename?: 'Issue' }
-      & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt'>
+      & Pick<Issue, 'id' | 'title' | 'creatorId' | 'due' | 'status' | 'createdAt' | 'updatedAt' | 'projectId'>
       & { assignedUsers?: Maybe<Array<(
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username' | 'email' | 'createdAt' | 'updatedAt'>
@@ -630,6 +630,7 @@ export const EditProjectDocument = gql`
       status
       createdAt
       updatedAt
+      projectId
       assignedUsers {
         id
         username

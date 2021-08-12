@@ -11,6 +11,7 @@ mutation EditProject($id: Int!, $name: String!, $users: [Int!]) {
       status
       createdAt
       updatedAt
+      projectId
       assignedUsers {
         id
         username

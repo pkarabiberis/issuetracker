@@ -13,16 +13,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
-import { Router, useRouter } from 'next/dist/client/router';
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { AiOutlineUserDelete, AiOutlineUserAdd } from 'react-icons/ai';
+import { useRouter } from 'next/dist/client/router';
+import React, { useEffect, useState } from 'react';
+import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import {
-  IssueDocument,
-  IssueQuery,
-  ProjectDocument,
-  ProjectQuery,
   useDeleteProjectMutation,
   useEditProjectMutation,
   useUsersQuery,
@@ -90,35 +84,6 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
               id: data?.project?.project.id!,
               users: userIds || [],
             },
-            update: (cache, { data: updatedProjectData }) => {
-              console.log('cache: ', cache);
-
-              const projectCache: ProjectQuery | null = cache.readQuery({
-                query: ProjectDocument,
-                variables: {
-                  id: data?.project?.project.id!,
-                },
-              });
-
-              console.log('OLD: ', projectCache);
-              console.log('NEW: ', updatedProjectData);
-
-              // cache.writeQuery<ProjectQuery>({
-              //   query: ProjectDocument,
-              //   variables: {
-              //     id: data?.project?.project.id!,
-              //   },
-              //   data: {
-              //     project: {
-              //       __typename: 'ProjectResponse',
-              //       project: {
-              //         ...updatedProjectData?.editProject?.project!,
-              //       },
-              //       issues: [...(projectCache?.project?.issues || [])],
-              //     },
-              //   },
-              // });
-            },
           });
           onClose();
         }}
@@ -130,7 +95,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                 Update project
               </Text>
               <Form style={{ marginTop: '24px' }}>
-                <InputField name="projectName" label="Project name" />
+                <InputField name='projectName' label='Project name' />
                 <Box mt={4}>
                   <Flex justifyContent={'space-between'}>
                     <Text fontSize={'md'} fontWeight={'medium'}>
@@ -160,7 +125,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                           <Flex align={'center'}>
                             <Text>{username}</Text>
                             <IconButton
-                              aria-label="Delete assigned user"
+                              aria-label='Delete assigned user'
                               colorScheme={'pink'}
                               icon={<CloseIcon />}
                               size={'xs'}
@@ -204,7 +169,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                                     <Text>{u.username}</Text>
                                     <IconButton
                                       ml={2}
-                                      aria-label="Add user"
+                                      aria-label='Add user'
                                       size={'xs'}
                                       bgColor={'white'}
                                       icon={<AddIcon />}
@@ -231,7 +196,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                 </Collapse>
                 <ModalFooter justifyContent={'space-between'} p={0} mt={5}>
                   <Button
-                    colorScheme="red"
+                    colorScheme='red'
                     onClick={async () => {
                       await deleteProject({
                         variables: {
