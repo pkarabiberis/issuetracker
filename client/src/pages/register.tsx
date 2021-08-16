@@ -47,7 +47,7 @@ const Register: React.FC<registerProps> = ({}) => {
         {({ isSubmitting }) => {
           return (
             <Box
-              px={2}
+              px={4}
               w={['320px', '320px', '400px', '400px', '400px', '400px']}
             >
               <Form>

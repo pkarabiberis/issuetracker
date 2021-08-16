@@ -82,29 +82,34 @@ export const NavBar: React.FC = ({}) => {
             />
           </Box>
         </NextLink>
-        <NextLink href='/projects'>
-          <Text
-            display={['none', 'none', 'block', 'block', 'block', 'block']}
-            cursor={'pointer'}
-            _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
-            ml={8}
-            color={'#361d32'}
-            fontSize={24}
-          >
-            My projects
-          </Text>
-        </NextLink>
-        <NextLink href='/'>
-          <Text
-            cursor={'pointer'}
-            _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
-            ml={4}
-            color={'#361d32'}
-            fontSize={[16, 16, 24, 24, 24, 24]}
-          >
-            Explore projects
-          </Text>
-        </NextLink>
+        {data?.currentUser ? (
+          <>
+            <NextLink href='/projects'>
+              <Text
+                cursor={'pointer'}
+                _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
+                ml={[4, 4, 8, 8, 8, 8]}
+                color={'#361d32'}
+                fontSize={24}
+              >
+                My projects
+              </Text>
+            </NextLink>
+            <NextLink href='/'>
+              <Text
+                cursor={'pointer'}
+                _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
+                ml={4}
+                color={'#361d32'}
+                display={['none', 'none', 'block', 'block', 'block', 'block']}
+                fontSize={[16, 16, 24, 24, 24, 24]}
+              >
+                Explore projects
+              </Text>
+            </NextLink>
+          </>
+        ) : null}
+
         <Flex ml={'auto'}>{navBarButtons}</Flex>
       </Flex>
     </Box>

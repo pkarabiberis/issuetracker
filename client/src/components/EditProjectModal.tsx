@@ -132,13 +132,23 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                               colorScheme={'pink'}
                               icon={<CloseIcon />}
                               size={'xs'}
+                              cursor={
+                                usersToAssign.length === 1
+                                  ? 'not-allowed'
+                                  : 'pointer'
+                              }
                               ml={2}
-                              onClick={() => {
-                                const usersAfterDeletion = usersToAssign.filter(
-                                  (au) => au.id !== id
-                                );
-                                setUsersToAssign(usersAfterDeletion);
-                              }}
+                              onClick={
+                                usersToAssign.length === 1
+                                  ? () => null
+                                  : () => {
+                                      const usersAfterDeletion =
+                                        usersToAssign.filter(
+                                          (au) => au.id !== id
+                                        );
+                                      setUsersToAssign(usersAfterDeletion);
+                                    }
+                              }
                             />
                           </Flex>
                         </Badge>

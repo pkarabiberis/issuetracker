@@ -65,7 +65,7 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
       )}
       <PrimaryButton
         mt={[8, 8, 0, 0, 0, 0]}
-        mr={title ? [0, 0, 4, 4, 4, 4] : 4}
+        mr={title ? [0, 0, 4, 4, 0, 0] : [4, 4, 4, 4, 0, 0]}
         ml={!title ? 'auto' : undefined}
         buttonText={buttonText}
         cursor={!data?.currentUser ? 'not-allowed' : 'pointer'}
