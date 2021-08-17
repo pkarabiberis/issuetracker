@@ -33,7 +33,7 @@ const main = async () => {
 
   const RedisStore = connectRedis(session);
   const redis = new Redis(process.env.REDIS_URL);
-  app.set('proxy', 1);
+  app.set('trust proxy', 1);
   app.use(
     cors({
       origin: process.env.CORS_ORIGIN,
@@ -53,6 +53,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: 'lax',
         secure: __prod__,
+        domain: __prod__ ? '.karabiberisapps.com' : undefined,
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET,
