@@ -8,6 +8,5 @@ export const useGetProjectFromUrl = () => {
     variables: {
       id: intId,
     },
-    fetchPolicy: 'network-only',
   });
 };

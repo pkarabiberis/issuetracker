@@ -14,7 +14,6 @@ import { withApollo } from '../../utils/withApollo';
 interface ProjectProps {}
 
 const Project: React.FC<ProjectProps> = ({}) => {
-  useIsAuth();
   const { data, loading, error, refetch, variables } = useGetProjectFromUrl();
   const { data: meData, loading: userLoading } = useCurrentUserQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,6 +27,10 @@ const Project: React.FC<ProjectProps> = ({}) => {
   };
 
   useEffect(() => {
+    if (!meData?.currentUser) {
+      setHideProjectButtons(true);
+    }
+
     if (
       !userLoading &&
       !loading &&

@@ -49,7 +49,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
 }) => {
   const [createProject] = useCreateProjectMutation();
   const { data: meData } = useCurrentUserQuery();
-  const [showUserList, setShowUserList] = useState(false);
+  const [showUserList, setShowUserList] = useState(true);
   const { data } = useUsersQuery();
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
@@ -130,7 +130,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                   Create project
                 </Text>
                 <Form style={{ marginTop: '24px' }}>
-                  <InputField name='projectName' label='Project name' />
+                  <InputField name="projectName" label="Project name" />
                   <Box mt={4}>
                     <Flex justifyContent={'space-between'}>
                       <Text fontSize={'md'} fontWeight={'medium'}>
@@ -162,7 +162,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                             <Flex align={'center'}>
                               <Text>{username}</Text>
                               <IconButton
-                                aria-label='Delete assigned user'
+                                aria-label="Delete assigned user"
                                 colorScheme={'pink'}
                                 icon={<CloseIcon />}
                                 size={'xs'}
@@ -209,7 +209,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
                                       <Text>{u.username}</Text>
                                       <IconButton
                                         ml={2}
-                                        aria-label='Add user'
+                                        aria-label="Add user"
                                         size={'xs'}
                                         bgColor={'white'}
                                         icon={<AddIcon />}

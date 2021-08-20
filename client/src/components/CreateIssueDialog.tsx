@@ -44,7 +44,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
     { id: number; username: string }[]
   >([]);
   const { data: projectUsers } = useGetProjectFromUrl();
-  const [showUserList, setShowUserList] = useState(false);
+  const [showUserList, setShowUserList] = useState(true);
   const canToggle =
     usersToAssign.length !== projectUsers?.project?.project.users?.length;
   const open = () => {
@@ -108,9 +108,9 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                   Create issue
                 </Text>
                 <Form style={{ marginTop: '24px' }}>
-                  <InputField name='title' label='Issue name' />
+                  <InputField name="title" label="Issue name" />
                   <Box mt={4}>
-                    <InputField name='due' type='date' label='Due' />
+                    <InputField name="due" type="date" label="Due" />
                   </Box>
                   <Box mt={4}>
                     <Flex justifyContent={'space-between'}>
@@ -143,7 +143,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                             <Flex align={'center'}>
                               <Text>{username}</Text>
                               <IconButton
-                                aria-label='Delete assigned user'
+                                aria-label="Delete assigned user"
                                 colorScheme={'pink'}
                                 icon={<CloseIcon />}
                                 size={'xs'}
@@ -186,7 +186,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                                       <Text>{u.username}</Text>
                                       <IconButton
                                         ml={2}
-                                        aria-label='Add user'
+                                        aria-label="Add user"
                                         size={'xs'}
                                         bgColor={'white'}
                                         icon={<AddIcon />}

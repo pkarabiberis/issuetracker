@@ -40,7 +40,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
   const { data: userData } = useUsersQuery();
   const [editProject] = useEditProjectMutation();
   const [deleteProject] = useDeleteProjectMutation();
-  const [showUserList, setShowUserList] = useState(false);
+  const [showUserList, setShowUserList] = useState(true);
   const router = useRouter();
   const [usersToAssign, setUsersToAssign] = useState<
     { id: number; username: string }[]
@@ -53,7 +53,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
       setShowUserList(!showUserList);
     }
   };
-
+  console.log(data?.project);
   const projectInitialUsers: { id: number; username: string }[] = [];
 
   useEffect(() => {
@@ -95,7 +95,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                 Update project
               </Text>
               <Form style={{ marginTop: '24px' }}>
-                <InputField name='projectName' label='Project name' />
+                <InputField name="projectName" label="Project name" />
                 <Box mt={4}>
                   <Flex justifyContent={'space-between'}>
                     <Text fontSize={'md'} fontWeight={'medium'}>
@@ -128,7 +128,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                           <Flex align={'center'}>
                             <Text>{username}</Text>
                             <IconButton
-                              aria-label='Delete assigned user'
+                              aria-label="Delete assigned user"
                               colorScheme={'pink'}
                               icon={<CloseIcon />}
                               size={'xs'}
@@ -182,7 +182,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
                                     <Text>{u.username}</Text>
                                     <IconButton
                                       ml={2}
-                                      aria-label='Add user'
+                                      aria-label="Add user"
                                       size={'xs'}
                                       bgColor={'white'}
                                       icon={<AddIcon />}
