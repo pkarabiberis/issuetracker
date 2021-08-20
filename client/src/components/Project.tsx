@@ -12,8 +12,8 @@ interface ProjectProps {
 }
 
 export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
-  return userProject ? (
-    <NextLink href='/project/[id]' as={`/project/${pr.id}`}>
+  return (
+    <NextLink href="/project/[id]" as={`/project/${pr.id}`}>
       <Flex
         _hover={{ bgColor: '#fcfafa', cursor: 'pointer' }}
         p={2}
@@ -22,8 +22,11 @@ export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
         alignItems={'center'}
         w={'100%'}
       >
-        <Flex flexGrow={1} overflow={'auto'} flexBasis={0} alignItems='center'>
-          <Icon color={'green.500'} as={GoPrimitiveDot} />
+        <Flex flexGrow={1} overflow={'auto'} flexBasis={0} alignItems="center">
+          <Icon
+            color={userProject ? 'green.500' : 'red.500'}
+            as={GoPrimitiveDot}
+          />
           <Text ml={2}>{pr.name}</Text>
         </Flex>
         <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
@@ -34,25 +37,5 @@ export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
         </Text>
       </Flex>
     </NextLink>
-  ) : (
-    <Flex
-      _hover={{ bgColor: '#fcfafa', cursor: 'not-allowed' }}
-      p={2}
-      mt={4}
-      key={pr.id}
-      alignItems={'center'}
-      w={'100%'}
-    >
-      <Flex flexGrow={1} flexBasis={0} alignItems='center'>
-        <Icon color={'red.500'} as={GoPrimitiveDot} />
-        <Text ml={2}>{pr.name}</Text>
-      </Flex>
-      <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
-        {membersAmount(pr.users)}
-      </Text>
-      <Text textAlign={'end'} flexGrow={1} flexBasis={0}>
-        {toDate(pr.updatedAt)}
-      </Text>
-    </Flex>
   );
 };

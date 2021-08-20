@@ -1,7 +1,5 @@
 import { Divider, Flex, useDisclosure } from '@chakra-ui/react';
-import { useRouter } from 'next/dist/client/router';
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GeneralError } from '../../components/GeneralError';
 import { Loading } from '../../components/Loading';
 import { NavBar } from '../../components/NavBar';
@@ -17,10 +15,10 @@ interface ProjectProps {}
 
 const Project: React.FC<ProjectProps> = ({}) => {
   useIsAuth();
-  const router = useRouter();
   const { data, loading, error, refetch, variables } = useGetProjectFromUrl();
   const { data: meData, loading: userLoading } = useCurrentUserQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [hideProjectButtons, setHideProjectButtons] = useState(false);
   const handleSort = (sortBy: string, sortDir: string) => {
     refetch({
       id: data?.project?.project.id,
@@ -36,12 +34,18 @@ const Project: React.FC<ProjectProps> = ({}) => {
       data?.project?.project.users &&
       meData?.currentUser
     ) {
-      const isAllowed = data.project?.project.users.find(
+      const isUserInProject = data.project?.project.users.find(
         (u) => u.id === meData.currentUser?.id
       );
-      if (!isAllowed) {
-        router.replace('/');
+
+      if (!isUserInProject) {
+        setHideProjectButtons(true);
       }
+
+      // uncomment to deny access if not part of project
+      // if (!isUserInProject) {
+      //   router.replace('/');
+      // }
     }
   }, [userLoading, loading, data, meData]);
 
@@ -60,7 +64,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
         <Flex
           mt={10}
           maxW={'1200px'}
-          align='center'
+          align="center"
           mx={'auto'}
           direction={'column'}
         >
@@ -75,7 +79,7 @@ const Project: React.FC<ProjectProps> = ({}) => {
       <Flex
         mt={10}
         maxW={'1200px'}
-        align='center'
+        align="center"
         mx={'auto'}
         direction={'column'}
       >
@@ -85,15 +89,22 @@ const Project: React.FC<ProjectProps> = ({}) => {
           onOpen={onOpen}
           isOpen={isOpen}
           onClose={onClose}
+          hideButtons={hideProjectButtons}
           projectId={data.project.project.id}
           variables={typeof variables !== 'undefined' ? variables : undefined}
         />
-        <Divider mt={4} orientation='horizontal' />
+        <Divider mt={4} orientation="horizontal" />
         <ProjectIssueTitles handleSort={handleSort} />
         {data?.project &&
           data.project.issues.length > 0 &&
           data.project.issues.map((issue) => {
-            return <ProjectIssues key={issue.id} issue={issue} />;
+            return (
+              <ProjectIssues
+                key={issue.id}
+                issue={issue}
+                hideButton={hideProjectButtons}
+              />
+            );
           })}
       </Flex>
     </>

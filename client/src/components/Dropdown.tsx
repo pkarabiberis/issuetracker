@@ -62,17 +62,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
         >
           Logout
         </Button>
-        <Button
-          p={2}
-          justifyContent={'flex-start'}
-          textColor={'#361d32'}
-          bgColor={'transparent'}
-          fontWeight={'700'}
-          _hover={{ bgColor: '#f1e8e6' }}
-          textAlign={'start'}
-        >
-          Delete user
-        </Button>
       </Flex>
     </Box>
   );

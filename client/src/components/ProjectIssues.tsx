@@ -10,9 +10,13 @@ import { EditIssueDialog } from './EditIssueDialog';
 
 interface ProjectIssuesProps {
   issue: any;
+  hideButton: boolean;
 }
 
-export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
+export const ProjectIssues: React.FC<ProjectIssuesProps> = ({
+  issue,
+  hideButton,
+}) => {
   const realIssue = issue as Issue;
   const { onOpen, onClose, isOpen } = useDisclosure();
   return (
@@ -105,6 +109,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({ issue }) => {
             </Text>
 
             <Icon
+              visibility={hideButton ? 'hidden' : 'visible'}
               as={BsThreeDotsVertical}
               w={5}
               h={5}

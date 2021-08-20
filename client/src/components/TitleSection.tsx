@@ -19,6 +19,7 @@ interface TitleSectionProps {
   onClose?: () => void;
   projectId?: number;
   variables?: ProjectQueryVariables | undefined;
+  hideButtons?: boolean;
 }
 
 export const TitleSection: React.FC<TitleSectionProps> = ({
@@ -29,6 +30,7 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
   onClose,
   projectId,
   variables,
+  hideButtons,
 }) => {
   const { data } = useCurrentUserQuery();
   const router = useRouter();
@@ -54,16 +56,19 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
             {title}
           </Text>
           <Icon
+            visibility={hideButtons ? 'hidden' : 'visible'}
             ml={2}
-            aria-label='Edit project'
+            _hover={{ color: '#c7c7b7' }}
+            aria-label="Edit project"
             boxSize={7}
-            bgColor='white'
+            bgColor="white"
             as={MdEdit}
             onClick={onOpenEditProject}
           />
         </Flex>
       )}
       <PrimaryButton
+        visibility={hideButtons ? 'hidden' : 'visible'}
         mt={[8, 8, 0, 0, 0, 0]}
         mr={title ? [0, 0, 4, 4, 0, 0] : [4, 4, 4, 4, 0, 0]}
         ml={!title ? 'auto' : undefined}
