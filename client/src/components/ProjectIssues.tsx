@@ -53,6 +53,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({
               flexGrow={0.1}
               flexBasis={0}
               onClick={onOpen}
+              visibility={hideButton ? 'hidden' : 'visible'}
             />
           </Flex>
           <Flex
