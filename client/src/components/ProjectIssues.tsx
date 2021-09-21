@@ -37,7 +37,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({
             }}
             w={'100%'}
           >
-            <Text flex={1} flexGrow={1} textAlign={'center'}>
+            <Text flex={1} fontWeight={500} flexGrow={1} textAlign={'center'}>
               {realIssue.title ? realIssue.title : '-'}
             </Text>
 
@@ -72,11 +72,21 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({
               '2xl': 'flex',
             }}
           >
-            <Text flexGrow={1} flexBasis={0} textAlign={'center'}>
+            <Text
+              flexGrow={1}
+              flexBasis={0}
+              fontWeight={500}
+              textAlign={'center'}
+            >
               {realIssue.title}
             </Text>
 
-            <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+            <Text
+              textAlign={'center'}
+              fontWeight={500}
+              flexGrow={1}
+              flexBasis={0}
+            >
               <Badge colorScheme={getBadgeColor(realIssue.status)}>
                 {realIssue.status}
               </Badge>
@@ -87,6 +97,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({
               textAlign={'center'}
               flexGrow={1}
               flexBasis={0}
+              fontWeight={500}
             >
               {toDate(realIssue.createdAt)}
             </Text>
@@ -96,6 +107,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({
               textAlign={'center'}
               flexGrow={1}
               flexBasis={0}
+              fontWeight={500}
             >
               {realIssue.due ? toDate(realIssue.due) : '-'}
             </Text>
@@ -105,6 +117,7 @@ export const ProjectIssues: React.FC<ProjectIssuesProps> = ({
               flexGrow={1}
               flexBasis={0}
               textAlign={'center'}
+              fontWeight={500}
             >
               {membersAmount(realIssue.assignedUsers)}
             </Text>

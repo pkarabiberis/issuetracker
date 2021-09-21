@@ -13,13 +13,13 @@ export const ProjectTitles: React.FC<ProjectTitlesProps> = ({}) => {
       alignItems={'center'}
       w={'100%'}
     >
-      <Text flexGrow={1} flexBasis={0} fontWeight={'bold'}>
+      <Text flexGrow={1} flexBasis={0} fontWeight={700}>
         Project
       </Text>
-      <Text flexGrow={1} flexBasis={0} fontWeight={'bold'} textAlign={'center'}>
+      <Text flexGrow={1} flexBasis={0} fontWeight={700} textAlign={'center'}>
         Members
       </Text>
-      <Text flexGrow={1} flexBasis={0} fontWeight={'bold'} textAlign={'end'}>
+      <Text flexGrow={1} flexBasis={0} fontWeight={700} textAlign={'end'}>
         Last updated
       </Text>
     </Flex>

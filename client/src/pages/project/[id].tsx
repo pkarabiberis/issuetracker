@@ -1,4 +1,5 @@
 import { Divider, Flex, useDisclosure } from '@chakra-ui/react';
+import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { GeneralError } from '../../components/GeneralError';
 import { Loading } from '../../components/Loading';
@@ -8,7 +9,6 @@ import { ProjectIssueTitles } from '../../components/ProjectIssueTitles';
 import { TitleSection } from '../../components/TitleSection';
 import { useCurrentUserQuery } from '../../generated/graphql';
 import { useGetProjectFromUrl } from '../../utils/useGetProjectFromUrl';
-import { useIsAuth } from '../../utils/useIsAuth';
 import { withApollo } from '../../utils/withApollo';
 
 interface ProjectProps {}
@@ -79,6 +79,9 @@ const Project: React.FC<ProjectProps> = ({}) => {
   return (
     <>
       <NavBar />
+      <Head>
+        <title>{data.project.project.name}</title>
+      </Head>
       <Flex
         mt={10}
         maxW={'1200px'}

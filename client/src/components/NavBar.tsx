@@ -1,12 +1,10 @@
-import { Box, Button, Flex, Text, Icon } from '@chakra-ui/react';
+import { Box, Flex, Icon, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/dist/client/router';
 import NextLink from 'next/link';
-import React, { useState } from 'react';
-import { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { AiFillBug } from 'react-icons/ai';
 import { FaUserCircle } from 'react-icons/fa';
 import { useCurrentUserQuery } from '../generated/graphql';
-import { useModalSize } from '../utils/useModalSize';
 import { Dropdown } from './Dropdown';
 import { PrimaryButton } from './PrimaryButton';
 
@@ -26,12 +24,12 @@ export const NavBar: React.FC = ({}) => {
   if (!data?.currentUser) {
     navBarButtons = (
       <Flex ml={'auto'}>
-        <NextLink href='/login'>
+        <NextLink href="/login">
           <a>
             <PrimaryButton mr={2} buttonText={'Login'} />
           </a>
         </NextLink>
-        <NextLink href='/register'>
+        <NextLink href="/register">
           <a>
             <PrimaryButton buttonText={'Register'} />
           </a>
@@ -68,7 +66,7 @@ export const NavBar: React.FC = ({}) => {
   return (
     <Box w={'100%'} p={4} shadow={'sm'}>
       <Flex maxW={'1200px'} mx={'auto'} alignItems={'center'}>
-        <NextLink href='/'>
+        <NextLink href="/">
           <Box>
             <Icon
               boxSize={10}
@@ -84,25 +82,25 @@ export const NavBar: React.FC = ({}) => {
         </NextLink>
         {data?.currentUser ? (
           <>
-            <NextLink href='/projects'>
+            <NextLink href="/projects">
               <Text
                 cursor={'pointer'}
                 _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
                 ml={[4, 4, 8, 8, 8, 8]}
                 color={'#361d32'}
-                fontSize={24}
+                fontSize={16}
               >
                 My projects
               </Text>
             </NextLink>
-            <NextLink href='/'>
+            <NextLink href="/">
               <Text
                 cursor={'pointer'}
                 _hover={{ borderBottom: '1px solid', borderColor: '#361d32' }}
                 ml={4}
                 color={'#361d32'}
                 display={['none', 'none', 'block', 'block', 'block', 'block']}
-                fontSize={[16, 16, 24, 24, 24, 24]}
+                fontSize={16}
               >
                 Explore projects
               </Text>

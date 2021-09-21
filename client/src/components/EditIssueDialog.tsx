@@ -101,29 +101,24 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
           {({ isSubmitting }) => {
             return (
               <Box mx={'auto'} maxW={'400px'}>
-                <Text color={'#361d32'} fontSize={20} fontWeight={'bold'}>
+                <Text color={'#361d32'} fontWeight={700}>
                   Edit issue
                 </Text>
-                <Text fontWeight={300} fontSize={14}>
+                <Text fontWeight={400} fontSize={14}>
                   Created at {toDate(issue.createdAt)}
                 </Text>
                 <Flex>
-                  <Text fontWeight={300} fontSize={14}>
+                  <Text fontWeight={400} fontSize={14}>
                     by
                   </Text>
-                  <Text
-                    ml={1}
-                    fontWeight={'bold'}
-                    fontSize={14}
-                    color={'#361d32'}
-                  >
+                  <Text ml={1} fontWeight={500} fontSize={14} color={'#361d32'}>
                     {issueCreator?.user.user?.username}
                   </Text>
                 </Flex>
                 <Form style={{ marginTop: '24px' }}>
                   <InputField name="title" label="Issue" />
                   <Box mt={4}>
-                    <Text fontSize={'md'} fontWeight={'medium'}>
+                    <Text fontSize={14} fontWeight={500}>
                       Status
                     </Text>
                     <Flex mt={2}>
@@ -164,7 +159,7 @@ export const EditIssueDialog: React.FC<EditIssueDialogProps> = ({
                   </Box>
                   <Box mt={4}>
                     <Flex justifyContent={'space-between'}>
-                      <Text fontSize={'md'} fontWeight={'medium'}>
+                      <Text fontSize={14} fontWeight={500}>
                         Assigned to
                       </Text>
                       <Icon

@@ -1,4 +1,5 @@
 import { Divider, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { CreateProjectDialog } from '../components/CreateProjectDialog';
 import { GeneralError } from '../components/GeneralError';
@@ -39,6 +40,9 @@ const Index = () => {
 
   return (
     <>
+      <Head>
+        <title>Explore</title>
+      </Head>
       <NavBar />
       {isOpen && (
         <CreateProjectDialog
@@ -50,12 +54,12 @@ const Index = () => {
       <Flex
         mt={10}
         maxW={'1200px'}
-        align='center'
+        align="center"
         mx={'auto'}
         direction={'column'}
       >
         <TitleSection buttonText={'Create project'} onOpen={onOpen} />
-        <Divider mt={4} orientation='horizontal' />
+        <Divider mt={4} orientation="horizontal" />
 
         {data?.projects?.projects && data.projects.projects.length > 0 ? (
           <ProjectTitles />

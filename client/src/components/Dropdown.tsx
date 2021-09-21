@@ -38,8 +38,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
       visibility={showDropdown ? 'visible' : 'hidden'}
     >
       <Box mt={2} ml={2}>
-        <Text>Logged in as</Text>
-        <Text color={'black'} fontWeight={'bold'}>
+        <Text color={'#756d6d'} fontSize={14}>
+          Logged in as
+        </Text>
+        <Text fontWeight={500} color={'#361d32'}>
           {username}
         </Text>
       </Box>
@@ -47,6 +49,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
       <Flex direction={'column'}>
         <Button
           textColor={'#361d32'}
+          fontSize={12}
+          textTransform={'uppercase'}
           bgColor={'transparent'}
           fontWeight={'700'}
           _hover={{ bgColor: '#f1e8e6' }}

@@ -1,4 +1,5 @@
 import { Divider, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import Head from 'next/head';
 import React, { useEffect } from 'react';
 import { CreateProjectDialog } from '../components/CreateProjectDialog';
 import { NavBar } from '../components/NavBar';
@@ -24,6 +25,9 @@ const Projects = () => {
 
   return (
     <>
+      <Head>
+        <title>My projects</title>
+      </Head>
       <NavBar />
       {isOpen && (
         <CreateProjectDialog

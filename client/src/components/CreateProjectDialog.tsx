@@ -64,7 +64,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
   };
 
   useEffect(() => {
-    if (!canToggle) {
+    if (canToggle && !canToggle) {
       setShowUserList(false);
     }
   }, [usersToAssign]);
@@ -73,7 +73,7 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
       <BaseModal isOpen={isOpen} onClose={onClose}>
         <Formik
           initialValues={{ projectName: '' }}
-          onSubmit={async (name, { setErrors }) => {
+          onSubmit={async (name) => {
             const idsToAssign = usersToAssign.map(({ id }) => id);
             await createProject({
               variables: {
@@ -126,14 +126,14 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
           {({ isSubmitting }) => {
             return (
               <Box maxW={'400px'} mx={'auto'}>
-                <Text color={'#361d32'} fontSize={20} fontWeight={'bold'}>
+                <Text color={'#361d32'} fontWeight={700}>
                   Create project
                 </Text>
                 <Form style={{ marginTop: '24px' }}>
                   <InputField name="projectName" label="Project name" />
                   <Box mt={4}>
                     <Flex justifyContent={'space-between'}>
-                      <Text fontSize={'md'} fontWeight={'medium'}>
+                      <Text fontSize={14} fontWeight={500}>
                         Users
                       </Text>
                       <Icon

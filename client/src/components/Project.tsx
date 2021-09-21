@@ -27,12 +27,14 @@ export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
             color={userProject ? 'green.500' : 'red.500'}
             as={GoPrimitiveDot}
           />
-          <Text ml={2}>{pr.name}</Text>
+          <Text fontWeight={500} ml={2}>
+            {pr.name}
+          </Text>
         </Flex>
-        <Text textAlign={'center'} flexGrow={1} flexBasis={0}>
+        <Text textAlign={'center'} flexGrow={1} fontWeight={500} flexBasis={0}>
           {membersAmount(pr.users)}
         </Text>
-        <Text textAlign={'end'} flexGrow={1} flexBasis={0}>
+        <Text textAlign={'end'} flexGrow={1} fontWeight={500} flexBasis={0}>
           {toDate(pr.updatedAt)}
         </Text>
       </Flex>

@@ -104,7 +104,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
           {({ isSubmitting }) => {
             return (
               <Box mx={'auto'} maxW={'400px'}>
-                <Text color={'#361d32'} fontSize={20} fontWeight={'bold'}>
+                <Text color={'#361d32'} fontWeight={700}>
                   Create issue
                 </Text>
                 <Form style={{ marginTop: '24px' }}>
@@ -114,7 +114,7 @@ export const CreateIssueDialog: React.FC<CreateIssueDialogProps> = ({
                   </Box>
                   <Box mt={4}>
                     <Flex justifyContent={'space-between'}>
-                      <Text fontSize={'md'} fontWeight={'medium'}>
+                      <Text fontSize={14} fontWeight={500}>
                         Assign to
                       </Text>
                       <Icon

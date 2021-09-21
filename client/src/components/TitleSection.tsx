@@ -52,7 +52,7 @@ export const TitleSection: React.FC<TitleSectionProps> = ({
           alignItems={'center'}
           flexDir={['column', 'column', 'row', 'row', 'row', 'row']}
         >
-          <Text color={'#361d32'} overflowWrap={'anywhere'} fontSize={20}>
+          <Text color={'#361d32'} overflowWrap={'anywhere'} fontWeight={500}>
             {title}
           </Text>
           <Icon

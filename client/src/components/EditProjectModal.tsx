@@ -91,14 +91,14 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
         {({ isSubmitting }) => {
           return (
             <Box mx={'auto'} maxW={'400px'}>
-              <Text color={'#361d32'} fontSize={20} fontWeight={'bold'}>
+              <Text color={'#361d32'} fontWeight={700}>
                 Update project
               </Text>
               <Form style={{ marginTop: '24px' }}>
                 <InputField name="projectName" label="Project name" />
                 <Box mt={4}>
                   <Flex justifyContent={'space-between'}>
-                    <Text fontSize={'md'} fontWeight={'medium'}>
+                    <Text fontSize={14} fontWeight={500}>
                       Users
                     </Text>
                     <Icon

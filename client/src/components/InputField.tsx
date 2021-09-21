@@ -27,8 +27,16 @@ export const InputField: React.FC<InputFieldProps> = ({
   const [field, { error }] = useField(props);
   return (
     <FormControl isInvalid={!!error}>
-      <FormLabel htmlFor={field.name}>{label}</FormLabel>
-      <InputOrTextarea {...field} {...props} id={field.name} />
+      <FormLabel fontSize={14} fontWeight={500} htmlFor={field.name}>
+        {label}
+      </FormLabel>
+      <InputOrTextarea
+        fontSize={14}
+        fontWeight={400}
+        {...field}
+        {...props}
+        id={field.name}
+      />
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );

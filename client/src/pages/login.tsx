@@ -1,6 +1,7 @@
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/dist/client/router';
+import Head from 'next/head';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Layout } from '../components/Layout';
@@ -21,6 +22,9 @@ const Login: React.FC<loginProps> = ({}) => {
 
   return (
     <Layout>
+      <Head>
+        <title>Login</title>
+      </Head>
       <Formik
         initialValues={{ username: '', password: '' }}
         onSubmit={async (creds, { setErrors }) => {
@@ -53,24 +57,24 @@ const Login: React.FC<loginProps> = ({}) => {
             >
               <Form>
                 <InputField
-                  name='username'
-                  placeholder='username'
-                  label='Username'
+                  name="username"
+                  placeholder="username"
+                  label="Username"
                 />
 
                 <Box mt={4}>
                   <InputField
-                    name='password'
-                    label='Password'
-                    placeholder='********'
-                    type='password'
+                    name="password"
+                    label="Password"
+                    placeholder="********"
+                    type="password"
                   />
                 </Box>
                 <Flex>
                   <PrimaryButton
                     mt={4}
                     ml={'auto'}
-                    type='submit'
+                    type="submit"
                     isLoading={isSubmitting}
                     buttonText={'Login'}
                   />

@@ -1,6 +1,7 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/dist/client/router';
+import Head from 'next/head';
 import React from 'react';
 import { InputField } from '../components/InputField';
 import { Layout } from '../components/Layout';
@@ -18,8 +19,12 @@ interface registerProps {}
 const Register: React.FC<registerProps> = ({}) => {
   const router = useRouter();
   const [register] = useRegisterMutation();
+
   return (
     <Layout>
+      <Head>
+        <title>Register</title>
+      </Head>
       <Formik
         initialValues={{ email: '', username: '', password: '' }}
         onSubmit={async (creds, { setErrors }) => {
@@ -52,30 +57,30 @@ const Register: React.FC<registerProps> = ({}) => {
             >
               <Form>
                 <InputField
-                  name='email'
-                  placeholder='your@email.com'
-                  label='Email'
+                  name="email"
+                  placeholder="your@email.com"
+                  label="Email"
                 />
                 <Box mt={4}>
                   <InputField
-                    name='username'
-                    placeholder='username'
-                    label='Username'
+                    name="username"
+                    placeholder="username"
+                    label="Username"
                   />
                 </Box>
                 <Box mt={4}>
                   <InputField
-                    name='password'
-                    label='Password'
-                    placeholder='********'
-                    type='password'
+                    name="password"
+                    label="Password"
+                    placeholder="********"
+                    type="password"
                   />
                 </Box>
                 <Flex>
                   <PrimaryButton
                     mt={4}
                     ml={'auto'}
-                    type='submit'
+                    type="submit"
                     buttonText={'Register'}
                     isLoading={isSubmitting}
                   />
