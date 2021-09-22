@@ -89,6 +89,7 @@ export const NavBar: React.FC = ({}) => {
                 ml={[4, 4, 8, 8, 8, 8]}
                 color={'#361d32'}
                 fontSize={16}
+                fontWeight={700}
               >
                 My projects
               </Text>
@@ -101,6 +102,7 @@ export const NavBar: React.FC = ({}) => {
                 color={'#361d32'}
                 display={['none', 'none', 'block', 'block', 'block', 'block']}
                 fontSize={16}
+                fontWeight={700}
               >
                 Explore projects
               </Text>

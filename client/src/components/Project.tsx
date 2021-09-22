@@ -22,7 +22,12 @@ export const Project: React.FC<ProjectProps> = ({ pr, userProject }) => {
         alignItems={'center'}
         w={'100%'}
       >
-        <Flex flexGrow={1} overflow={'auto'} flexBasis={0} alignItems="center">
+        <Flex
+          flexGrow={1}
+          overflow={'hidden'}
+          flexBasis={0}
+          alignItems="center"
+        >
           <Icon
             color={userProject ? 'green.500' : 'red.500'}
             as={GoPrimitiveDot}
