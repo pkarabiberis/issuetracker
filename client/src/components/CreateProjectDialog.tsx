@@ -74,53 +74,55 @@ export const CreateProjectDialog: React.FC<CreateProjectDialogProps> = ({
         <Formik
           initialValues={{ projectName: '' }}
           onSubmit={async (name) => {
-            const idsToAssign = usersToAssign.map(({ id }) => id);
-            await createProject({
-              variables: {
-                name: name.projectName,
-                users: [
-                  ...idsToAssign,
-                  typeof meData?.currentUser?.id !== 'undefined'
-                    ? meData.currentUser?.id
-                    : -1,
-                ],
-              },
-              update: (cache, { data: newProjectData }) => {
-                if (!fromIndexPage) {
-                  const existingProjects: UserProjectsQuery | null =
-                    cache.readQuery({
+            if (name.projectName.length > 0) {
+              const idsToAssign = usersToAssign.map(({ id }) => id);
+              await createProject({
+                variables: {
+                  name: name.projectName,
+                  users: [
+                    ...idsToAssign,
+                    typeof meData?.currentUser?.id !== 'undefined'
+                      ? meData.currentUser?.id
+                      : -1,
+                  ],
+                },
+                update: (cache, { data: newProjectData }) => {
+                  if (!fromIndexPage) {
+                    const existingProjects: UserProjectsQuery | null =
+                      cache.readQuery({
+                        query: UserProjectsDocument,
+                      });
+                    cache.writeQuery({
                       query: UserProjectsDocument,
-                    });
-                  cache.writeQuery({
-                    query: UserProjectsDocument,
-                    data: {
-                      userProjects: [
-                        newProjectData!.createProject,
-                        ...(existingProjects?.userProjects || []),
-                      ],
-                    },
-                  });
-                } else {
-                  const existingProjects: ProjectsQuery | null =
-                    cache.readQuery({
-                      query: ProjectsDocument,
-                    });
-                  cache.writeQuery<ProjectsQuery>({
-                    query: ProjectsDocument,
-                    data: {
-                      projects: {
-                        __typename: 'ProjectResponse',
-                        projects: [
+                      data: {
+                        userProjects: [
                           newProjectData!.createProject,
-                          ...(existingProjects?.projects?.projects || []),
+                          ...(existingProjects?.userProjects || []),
                         ],
                       },
-                    },
-                  });
-                }
-              },
-            });
-            onClose();
+                    });
+                  } else {
+                    const existingProjects: ProjectsQuery | null =
+                      cache.readQuery({
+                        query: ProjectsDocument,
+                      });
+                    cache.writeQuery<ProjectsQuery>({
+                      query: ProjectsDocument,
+                      data: {
+                        projects: {
+                          __typename: 'ProjectResponse',
+                          projects: [
+                            newProjectData!.createProject,
+                            ...(existingProjects?.projects?.projects || []),
+                          ],
+                        },
+                      },
+                    });
+                  }
+                },
+              });
+              onClose();
+            }
           }}
         >
           {({ isSubmitting }) => {
