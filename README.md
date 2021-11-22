@@ -1,4 +1,4 @@
-### Issuetracker - <a href="https://pavloskarabiberis.com">issuetracker.karabiberisapps.com</a>
+### Issuetracker - <a href="https://issuetracker.karabiberisapps.com">issuetracker.karabiberisapps.com</a>
 
 > A web app where users can make projects and issues
 
