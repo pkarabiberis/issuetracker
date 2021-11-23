@@ -2,7 +2,7 @@
 
 > A web app where users can make projects and issues
 
-![Issuetracker]((https://imgur.com/qjBhYiG)
+![Issuetracker](https://imgur.com/qjBhYiG)
 
 Things used:
 
